@@ -1,0 +1,8 @@
+{
+  "name": "theme-switch-page",
+  "private": true,
+  "description": "Static theme launch page (RTEACB)",
+  "dependencies": {
+    "@vercel/kv": "^3.0.0"
+  }
+}
