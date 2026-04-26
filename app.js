@@ -855,6 +855,37 @@ const modeLabels = {
   snow: '雪天'
 };
 
+const ABOUT_ILLUSTRATIONS = {
+  day: 'assets/generated/about-duck-day.png',
+  sunny: 'assets/generated/about-duck-sunny.png',
+  night: 'assets/generated/about-duck-night.png',
+  midnight: 'assets/generated/about-duck-moonlight.png',
+  rain: 'assets/generated/about-duck-rainy.png',
+  snow: 'assets/generated/about-duck-snowy.png'
+};
+
+function preloadAboutIllustrations() {
+  Object.keys(ABOUT_ILLUSTRATIONS).forEach((mode) => {
+    const img = new Image();
+    img.src = ABOUT_ILLUSTRATIONS[mode];
+  });
+}
+
+function updateAboutIllustration(mode) {
+  const img = document.getElementById('about-duck-scene');
+  if (!img) return;
+  const next = ABOUT_ILLUSTRATIONS[mode] || ABOUT_ILLUSTRATIONS.day;
+  if (img.getAttribute('src') === next) return;
+  img.classList.add('is-switching');
+  window.setTimeout(function () {
+    img.src = next;
+    img.onload = function () {
+      img.classList.remove('is-switching');
+      img.onload = null;
+    };
+  }, 90);
+}
+
 function showToast(label) {
   const toast = document.getElementById('toast');
   toast.textContent = label;
@@ -940,6 +971,7 @@ function setMode(mode, opts) {
   } catch (e) {}
   renderLaunchGrid();
   refreshWeatherIconForTheme();
+  updateAboutIllustration(mode);
 }
 
 // ═══════════════════════════════════════════
@@ -968,17 +1000,6 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ═══════════════════════════════════════════
-// Header letter shortcuts (D·S·N·M·R·S)
-// ═══════════════════════════════════════════
-
-document.querySelectorAll('.mode-shortcuts .mode-key').forEach((btn) => {
-  btn.addEventListener('click', () => {
-    const mode = btn.dataset.mode;
-    if (mode && modes.includes(mode)) setMode(mode, { fromUser: true });
-  });
-});
-
-// ═══════════════════════════════════════════
 // Mode dot clicks
 // ═══════════════════════════════════════════
 
@@ -994,7 +1015,94 @@ document.querySelectorAll('.mode-dot').forEach(dot => {
 
 const STORAGE_MODE = 'themeLaunchMode';
 /** 与 default-shortcuts.json 对齐；换键后重新从 JSON 种子，避免沿用删项前的 localStorage 条数 */
-const STORAGE_SHORTCUTS = 'themeLaunchShortcuts_default53';
+const STORAGE_SHORTCUTS = 'themeLaunchShortcuts_default51';
+/** 与 Vercel SHORTCUTS_WRITE_SECRET 同值，仅本机用：localStorage.setItem(…, '<密钥>') 后带 Authorization 写 KV */
+const STORAGE_API_SHORTCUTS_BEARER = 'themeApiShortcutsWriteBearer';
+const STORAGE_PRIVACY_MODE = 'themeSitePrivacyMode';
+const STORAGE_WEATHER_CITY = 'themeWeatherCity';
+
+const WORK_CASES = [
+  {
+    title: '多项目跟进工作台',
+    meta: '2026 · B 端效率',
+    summary: '围绕项目状态、负责人、风险和下一步行动重组信息层级，让协作成员能在一个视图里判断优先级。',
+    tags: ['Dashboard', 'Information Architecture', 'Workflow']
+  },
+  {
+    title: '设计资源与 AI 工具流',
+    meta: '2026 · Personal System',
+    summary: '把灵感、素材、生成式工具和交付链路收纳到同一个入口，减少设计过程中的上下文切换。',
+    tags: ['Design Ops', 'AI', 'Resource Library']
+  },
+  {
+    title: '组件规范与前端协作',
+    meta: '2025 · Design System',
+    summary: '建立组件命名、状态、用法和验收说明，帮助设计稿从页面资产变成可维护的产品语言。',
+    tags: ['Components', 'Spec', 'Handoff']
+  },
+  {
+    title: '个人网站主题系统',
+    meta: '2026 · Web Experience',
+    summary: '用天气、昼夜和环境音组织页面情绪，同时保持文字、线框和交互控件的一致性。',
+    tags: ['Theme', 'Motion', 'Personal Site']
+  }
+];
+
+const INSPIRATION_ITEMS = [
+  {
+    title: '安静的信息密度',
+    source: 'Interface Note',
+    summary: '高频工具不需要讲很多故事，留白、线条和层级足够稳定时，界面会自然变得可信。',
+    tags: ['Layout', 'B-side', 'Density']
+  },
+  {
+    title: '单色图标系统',
+    source: 'Icon Practice',
+    summary: '在多主题界面里，单色图标比彩色图标更容易适配，也更适合作为长期维护的基础资产。',
+    tags: ['Icon', 'Token', 'System']
+  }
+];
+
+const LIFE_RECORDS = [
+  {
+    title: '阅读',
+    meta: '长期',
+    summary: '保留产品、城市、影像和技术相关的阅读线索，把碎片输入沉淀成设计判断。',
+    tags: ['Books', 'Notes']
+  },
+  {
+    title: '音乐与环境音',
+    meta: '日常',
+    summary: '把不同工作状态对应到不同声音，让打开页面本身成为切换状态的仪式。',
+    tags: ['Sound', 'Focus']
+  }
+];
+
+const NOW_ITEMS = [
+  { label: '正在设计', value: '把个人启动页扩展成设计师网站' },
+  { label: '正在整理', value: '作品案例、收藏分类和可复用的主题 token' },
+  { label: '正在学习', value: 'AI 工具流、前端交互细节和更耐看的信息布局' }
+];
+
+let siteContent = {
+  workCases: WORK_CASES,
+  inspirations: INSPIRATION_ITEMS,
+  lifeRecords: LIFE_RECORDS,
+  now: NOW_ITEMS
+};
+
+const TOOL_CATEGORIES = [
+  { id: 'all', label: '全部' },
+  { id: 'work', label: '工作' },
+  { id: 'design', label: '设计' },
+  { id: 'ai', label: 'AI' },
+  { id: 'dev', label: '开发' },
+  { id: 'life', label: '生活' }
+];
+
+let activeView = 'home';
+let activeToolCategory = 'all';
+let privacyMode = 'public';
 
 /** 离线或未加载 default-shortcuts.json 时的后备 */
 const SHORTCUTS_FALLBACK = [
@@ -1176,9 +1284,20 @@ function coerceSavedIconUrl(rawIconUrl, urlRaw, title) {
   );
 }
 
+/** 线上利用 HTTP 缓存减轻重复读 JSON；本地开发仍 no-cache 便于改文件即刷新 */
+function staticJsonFetchInit() {
+  try {
+    const h = typeof location !== 'undefined' && location.hostname;
+    if (!h || h === 'localhost' || h === '127.0.0.1' || h === '[::1]') {
+      return { cache: 'no-cache' };
+    }
+  } catch (e) {}
+  return { cache: 'default' };
+}
+
 async function fetchIcon8SlugConfig() {
   try {
-    const res = await fetch('icon8-host-slugs.json', { cache: 'no-cache' });
+    const res = await fetch('icon8-host-slugs.json', staticJsonFetchInit());
     if (res.ok) return await res.json();
   } catch (e) {}
   return ICON8_SLUG_CONFIG_FALLBACK;
@@ -1186,13 +1305,249 @@ async function fetchIcon8SlugConfig() {
 
 async function fetchDefaultShortcutsFromBookmarksJson() {
   try {
-    const res = await fetch('default-shortcuts.json', { cache: 'no-cache' });
+    const res = await fetch('default-shortcuts.json', staticJsonFetchInit());
     if (!res.ok) return null;
     const data = await res.json();
     return Array.isArray(data) && data.length ? data : null;
   } catch (e) {
     return null;
   }
+}
+
+async function fetchSiteContent() {
+  try {
+    const res = await fetch('site-content.json', staticJsonFetchInit());
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data && typeof data === 'object' ? data : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function applySiteContent(data) {
+  if (!data) return;
+  siteContent = {
+    workCases: Array.isArray(data.workCases) && data.workCases.length ? data.workCases : WORK_CASES,
+    inspirations: Array.isArray(data.inspirations) && data.inspirations.length ? data.inspirations : INSPIRATION_ITEMS,
+    lifeRecords: Array.isArray(data.lifeRecords) && data.lifeRecords.length ? data.lifeRecords : LIFE_RECORDS,
+    now: Array.isArray(data.now) && data.now.length ? data.now : NOW_ITEMS
+  };
+}
+
+function renderWorkCases() {
+  const grid = document.getElementById('work-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  siteContent.workCases.forEach((item) => {
+    const card = document.createElement('article');
+    card.className = 'work-card';
+
+    const meta = document.createElement('div');
+    meta.className = 'work-meta';
+    meta.textContent = item.meta;
+
+    const title = document.createElement('h3');
+    title.textContent = item.title;
+
+    const summary = document.createElement('p');
+    summary.textContent = item.summary;
+
+    const tags = document.createElement('div');
+    tags.className = 'work-tags';
+    item.tags.forEach((tag) => {
+      const t = document.createElement('span');
+      t.className = 'work-tag';
+      t.textContent = tag;
+      tags.appendChild(t);
+    });
+
+    card.appendChild(meta);
+    card.appendChild(title);
+    card.appendChild(summary);
+    card.appendChild(tags);
+    grid.appendChild(card);
+  });
+}
+
+function renderTaggedCards(gridId, items, className, metaKey) {
+  const grid = document.getElementById(gridId);
+  if (!grid) return;
+  grid.innerHTML = '';
+  items.forEach((item) => {
+    const card = document.createElement('article');
+    card.className = className;
+
+    const meta = document.createElement('div');
+    meta.className = 'content-meta';
+    meta.textContent = item[metaKey] || '';
+
+    const title = document.createElement('h3');
+    title.textContent = item.title || '未命名';
+
+    const summary = document.createElement('p');
+    summary.textContent = item.summary || '';
+
+    const tags = document.createElement('div');
+    tags.className = 'content-tags';
+    (item.tags || []).forEach((tag) => {
+      const t = document.createElement('span');
+      t.className = 'content-tag';
+      t.textContent = tag;
+      tags.appendChild(t);
+    });
+
+    card.appendChild(meta);
+    card.appendChild(title);
+    card.appendChild(summary);
+    card.appendChild(tags);
+    grid.appendChild(card);
+  });
+}
+
+function renderNowItems() {
+  const list = document.getElementById('now-list');
+  if (!list) return;
+  list.innerHTML = '';
+  siteContent.now.forEach((item) => {
+    const row = document.createElement('div');
+    row.className = 'now-item';
+    const label = document.createElement('span');
+    label.textContent = item.label || '';
+    const value = document.createElement('strong');
+    value.textContent = item.value || '';
+    row.appendChild(label);
+    row.appendChild(value);
+    list.appendChild(row);
+  });
+}
+
+function renderSiteContent() {
+  if (document.getElementById('work-grid')) renderWorkCases();
+  renderTaggedCards('inspiration-grid', siteContent.inspirations, 'inspiration-card', 'source');
+  renderTaggedCards('life-grid', siteContent.lifeRecords, 'life-card', 'meta');
+  renderNowItems();
+}
+
+function setActiveView(view) {
+  if (!view) return;
+  activeView = view;
+  document.body.classList.toggle('view-home', view === 'home');
+  document.querySelectorAll('.nav-item').forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.view === view);
+  });
+  document.querySelectorAll('.view-panel').forEach((panel) => {
+    panel.classList.toggle('active', panel.dataset.viewPanel === view);
+  });
+  try {
+    history.replaceState(null, '', '#' + view);
+  } catch (e) {}
+}
+
+function setupSiteNavigation() {
+  document.querySelectorAll('.nav-item').forEach((btn) => {
+    btn.addEventListener('click', () => setActiveView(btn.dataset.view));
+  });
+  const hash = (window.location.hash || '').replace(/^#/, '');
+  const views = Array.from(document.querySelectorAll('.nav-item')).map((btn) => btn.dataset.view);
+  if (hash === 'about' || hash === 'work') setActiveView('home');
+  else if (views.includes(hash)) setActiveView(hash);
+  else setActiveView('home');
+}
+
+function loadPrivacyMode() {
+  try {
+    const saved = localStorage.getItem(STORAGE_PRIVACY_MODE);
+    if (saved === 'private' || saved === 'public') return saved;
+  } catch (e) {}
+  return 'public';
+}
+
+function setPrivacyMode(mode) {
+  privacyMode = mode === 'private' ? 'private' : 'public';
+  try {
+    localStorage.setItem(STORAGE_PRIVACY_MODE, privacyMode);
+  } catch (e) {}
+  const btn = document.getElementById('privacy-toggle');
+  if (btn) {
+    const isPrivate = privacyMode === 'private';
+    btn.textContent = isPrivate ? '私人模式' : '公开模式';
+    btn.classList.toggle('private', isPrivate);
+    btn.setAttribute('aria-pressed', isPrivate ? 'true' : 'false');
+    btn.title = isPrivate ? '当前显示全部私人入口' : '当前隐藏私人入口';
+  }
+  renderLaunchGrid();
+}
+
+function setupPrivacyToggle() {
+  const btn = document.getElementById('privacy-toggle');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    setPrivacyMode(privacyMode === 'private' ? 'public' : 'private');
+  });
+  setPrivacyMode(loadPrivacyMode());
+}
+
+function textForShortcut(s) {
+  return ((s.title || '') + ' ' + shortcutHostnameFromUrl(normalizeUrl(s.url || '')) + ' ' + (s.url || '')).toLowerCase();
+}
+
+function shortcutCategory(s) {
+  const t = textForShortcut(s);
+  if (/chatgpt|gemini|grok|perplexity|minimax|lovart|recraft|mesh|ai-|ai工具|flux|bfl|artificial/.test(t)) return 'ai';
+  if (/figma|iconfont|pinterest|freepik|js\.design|bestdesign|navbar|素材|设计|palette|gallery|gif|ezgif|png|图标/.test(t)) return 'design';
+  if (/github|vercel|yourware|server|laoxue|xda|fpi|component|api-|cloud|开发|部署|托管|论坛/.test(t)) return 'dev';
+  if (/seatable|chandao|confluence|项目|任务|文档|translate|translation/.test(t)) return 'work';
+  if (/map|taobao|tennis|podcast|播客|music|iptv|sim|vpn|mullvad|giffgaff|购物|电影|news|资讯/.test(t)) return 'life';
+  return 'work';
+}
+
+function shortcutCategoryLabel(id) {
+  const item = TOOL_CATEGORIES.find((x) => x.id === id);
+  return item ? item.label : '其他';
+}
+
+function isShortcutPrivate(s) {
+  const t = textForShortcut(s);
+  return /account|accounts|login|profile|clientarea|pricing|兑换|vpn|shadowrocket|mullvad|giffgaff|chandao|seatable|confluence|47\.99\.|fpi-inc|teamxz|api-flowercloud|stentvessel|laoxue|bw\.icu|tannel|个人|内部|项目管理/.test(t);
+}
+
+function visibleShortcuts() {
+  return shortcuts.filter((s) => {
+    if (privacyMode !== 'private' && isShortcutPrivate(s)) return false;
+    if (activeToolCategory !== 'all' && shortcutCategory(s) !== activeToolCategory) return false;
+    return true;
+  });
+}
+
+function renderToolFilters() {
+  const wrap = document.getElementById('tool-filters');
+  if (!wrap) return;
+  const base = shortcuts.filter((s) => privacyMode === 'private' || !isShortcutPrivate(s));
+  const counts = base.reduce((acc, s) => {
+    const c = shortcutCategory(s);
+    acc[c] = (acc[c] || 0) + 1;
+    acc.all += 1;
+    return acc;
+  }, { all: 0 });
+  if (activeToolCategory !== 'all' && !counts[activeToolCategory]) activeToolCategory = 'all';
+  wrap.innerHTML = '';
+  TOOL_CATEGORIES.forEach((cat) => {
+    const count = counts[cat.id] || 0;
+    if (cat.id !== 'all' && count === 0) return;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'tool-filter';
+    btn.classList.toggle('active', activeToolCategory === cat.id);
+    btn.textContent = cat.label + ' ' + count;
+    btn.setAttribute('role', 'tab');
+    btn.setAttribute('aria-selected', activeToolCategory === cat.id ? 'true' : 'false');
+    btn.addEventListener('click', () => {
+      activeToolCategory = cat.id;
+      renderLaunchGrid();
+    });
+    wrap.appendChild(btn);
+  });
 }
 
 let shortcuts = [];
@@ -1326,9 +1681,14 @@ function persistShortcuts() {
   if (!shortcutsServerPersist) return;
   void (async function () {
     try {
+      const headers = { 'Content-Type': 'application/json' };
+      try {
+        const t = localStorage.getItem(STORAGE_API_SHORTCUTS_BEARER);
+        if (t) headers['Authorization'] = 'Bearer ' + t;
+      } catch (e) {}
       const res = await fetch('/api/shortcuts', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(shortcuts)
       });
       if (!res.ok) {
@@ -1371,13 +1731,16 @@ function renderLaunchGrid() {
   const grid = document.getElementById('launch-grid');
   const empty = document.getElementById('launch-empty');
   if (!grid || !empty) return;
+  renderToolFilters();
   grid.innerHTML = '';
-  if (!shortcuts.length) {
+  const list = visibleShortcuts();
+  if (!list.length) {
     empty.classList.remove('hidden');
     return;
   }
   empty.classList.add('hidden');
-  shortcuts.forEach((s) => {
+
+  function createLaunchTile(s) {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'launch-tile';
@@ -1454,9 +1817,43 @@ function renderLaunchGrid() {
         return;
       }
       const u = normalizeUrl(s.url);
-      if (u) window.location.assign(u);
+      if (u) window.open(u, '_blank', 'noopener,noreferrer');
     });
-    grid.appendChild(btn);
+    return btn;
+  }
+
+  const grouped = {};
+  list.forEach((s) => {
+    const cat = shortcutCategory(s);
+    if (!grouped[cat]) grouped[cat] = [];
+    grouped[cat].push(s);
+  });
+
+  TOOL_CATEGORIES.filter((cat) => cat.id !== 'all').forEach((cat) => {
+    const items = activeToolCategory === 'all' ? grouped[cat.id] : (cat.id === activeToolCategory ? grouped[cat.id] : null);
+    if (!items || !items.length) return;
+
+    const group = document.createElement('section');
+    group.className = 'launch-group';
+
+    const head = document.createElement('div');
+    head.className = 'launch-group-head';
+    const title = document.createElement('div');
+    title.className = 'launch-group-title';
+    title.textContent = shortcutCategoryLabel(cat.id);
+    const count = document.createElement('div');
+    count.className = 'tool-group-count';
+    count.textContent = String(items.length).padStart(2, '0');
+    head.appendChild(title);
+    head.appendChild(count);
+
+    const groupGrid = document.createElement('div');
+    groupGrid.className = 'launch-group-grid';
+    items.forEach((s) => groupGrid.appendChild(createLaunchTile(s)));
+
+    group.appendChild(head);
+    group.appendChild(groupGrid);
+    grid.appendChild(group);
   });
 }
 
@@ -1826,6 +2223,23 @@ var HANGZHOU_COORDS = { lat: 30.2741, lon: 120.1551 };
 var SS_GEO_ASKED = 'themePageGeoAsked';
 var SS_GEO_COORDS = 'themePageGeoCoords';
 
+function getStoredWeatherCity() {
+  try {
+    const raw = localStorage.getItem(STORAGE_WEATHER_CITY);
+    if (!raw) return null;
+    const city = JSON.parse(raw);
+    if (city && typeof city.lat === 'number' && typeof city.lon === 'number' && city.name) return city;
+  } catch (e) {}
+  return null;
+}
+
+function setStoredWeatherCity(city) {
+  try {
+    if (!city) localStorage.removeItem(STORAGE_WEATHER_CITY);
+    else localStorage.setItem(STORAGE_WEATHER_CITY, JSON.stringify(city));
+  } catch (e) {}
+}
+
 function getSessionStoredCoords() {
   try {
     const raw = sessionStorage.getItem(SS_GEO_COORDS);
@@ -1875,11 +2289,24 @@ function renderWeatherFromApi(data, options) {
   descEl.textContent = weatherCodeToZh(code);
   applyWeatherIcon(weatherCodeToIconSlug(code, cur.is_day));
   if (metaEl) {
-    const parts = [];
-    if (cityLabel) parts.push(cityLabel);
-    if (typeof rh === 'number') parts.push('湿度 ' + rh + '%');
-    if (typeof wind === 'number') parts.push('风速 ' + Math.round(wind) + ' km/h');
-    metaEl.textContent = parts.join(' · ');
+    metaEl.innerHTML = '';
+    const pieces = [];
+    if (cityLabel) {
+      const cityBtn = document.createElement('button');
+      cityBtn.type = 'button';
+      cityBtn.className = 'weather-city-trigger';
+      cityBtn.textContent = cityLabel;
+      cityBtn.setAttribute('aria-label', '设置天气城市');
+      cityBtn.title = cityLabel;
+      cityBtn.addEventListener('click', promptWeatherCity);
+      pieces.push(cityBtn);
+    }
+    if (typeof rh === 'number') pieces.push(document.createTextNode('湿度 ' + rh + '%'));
+    if (typeof wind === 'number') pieces.push(document.createTextNode('风速 ' + Math.round(wind) + ' km/h'));
+    pieces.forEach(function (piece, idx) {
+      if (idx > 0) metaEl.appendChild(document.createTextNode(' · '));
+      metaEl.appendChild(piece);
+    });
   }
 
   applyThemeFromWeatherData(data);
@@ -1899,10 +2326,73 @@ function fetchOpenMeteo(lat, lon) {
     });
 }
 
+function geocodeWeatherCity(name) {
+  const params = new URLSearchParams({
+    name: name,
+    count: '1',
+    language: 'zh',
+    format: 'json'
+  });
+  return fetch('https://geocoding-api.open-meteo.com/v1/search?' + params.toString())
+    .then((r) => {
+      if (!r.ok) throw new Error('geocode http');
+      return r.json();
+    })
+    .then((data) => {
+      const first = data && data.results && data.results[0];
+      if (!first) throw new Error('city not found');
+      const labelParts = [first.name, first.admin1, first.country].filter(Boolean);
+      return {
+        name: labelParts.slice(0, 2).join(' · ') || first.name,
+        lat: first.latitude,
+        lon: first.longitude
+      };
+    });
+}
+
+function promptWeatherCity() {
+  const current = getStoredWeatherCity();
+  const currentName = current && current.name ? current.name : '杭州';
+  const q = window.prompt('天气城市', currentName);
+  if (q === null) return;
+  const name = q.trim();
+  if (!name) {
+    setStoredWeatherCity(null);
+    requestWeatherUpdate(false);
+    showToast('已恢复自动天气');
+    return;
+  }
+  setWeatherLoading();
+  geocodeWeatherCity(name)
+    .then(function (city) {
+      setStoredWeatherCity(city);
+      return fetchOpenMeteo(city.lat, city.lon).then(function (data) {
+        renderWeatherFromApi(data, { cityLabel: city.name });
+        showToast('天气城市已更新');
+      });
+    })
+    .catch(function () {
+      setWeatherError('未找到城市');
+    });
+}
+
 function requestWeatherUpdate(silent) {
   if (!document.getElementById('weather-temp')) return;
 
   var localApplied = false;
+  var manualCity = getStoredWeatherCity();
+
+  if (manualCity) {
+    if (!silent) setWeatherLoading();
+    fetchOpenMeteo(manualCity.lat, manualCity.lon)
+      .then(function (data) {
+        renderWeatherFromApi(data, { cityLabel: manualCity.name });
+      })
+      .catch(function () {
+        setWeatherError('城市天气获取失败');
+      });
+    return;
+  }
 
   function tryHangzhouIfNeeded() {
     return fetchOpenMeteo(HANGZHOU_COORDS.lat, HANGZHOU_COORDS.lon)
@@ -1999,6 +2489,10 @@ document.addEventListener('keydown', function (e) {
 document.getElementById('btn-close-edit').addEventListener('click', saveShortcutSheetAndClose);
 document.getElementById('edit-backdrop').addEventListener('click', saveShortcutSheetAndClose);
 setupShortcutForms();
+renderSiteContent();
+setupSiteNavigation();
+setupPrivacyToggle();
+preloadAboutIllustrations();
 
 // Initialize clock
 updateClock();
@@ -2010,12 +2504,15 @@ setInterval(function () {
 
 // Load saved theme + shortcuts（线上：服务端 KV；本地或无 KV：default-shortcuts.json + localStorage）
 (async function loadStoredShortcutsAndTheme() {
-  const [cfg, fromFile, server] = await Promise.all([
+  const [cfg, fromFile, server, content] = await Promise.all([
     fetchIcon8SlugConfig(),
     fetchDefaultShortcutsFromBookmarksJson(),
-    fetchShortcutsFromServer()
+    fetchShortcutsFromServer(),
+    fetchSiteContent()
   ]);
   icon8SlugConfig = cfg;
+  applySiteContent(content);
+  renderSiteContent();
   const seedDefaults = fromFile || SHORTCUTS_FALLBACK;
 
   shortcutsServerPersist = server.persist === true;

@@ -6,14 +6,18 @@
  *   KV_REST_API_TOKEN
  * （旧版「Vercel KV」已迁移到 Upstash，变量名一般不变。）
  *
- * 可选：SHORTCUTS_WRITE_SECRET — 若设置，PUT/POST 须带 Header：
- *   Authorization: Bearer <与之一致的密钥>
- * （启用后浏览器端无法匿名写入，需自建带密钥的客户端或关闭此项。）
+ * 安全（重要）：只要配置了 KV，**务必** 设置 SHORTCUTS_WRITE_SECRET。PUT/POST 需带
+ *   Authorization: Bearer <密钥>
+ * 未设置 secret 时写入仍被接受（便于本地/预览），**生产环境公网站点请勿长期如此**；不设 secret 的公开部署等同任何人可改 KV 中的列表。
+ * 需要彻底禁止匿名写时，请设置密钥并在可信环境（自写脚本/CI、带秘钥的私有客户端）同步，或在前端不调用 persist（仅用 localStorage）。
  */
 const path = require('path');
 const fs = require('fs');
 
 const KV_KEY = 'theme-launch-shortcuts';
+/** 防止大 JSON / base64 图标拖垮函数内存（与浏览器 localStorage 上限同量级可接受） */
+const MAX_JSON_BODY_BYTES = 450 * 1024;
+const MAX_ARRAY_ITEMS = 2000;
 
 function loadDefaultShortcuts() {
   try {
@@ -29,6 +33,9 @@ function parseJsonBody(req) {
     if (req.body !== undefined && req.body !== null) {
       if (typeof req.body === 'object' && !Buffer.isBuffer(req.body)) return resolve(req.body);
       if (typeof req.body === 'string') {
+        if (Buffer.byteLength(req.body, 'utf8') > MAX_JSON_BODY_BYTES) {
+          return reject(new Error('Body too large'));
+        }
         try {
           return resolve(JSON.parse(req.body));
         } catch (e) {
@@ -37,10 +44,23 @@ function parseJsonBody(req) {
       }
     }
     let raw = '';
+    let byteLen = 0;
+    let tooLarge = false;
     req.on('data', (c) => {
+      if (tooLarge) return;
+      byteLen += typeof c === 'string' ? Buffer.byteLength(c) : c.length;
+      if (byteLen > MAX_JSON_BODY_BYTES) {
+        tooLarge = true;
+        try {
+          req.destroy();
+        } catch (e) {}
+        reject(new Error('Body too large'));
+        return;
+      }
       raw += c;
     });
     req.on('end', () => {
+      if (tooLarge) return;
       try {
         resolve(raw ? JSON.parse(raw) : null);
       } catch (e) {
@@ -96,11 +116,25 @@ module.exports = async (req, res) => {
         return res.end(JSON.stringify({ error: 'Unauthorized' }));
       }
     }
+    let body;
     try {
-      const body = await parseJsonBody(req);
+      body = await parseJsonBody(req);
+    } catch (e) {
+      if (e && e.message === 'Body too large') {
+        res.statusCode = 413;
+        return res.end(JSON.stringify({ error: 'Payload too large', maxBytes: MAX_JSON_BODY_BYTES }));
+      }
+      res.statusCode = 400;
+      return res.end(JSON.stringify({ error: 'Invalid JSON body' }));
+    }
+    try {
       if (!Array.isArray(body)) {
         res.statusCode = 400;
         return res.end(JSON.stringify({ error: 'Expected JSON array' }));
+      }
+      if (body.length > MAX_ARRAY_ITEMS) {
+        res.statusCode = 400;
+        return res.end(JSON.stringify({ error: 'Too many items', max: MAX_ARRAY_ITEMS }));
       }
       for (let i = 0; i < body.length; i++) {
         if (!body[i] || typeof body[i] !== 'object') {

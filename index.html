@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>RTEACB — 主题启动页</title>
+  <title>RECHRIS — UI Designer</title>
+  <link rel="preconnect" href="https://api.open-meteo.com" crossorigin>
+  <link rel="preconnect" href="https://geocoding-api.open-meteo.com" crossorigin>
   <link rel="icon" type="image/png" sizes="48x48" href="https://img.icons8.com/ios-filled/50/888888/sun.png">
   <link rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/96/888888/sun.png">
   <link rel="stylesheet" href="styles.css">
@@ -45,20 +47,21 @@
 
 <div class="page">
   <header class="header">
-    <div class="logo">RTEACB</div>
-    <div class="mode-shortcuts" role="toolbar" aria-label="主题切换">
-      <button type="button" class="mode-key" data-mode="day" title="白昼">D</button><span class="mode-sep" aria-hidden="true">·</span>
-      <button type="button" class="mode-key" data-mode="sunny" title="晴朗">S</button><span class="mode-sep" aria-hidden="true">·</span>
-      <button type="button" class="mode-key" data-mode="night" title="夜色">N</button><span class="mode-sep" aria-hidden="true">·</span>
-      <button type="button" class="mode-key" data-mode="midnight" title="月光">M</button><span class="mode-sep" aria-hidden="true">·</span>
-      <button type="button" class="mode-key" data-mode="rain" title="雨天">R</button><span class="mode-sep" aria-hidden="true">·</span>
-      <button type="button" class="mode-key" data-mode="snow" title="雪天">S</button>
-    </div>
+    <div class="logo">RECHRIS</div>
+    <nav class="site-nav" aria-label="站点导航">
+      <button type="button" class="nav-item active" data-view="home">首页</button>
+      <button type="button" class="nav-item" data-view="tools">收藏</button>
+      <button type="button" class="nav-item" data-view="inspiration">灵感</button>
+      <button type="button" class="nav-item" data-view="life">生活</button>
+      <button type="button" class="nav-item" data-view="now">Now</button>
+    </nav>
   </header>
 
   <section class="hero">
     <div class="hero-primary">
       <h1 id="greeting">你好</h1>
+      <p class="hero-kicker">UI Designer · Product Thinking · Daily Systems</p>
+      <p class="hero-copy">把收藏、作品集和生活记录收进同一个安静的界面。白天处理设计协作，夜里收藏灵感，也给日常留一点空气。</p>
       <p class="hero-time" id="clock" aria-live="polite"></p>
     </div>
     <aside class="hero-weather" id="hero-weather" aria-label="天气">
@@ -79,13 +82,54 @@
 
   <div class="divider"></div>
 
-  <section class="section">
-    <div class="section-head">
-      <div class="section-title">快捷方式</div>
-      <button type="button" class="ghost-btn" id="btn-new-shortcut" title="新增快捷方式">新增</button>
+  <section class="section view-panel active" data-view-panel="home">
+    <div class="about-visual home-immersive-visual" aria-label="生活在杭州、每天努力工作的 UI 设计师鸭子主题插画">
+      <img class="about-duck-scene" id="about-duck-scene" src="assets/generated/about-duck-day.png" width="1200" height="720" alt="生活在杭州、每天努力工作的 UI 设计师鸭子主题插画" fetchpriority="high" decoding="async">
     </div>
-    <div id="launch-empty" class="launch-empty hidden">暂无快捷方式 — 点击「新增」或右键菜单添加。</div>
+  </section>
+
+  <section class="section view-panel" data-view-panel="tools">
+    <div class="section-head section-head--tools">
+      <div class="tool-filters" id="tool-filters" role="tablist" aria-label="收藏分类"></div>
+      <button type="button" class="tools-add-link" id="btn-new-shortcut" title="新增快捷方式">
+        <svg class="tools-add-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+        <span class="tools-add-label">新增</span>
+      </button>
+    </div>
+    <div id="launch-empty" class="launch-empty hidden">暂无快捷方式 — 点击「新增」或切换到私人模式查看。</div>
     <div class="launch-grid" id="launch-grid" role="navigation" aria-label="快捷方式网格，可拖动调整顺序"></div>
+  </section>
+
+  <section class="section view-panel" data-view-panel="inspiration">
+    <div class="section-head">
+      <div class="section-title">灵感收藏</div>
+      <div class="section-note">Reference / Notes / Patterns</div>
+    </div>
+    <div class="inspiration-grid" id="inspiration-grid" aria-label="灵感收藏墙"></div>
+  </section>
+
+  <section class="section view-panel" data-view-panel="life">
+    <div class="section-head">
+      <div class="section-title">生活记录</div>
+      <div class="section-note">Reading / Sound / Routine</div>
+    </div>
+    <div class="life-grid" id="life-grid" aria-label="生活记录"></div>
+  </section>
+
+  <section class="section view-panel" data-view-panel="now">
+    <div class="section-head">
+      <div class="section-title">Now</div>
+      <div class="section-note">Updated from site-content.json</div>
+    </div>
+    <div class="now-panel">
+      <div class="now-copy">
+        <h2>最近的我正在把这个站点变成一个能长期使用的个人系统。</h2>
+        <p>这里不追求完整履历，而是记录当前正在发生的工作、学习和生活节奏。</p>
+      </div>
+      <div class="now-list" id="now-list" aria-label="Now 状态"></div>
+    </div>
   </section>
 
   <div class="footer">静态页面 · <a href="https://icons8.com/icons" target="_blank" rel="noopener noreferrer">图标 Icons8</a> · Open-Meteo · CSS Houdini</div>
@@ -145,6 +189,6 @@
   </div>
 </div>
 
-<script src="app.js"></script>
+<script src="app.js" defer></script>
 </body>
 </html>

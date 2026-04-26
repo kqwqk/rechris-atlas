@@ -1,0 +1,98 @@
+{
+  "workCases": [
+    {
+      "title": "多项目跟进工作台",
+      "meta": "2026 · B 端效率",
+      "summary": "围绕项目状态、负责人、风险和下一步行动重组信息层级，让协作成员能在一个视图里判断优先级。",
+      "tags": ["Dashboard", "Information Architecture", "Workflow"]
+    },
+    {
+      "title": "设计资源与 AI 工具流",
+      "meta": "2026 · Personal System",
+      "summary": "把灵感、素材、生成式工具和交付链路收纳到同一个入口，减少设计过程中的上下文切换。",
+      "tags": ["Design Ops", "AI", "Resource Library"]
+    },
+    {
+      "title": "组件规范与前端协作",
+      "meta": "2025 · Design System",
+      "summary": "建立组件命名、状态、用法和验收说明，帮助设计稿从页面资产变成可维护的产品语言。",
+      "tags": ["Components", "Spec", "Handoff"]
+    },
+    {
+      "title": "个人网站主题系统",
+      "meta": "2026 · Web Experience",
+      "summary": "用天气、昼夜和环境音组织页面情绪，同时保持文字、线框和交互控件的一致性。",
+      "tags": ["Theme", "Motion", "Personal Site"]
+    }
+  ],
+  "inspirations": [
+    {
+      "title": "安静的信息密度",
+      "source": "Interface Note",
+      "summary": "高频工具不需要讲很多故事，留白、线条和层级足够稳定时，界面会自然变得可信。",
+      "tags": ["Layout", "B-side", "Density"]
+    },
+    {
+      "title": "单色图标系统",
+      "source": "Icon Practice",
+      "summary": "在多主题界面里，单色图标比彩色图标更容易适配，也更适合作为长期维护的基础资产。",
+      "tags": ["Icon", "Token", "System"]
+    },
+    {
+      "title": "天气作为情绪层",
+      "source": "Personal Site",
+      "summary": "主题不只是换颜色，也可以承担环境感：时间、天气和声音共同决定页面的呼吸节奏。",
+      "tags": ["Theme", "Atmosphere", "Motion"]
+    },
+    {
+      "title": "收藏即工作流",
+      "source": "Daily Tooling",
+      "summary": "入口排序本身反映工作方式，把常用工具按任务聚合，比按品牌或来源聚合更贴近真实使用。",
+      "tags": ["Workflow", "Tooling", "Personal"]
+    }
+  ],
+  "lifeRecords": [
+    {
+      "title": "阅读",
+      "meta": "长期",
+      "summary": "保留产品、城市、影像和技术相关的阅读线索，把碎片输入沉淀成设计判断。",
+      "tags": ["Books", "Notes"]
+    },
+    {
+      "title": "音乐与环境音",
+      "meta": "日常",
+      "summary": "把不同工作状态对应到不同声音：森林、雨、雪和安静的夜色，让打开页面本身成为切换状态的仪式。",
+      "tags": ["Sound", "Focus"]
+    },
+    {
+      "title": "运动与恢复",
+      "meta": "每周",
+      "summary": "用轻量记录关注睡眠、步行和运动节奏，不追求复杂统计，只提醒自己不要连续透支。",
+      "tags": ["Health", "Routine"]
+    },
+    {
+      "title": "影像与旅行",
+      "meta": "偶尔",
+      "summary": "收藏有情绪的城市片段和空间细节，作为界面氛围、色彩和叙事节奏的参考。",
+      "tags": ["Photo", "City"]
+    }
+  ],
+  "now": [
+    {
+      "label": "正在设计",
+      "value": "把个人启动页扩展成设计师网站"
+    },
+    {
+      "label": "正在整理",
+      "value": "作品案例、收藏分类和可复用的主题 token"
+    },
+    {
+      "label": "正在学习",
+      "value": "AI 工具流、前端交互细节和更耐看的信息布局"
+    },
+    {
+      "label": "最近想保留",
+      "value": "更慢一点的输入节奏，以及更快进入状态的工作入口"
+    }
+  ]
+}
