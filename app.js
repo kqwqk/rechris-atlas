@@ -1560,6 +1560,8 @@ let shortcutPendingDataUrlEdit = '';
 let launchTileSuppressNavigate = false;
 /** 为 true 时从 /api/shortcuts 读列表，且增删改会 PUT 同步到服务端（Vercel KV） */
 let shortcutsServerPersist = false;
+/** 排序模式：'default' 或 'frequency' */
+let shortcutsSortMode = localStorage.getItem('shortcutsSortMode') || 'default';
 
 async function fetchShortcutsFromServer() {
   try {
@@ -1733,7 +1735,13 @@ function renderLaunchGrid() {
   if (!grid || !empty) return;
   renderToolFilters();
   grid.innerHTML = '';
-  const list = visibleShortcuts();
+  let list = visibleShortcuts();
+
+  // 根据排序模式排序
+  if (shortcutsSortMode === 'frequency' && window.UsageAnalytics) {
+    list = window.UsageAnalytics.sortByFrequency([...list]);
+  }
+
   if (!list.length) {
     empty.classList.remove('hidden');
     return;
@@ -1750,15 +1758,33 @@ function renderLaunchGrid() {
     const remote = resolveRemoteIconUrlForShortcut(s);
     if (data) {
       const img = document.createElement('img');
-      img.src = data;
+      img.dataset.lazySrc = data;
       img.alt = '';
+      // 添加占位符，避免布局抖动
+      img.style.opacity = '0';
+      img.onload = function() { this.style.opacity = '1'; };
       iconWrap.appendChild(img);
+      // 使用懒加载
+      if (window.LazyImageLoader) {
+        window.LazyImageLoader.observe(img);
+      } else {
+        img.src = data;
+      }
     } else if (remote && /^https?:\/\//i.test(remote)) {
       const img = document.createElement('img');
-      img.src = remote;
+      img.dataset.lazySrc = remote;
       img.alt = '';
       img.referrerPolicy = 'no-referrer';
+      // 添加占位符，避免布局抖动
+      img.style.opacity = '0';
+      img.onload = function() { this.style.opacity = '1'; };
       iconWrap.appendChild(img);
+      // 使用懒加载
+      if (window.LazyImageLoader) {
+        window.LazyImageLoader.observe(img);
+      } else {
+        img.src = remote;
+      }
     } else {
       iconWrap.textContent = (s.iconEmoji && s.iconEmoji.trim()) || '·';
     }
@@ -1815,6 +1841,10 @@ function renderLaunchGrid() {
         ev.preventDefault();
         ev.stopPropagation();
         return;
+      }
+      // 记录使用统计
+      if (window.UsageAnalytics) {
+        window.UsageAnalytics.track(s.id);
       }
       const u = normalizeUrl(s.url);
       if (u) window.open(u, '_blank', 'noopener,noreferrer');
@@ -2454,6 +2484,103 @@ function setupWeather() {
 
 const btnNewShortcut = document.getElementById('btn-new-shortcut');
 if (btnNewShortcut) btnNewShortcut.addEventListener('click', openAddShortcutPanel);
+
+const btnSortShortcuts = document.getElementById('btn-sort-shortcuts');
+if (btnSortShortcuts) {
+  btnSortShortcuts.addEventListener('click', function() {
+    shortcutsSortMode = shortcutsSortMode === 'default' ? 'frequency' : 'default';
+    localStorage.setItem('shortcutsSortMode', shortcutsSortMode);
+    this.classList.toggle('active', shortcutsSortMode === 'frequency');
+    this.title = shortcutsSortMode === 'frequency' ? '按默认顺序排序' : '按使用频率排序';
+    renderLaunchGrid();
+  });
+  // 初始状态
+  btnSortShortcuts.classList.toggle('active', shortcutsSortMode === 'frequency');
+  btnSortShortcuts.title = shortcutsSortMode === 'frequency' ? '按默认顺序排序' : '按使用频率排序';
+}
+
+// 导出快捷方式数据
+const btnExportShortcuts = document.getElementById('btn-export-shortcuts');
+if (btnExportShortcuts) {
+  btnExportShortcuts.addEventListener('click', function() {
+    const exportData = {
+      version: '1.0',
+      exportDate: new Date().toISOString(),
+      shortcuts: shortcuts,
+      usageStats: window.UsageAnalytics ? window.UsageAnalytics.stats : {}
+    };
+
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `shortcuts-backup-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showToast('数据已导出');
+  });
+}
+
+// 导入快捷方式数据
+const btnImportShortcuts = document.getElementById('btn-import-shortcuts');
+const importFileInput = document.getElementById('import-shortcuts-file');
+if (btnImportShortcuts && importFileInput) {
+  btnImportShortcuts.addEventListener('click', function() {
+    importFileInput.click();
+  });
+
+  importFileInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      try {
+        const importData = JSON.parse(event.target.result);
+
+        // 验证数据格式
+        if (!importData.shortcuts || !Array.isArray(importData.shortcuts)) {
+          throw new Error('无效的数据格式');
+        }
+
+        // 询问用户是合并还是替换
+        const shouldMerge = confirm('导入模式：\n\n点击「确定」合并数据（保留现有快捷方式）\n点击「取消」替换数据（清空现有快捷方式）');
+
+        if (shouldMerge) {
+          // 合并模式：添加新的快捷方式，跳过重复的ID
+          const existingIds = new Set(shortcuts.map(s => s.id));
+          const newShortcuts = importData.shortcuts.filter(s => !existingIds.has(s.id));
+          shortcuts = shortcuts.concat(newShortcuts);
+          showToast(`已导入 ${newShortcuts.length} 个新快捷方式`);
+        } else {
+          // 替换模式：完全替换
+          shortcuts = importData.shortcuts;
+          showToast(`已导入 ${shortcuts.length} 个快捷方式`);
+        }
+
+        // 导入使用统计数据（如果存在）
+        if (importData.usageStats && window.UsageAnalytics) {
+          window.UsageAnalytics.stats = importData.usageStats;
+          localStorage.setItem(window.UsageAnalytics.STORAGE_KEY, JSON.stringify(importData.usageStats));
+        }
+
+        persistShortcuts();
+        renderLaunchGrid();
+      } catch (err) {
+        alert('导入失败：' + err.message);
+      }
+
+      // 清空文件输入
+      importFileInput.value = '';
+    };
+
+    reader.readAsText(file);
+  });
+}
 
 (function setupShortcutContextMenu() {
   const menu = document.getElementById('shortcut-ctx-menu');

@@ -9,6 +9,7 @@
   <link rel="icon" type="image/png" sizes="48x48" href="https://img.icons8.com/ios-filled/50/888888/sun.png">
   <link rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/96/888888/sun.png">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="enhancements.css">
 </head>
 <body class="light">
 
@@ -91,12 +92,32 @@
   <section class="section view-panel" data-view-panel="tools">
     <div class="section-head section-head--tools">
       <div class="tool-filters" id="tool-filters" role="tablist" aria-label="收藏分类"></div>
-      <button type="button" class="tools-add-link" id="btn-new-shortcut" title="新增快捷方式">
-        <svg class="tools-add-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-          <path d="M12 5v14M5 12h14" />
-        </svg>
-        <span class="tools-add-label">新增</span>
-      </button>
+      <div class="tools-actions">
+        <button type="button" class="tools-sort-btn" id="btn-sort-shortcuts" title="按使用频率排序">
+          <svg class="tools-sort-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M3 6h18M7 12h10M11 18h2" />
+          </svg>
+          <span class="tools-sort-label">排序</span>
+        </button>
+        <button type="button" class="tools-export-btn" id="btn-export-shortcuts" title="导出数据">
+          <svg class="tools-export-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5-5 5 5M12 5v12" />
+          </svg>
+          <span class="tools-export-label">导出</span>
+        </button>
+        <button type="button" class="tools-import-btn" id="btn-import-shortcuts" title="导入数据">
+          <svg class="tools-import-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5 5-5-5M12 3v12" />
+          </svg>
+          <span class="tools-import-label">导入</span>
+        </button>
+        <button type="button" class="tools-add-link" id="btn-new-shortcut" title="新增快捷方式">
+          <svg class="tools-add-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          <span class="tools-add-label">新增</span>
+        </button>
+      </div>
     </div>
     <div id="launch-empty" class="launch-empty hidden">暂无快捷方式 — 点击「新增」或切换到私人模式查看。</div>
     <div class="launch-grid" id="launch-grid" role="navigation" aria-label="快捷方式网格，可拖动调整顺序"></div>
@@ -137,12 +158,25 @@
 
 <div class="mode-toast" id="toast"></div>
 
+<input type="file" id="import-shortcuts-file" accept=".json" style="display: none;" />
+
 <div id="shortcut-ctx-menu" class="shortcut-ctx-menu hidden" role="menu" aria-hidden="true">
   <button type="button" class="shortcut-ctx-item" role="menuitem" data-ctx-action="edit">编辑</button>
   <button type="button" class="shortcut-ctx-item shortcut-ctx-item-danger" role="menuitem" data-ctx-action="delete">删除</button>
 </div>
 
 <button type="button" class="audio-toggle" id="audio-toggle" title="环境音开关">♫</button>
+
+<div class="enhancements-panel">
+  <button type="button" class="enhancement-toggle" id="toggle-smart-theme" data-tooltip="智能主题" title="智能主题">
+    <img src="https://img.icons8.com/ios/50/artificial-intelligence.png" alt="智能主题" class="enhancement-icon" />
+  </button>
+  <button type="button" class="enhancement-toggle" id="toggle-cursor-particles" data-tooltip="光标粒子" title="光标粒子">
+    <img src="https://img.icons8.com/ios/50/sparkling.png" alt="光标粒子" class="enhancement-icon" />
+  </button>
+</div>
+
+<div class="smart-theme-indicator" id="smart-theme-indicator">Auto</div>
 
 <div id="edit-panel" class="edit-panel" aria-hidden="true">
   <div class="edit-panel-backdrop" id="edit-backdrop"></div>
@@ -190,5 +224,42 @@
 </div>
 
 <script src="app.js" defer></script>
+<script src="enhancements.js" defer></script>
+<script>
+  // 增强功能按钮事件监听
+  document.addEventListener('DOMContentLoaded', function() {
+    // 智能主题切换
+    const smartThemeBtn = document.getElementById('toggle-smart-theme');
+    if (smartThemeBtn) {
+      smartThemeBtn.addEventListener('click', function() {
+        if (window.SmartTheme) {
+          window.SmartTheme.toggle();
+          this.classList.toggle('active', window.SmartTheme.enabled);
+          document.getElementById('smart-theme-indicator').classList.toggle('active', window.SmartTheme.enabled);
+        }
+      });
+
+      // 初始状态
+      const enabled = localStorage.getItem('smartThemeEnabled') === 'true';
+      smartThemeBtn.classList.toggle('active', enabled);
+      document.getElementById('smart-theme-indicator').classList.toggle('active', enabled);
+    }
+
+    // 光标粒子切换
+    const particlesBtn = document.getElementById('toggle-cursor-particles');
+    if (particlesBtn) {
+      particlesBtn.addEventListener('click', function() {
+        if (window.CursorParticles) {
+          window.CursorParticles.toggle();
+          this.classList.toggle('active', window.CursorParticles.enabled);
+        }
+      });
+
+      // 初始状态
+      const enabled = localStorage.getItem('cursorParticlesEnabled') === 'true';
+      particlesBtn.classList.toggle('active', enabled);
+    }
+  });
+</script>
 </body>
 </html>

@@ -1,0 +1,431 @@
+/* ═══════════════════════════════════════════
+   Theme Switch Page Enhancements Styles
+   增强功能样式
+   ═══════════════════════════════════════════ */
+
+/* ── 主题切换波纹动画 ── */
+.theme-ripple {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+  z-index: 9998;
+  animation: rippleExpand 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  opacity: 0.8;
+}
+
+@keyframes rippleExpand {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(150);
+    opacity: 0;
+  }
+}
+
+/* ── 快捷方式搜索框 ── */
+.shortcut-search-container {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 15vh;
+  opacity: 0;
+  transition: opacity 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.shortcut-search-container.hidden {
+  display: none;
+}
+
+.shortcut-search-container.visible {
+  opacity: 1;
+}
+
+body.light .shortcut-search-container {
+  background: rgba(242, 239, 233, 0.85);
+}
+
+.shortcut-search-input {
+  width: min(600px, 90vw);
+  padding: 18px 24px;
+  font-family: inherit;
+  font-size: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  transition: border-color 200ms ease, background 400ms ease;
+  outline: none;
+}
+
+.shortcut-search-input:focus {
+  border-color: var(--accent);
+}
+
+.shortcut-search-results {
+  position: absolute;
+  top: calc(15vh + 70px);
+  width: min(600px, 90vw);
+  max-height: 50vh;
+  overflow-y: auto;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  transition: background 400ms ease;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--text);
+  transition: background 150ms ease;
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+.search-result-item:hover {
+  background: var(--surface);
+}
+
+.search-result-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+.search-result-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.search-result-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.search-result-url {
+  font-size: 11px;
+  color: var(--mid);
+  opacity: 0.7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-no-results {
+  padding: 32px 20px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--mid);
+}
+
+/* ── 增强控制面板 ── */
+.enhancements-panel {
+  position: fixed;
+  bottom: 80px;
+  right: 24px;
+  z-index: 1002;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: panelSlideIn 400ms cubic-bezier(0.23, 1, 0.32, 1) 500ms forwards;
+}
+
+@keyframes panelSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.enhancement-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--mid);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 180ms cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  padding: 8px;
+}
+
+.enhancement-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  opacity: 0.6;
+  transition: opacity 180ms ease, filter 180ms ease;
+  filter: brightness(0) saturate(100%) invert(44%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(95%) contrast(88%);
+}
+
+.enhancement-toggle:hover {
+  border-color: var(--mid);
+  color: var(--text);
+  transform: scale(1.1);
+}
+
+.enhancement-toggle:hover .enhancement-icon {
+  opacity: 1;
+  filter: brightness(0) saturate(100%) invert(88%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(95%) contrast(88%);
+}
+
+.enhancement-toggle:active {
+  transform: scale(0.95);
+}
+
+.enhancement-toggle.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+
+.enhancement-toggle.active .enhancement-icon {
+  opacity: 1;
+  filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+}
+
+.enhancement-toggle::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  right: calc(100% + 12px);
+  background: var(--surface);
+  color: var(--text);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+  border: 1px solid var(--line);
+}
+
+.enhancement-toggle:hover::before {
+  opacity: 1;
+}
+
+/* ── 快捷方式卡片增强 ── */
+.launch-tile {
+  transition: all 180ms cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: transform;
+}
+
+.launch-tile:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+body.light .launch-tile:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+/* ── 使用频率指示器 ── */
+.launch-tile[data-usage-count]::after {
+  content: attr(data-usage-count);
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.launch-tile:hover[data-usage-count]::after {
+  opacity: 0.7;
+}
+
+/* ── 天气图标动画 ── */
+.weather-icon {
+  transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.weather-icon:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+
+body.sunny .weather-icon {
+  animation: sunRotate 20s linear infinite;
+}
+
+@keyframes sunRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+body.rain .weather-icon {
+  animation: rainBounce 2s ease-in-out infinite;
+}
+
+@keyframes rainBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+body.snow .weather-icon {
+  animation: snowFloat 3s ease-in-out infinite;
+}
+
+@keyframes snowFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(5deg); }
+}
+
+/* ── 页面切换动画增强 ── */
+.view-panel.active {
+  animation: viewSlideIn 360ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+@keyframes viewSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ── 导航下划线动画增强 ── */
+.nav-item::after {
+  transition: opacity 200ms ease, transform 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.nav-item:hover::after {
+  box-shadow: 0 0 8px currentColor;
+}
+
+/* ── 响应式适配 ── */
+@media (max-width: 768px) {
+  .enhancements-panel {
+    bottom: 70px;
+    right: 14px;
+    gap: 6px;
+  }
+
+  .enhancement-toggle {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    padding: 10px;
+  }
+
+  .enhancement-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .enhancement-toggle::before {
+    display: none;
+  }
+
+  .shortcut-search-container {
+    padding-top: 10vh;
+  }
+
+  .shortcut-search-input {
+    font-size: 16px;
+    padding: 16px 20px;
+  }
+
+  .shortcut-search-results {
+    top: calc(10vh + 65px);
+  }
+}
+
+/* ── 减少动画偏好 ── */
+@media (prefers-reduced-motion: reduce) {
+  .theme-ripple,
+  .launch-tile,
+  .weather-icon,
+  .view-panel.active,
+  .enhancements-panel {
+    animation: none !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+/* ── 智能主题指示器 ── */
+.smart-theme-indicator {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  z-index: 1000;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--mid);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+}
+
+.smart-theme-indicator.active {
+  opacity: 1;
+}
+
+.smart-theme-indicator::before {
+  content: '●';
+  color: var(--accent);
+  margin-right: 6px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@media (max-width: 768px) {
+  .smart-theme-indicator {
+    top: auto;
+    bottom: 120px;
+    left: 14px;
+    font-size: 9px;
+    padding: 5px 10px;
+  }
+}
