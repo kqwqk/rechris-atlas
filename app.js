@@ -2656,3 +2656,31 @@ setInterval(function () {
   }
 })();
 
+// ═══════════════════════════════════════════
+// Dev Log Module Integration
+// ═══════════════════════════════════════════
+
+// Initialize dev log when DOM is ready
+if (typeof initDevLog === 'function') {
+  initDevLog();
+}
+
+// Dev log filter buttons
+const devlogFilters = document.getElementById('devlog-filters');
+if (devlogFilters) {
+  devlogFilters.addEventListener('click', function(e) {
+    const btn = e.target.closest('.devlog-filter-btn');
+    if (!btn) return;
+
+    // Update active state
+    devlogFilters.querySelectorAll('.devlog-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    // Filter timeline
+    const filter = btn.dataset.filter;
+    if (typeof filterDevLog === 'function') {
+      filterDevLog(filter);
+    }
+  });
+}
+

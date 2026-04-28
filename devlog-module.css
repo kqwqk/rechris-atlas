@@ -1,0 +1,325 @@
+/* ═══════════════════════════════════════════
+   Dev Log Module Styles
+   ═══════════════════════════════════════════ */
+
+/* Dev Log Container */
+.devlog-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Filter Buttons */
+.devlog-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.devlog-filter-btn {
+  padding: 6px 16px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.02em;
+}
+
+.devlog-filter-btn:hover {
+  border-color: var(--text);
+  background: var(--surface);
+}
+
+.devlog-filter-btn.active {
+  border-color: var(--text);
+  background: var(--text);
+  color: var(--bg);
+}
+
+/* Timeline */
+.devlog-timeline {
+  position: relative;
+}
+
+/* Month Group */
+.devlog-month {
+  margin-bottom: 48px;
+}
+
+.devlog-month-header {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+
+.devlog-entries {
+  position: relative;
+  padding-left: 32px;
+}
+
+/* Timeline Line */
+.devlog-entries::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--line);
+}
+
+/* Dev Log Entry */
+.devlog-entry {
+  position: relative;
+  margin-bottom: 32px;
+  padding-left: 24px;
+}
+
+.devlog-entry:last-child {
+  margin-bottom: 0;
+}
+
+/* Entry Marker (dot on timeline) */
+.devlog-entry-marker {
+  position: absolute;
+  left: -28px;
+  top: 6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--line);
+  transition: all 0.3s ease;
+}
+
+.devlog-entry:hover .devlog-entry-marker {
+  border-color: var(--text);
+  transform: scale(1.2);
+}
+
+/* High impact entries */
+.devlog-entry[data-impact="high"] .devlog-entry-marker {
+  border-width: 3px;
+  border-color: var(--text);
+}
+
+/* Entry Content */
+.devlog-entry-content {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.devlog-entry:hover .devlog-entry-content {
+  border-color: var(--text);
+  transform: translateX(4px);
+}
+
+/* Entry Header */
+.devlog-entry-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.devlog-entry-date {
+  font-size: 12px;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+}
+
+.devlog-entry-category {
+  display: inline-block;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid var(--line);
+  background: transparent;
+}
+
+/* Category Colors */
+.devlog-entry-category.milestone {
+  border-color: #4a9eff;
+  color: #4a9eff;
+}
+
+.devlog-entry-category.feature {
+  border-color: #28a745;
+  color: #28a745;
+}
+
+.devlog-entry-category.enhancement {
+  border-color: #ffc107;
+  color: #ffc107;
+}
+
+.devlog-entry-category.refactor {
+  border-color: #9b59b6;
+  color: #9b59b6;
+}
+
+.devlog-entry-category.bugfix {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.devlog-entry-category.maintenance {
+  border-color: #6c757d;
+  color: #6c757d;
+}
+
+/* Entry Title */
+.devlog-entry-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+
+/* Entry Description */
+.devlog-entry-description {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+/* Entry Details */
+.devlog-entry-details {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--text-secondary);
+}
+
+.devlog-entry-details li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+}
+
+.devlog-entry-details li::before {
+  content: '·';
+  position: absolute;
+  left: 4px;
+  color: var(--text);
+  font-weight: bold;
+}
+
+/* Entry Tags */
+.devlog-entry-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.devlog-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  font-size: 11px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--text-secondary);
+  letter-spacing: 0.03em;
+}
+
+/* Empty State */
+.devlog-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+}
+
+.devlog-empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+
+.devlog-empty-text {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.devlog-empty-hint {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .devlog-filters {
+    gap: 6px;
+  }
+
+  .devlog-filter-btn {
+    padding: 5px 12px;
+    font-size: 12px;
+  }
+
+  .devlog-entries {
+    padding-left: 24px;
+  }
+
+  .devlog-entry {
+    padding-left: 16px;
+  }
+
+  .devlog-entry-marker {
+    left: -20px;
+    width: 12px;
+    height: 12px;
+  }
+
+  .devlog-entry-content {
+    padding: 16px;
+  }
+
+  .devlog-entry-title {
+    font-size: 16px;
+  }
+
+  .devlog-entry-description {
+    font-size: 13px;
+  }
+
+  .devlog-entry-details {
+    font-size: 12px;
+  }
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.devlog-entry {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.devlog-entry:nth-child(1) { animation-delay: 0.05s; }
+.devlog-entry:nth-child(2) { animation-delay: 0.1s; }
+.devlog-entry:nth-child(3) { animation-delay: 0.15s; }
+.devlog-entry:nth-child(4) { animation-delay: 0.2s; }
+.devlog-entry:nth-child(5) { animation-delay: 0.25s; }
