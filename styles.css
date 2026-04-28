@@ -71,6 +71,15 @@ body.snow {
   --surface: #cbd6e2;
 }
 
+body.twilight {
+  --bg: #2a1f3d;
+  --text: #f5d7b8;
+  --mid: #9b7fa8;
+  --line: #3d2f52;
+  --accent: #ff9966;
+  --surface: #342847;
+}
+
 /* ── Layout ── */
 .page { max-width: 1000px; margin: 0 auto; padding: 20px 80px 80px; position: relative; z-index: 1; }
 

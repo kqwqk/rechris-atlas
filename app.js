@@ -1078,17 +1078,10 @@ const LIFE_RECORDS = [
   }
 ];
 
-const NOW_ITEMS = [
-  { label: '正在设计', value: '把个人启动页扩展成设计师网站' },
-  { label: '正在整理', value: '作品案例、收藏分类和可复用的主题 token' },
-  { label: '正在学习', value: 'AI 工具流、前端交互细节和更耐看的信息布局' }
-];
-
 let siteContent = {
   workCases: WORK_CASES,
   inspirations: INSPIRATION_ITEMS,
-  lifeRecords: LIFE_RECORDS,
-  now: NOW_ITEMS
+  lifeRecords: LIFE_RECORDS
 };
 
 const TOOL_CATEGORIES = [
@@ -1330,8 +1323,7 @@ function applySiteContent(data) {
   siteContent = {
     workCases: Array.isArray(data.workCases) && data.workCases.length ? data.workCases : WORK_CASES,
     inspirations: Array.isArray(data.inspirations) && data.inspirations.length ? data.inspirations : INSPIRATION_ITEMS,
-    lifeRecords: Array.isArray(data.lifeRecords) && data.lifeRecords.length ? data.lifeRecords : LIFE_RECORDS,
-    now: Array.isArray(data.now) && data.now.length ? data.now : NOW_ITEMS
+    lifeRecords: Array.isArray(data.lifeRecords) && data.lifeRecords.length ? data.lifeRecords : LIFE_RECORDS
   };
 }
 
@@ -1405,28 +1397,10 @@ function renderTaggedCards(gridId, items, className, metaKey) {
   });
 }
 
-function renderNowItems() {
-  const list = document.getElementById('now-list');
-  if (!list) return;
-  list.innerHTML = '';
-  siteContent.now.forEach((item) => {
-    const row = document.createElement('div');
-    row.className = 'now-item';
-    const label = document.createElement('span');
-    label.textContent = item.label || '';
-    const value = document.createElement('strong');
-    value.textContent = item.value || '';
-    row.appendChild(label);
-    row.appendChild(value);
-    list.appendChild(row);
-  });
-}
-
 function renderSiteContent() {
   if (document.getElementById('work-grid')) renderWorkCases();
   renderTaggedCards('inspiration-grid', siteContent.inspirations, 'inspiration-card', 'source');
   renderTaggedCards('life-grid', siteContent.lifeRecords, 'life-card', 'meta');
-  renderNowItems();
 }
 
 function setActiveView(view) {
@@ -2681,3 +2655,4 @@ setInterval(function () {
     setMode(mode, { silent: true });
   }
 })();
+

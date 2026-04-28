@@ -10,6 +10,7 @@
   <link rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/96/888888/sun.png">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="enhancements.css">
+  <link rel="stylesheet" href="inspiration-system.css">
 </head>
 <body class="light">
 
@@ -54,7 +55,6 @@
       <button type="button" class="nav-item" data-view="tools">收藏</button>
       <button type="button" class="nav-item" data-view="inspiration">灵感</button>
       <button type="button" class="nav-item" data-view="life">生活</button>
-      <button type="button" class="nav-item" data-view="now">Now</button>
     </nav>
   </header>
 
@@ -128,7 +128,28 @@
       <div class="section-title">灵感收藏</div>
       <div class="section-note">Reference / Notes / Patterns</div>
     </div>
+
+    <div class="inspiration-upload-zone" id="inspiration-upload-zone">
+      <img class="upload-icon" src="https://img.icons8.com/ios/50/upload--v1.png" alt="" />
+      <div class="upload-text">点击或拖拽图片到这里上传</div>
+      <div class="upload-hint">支持 JPG、PNG、GIF，最大 5MB</div>
+      <input type="file" class="upload-file-input" id="inspiration-file-input" accept="image/*" multiple />
+    </div>
+
+    <div class="inspiration-filters" id="inspiration-filters">
+      <span class="filter-label">标签筛选：</span>
+      <div class="filter-tag active" data-tag="all">全部</div>
+    </div>
+
     <div class="inspiration-grid" id="inspiration-grid" aria-label="灵感收藏墙"></div>
+
+    <div class="inspiration-empty" id="inspiration-empty">
+      <div class="inspiration-empty-icon">
+        <img src="https://img.icons8.com/ios/50/000000/image.png" alt="Empty" style="width: 48px; height: 48px; opacity: 0.3;">
+      </div>
+      <div class="inspiration-empty-text">还没有收藏任何灵感</div>
+      <div class="inspiration-empty-hint">上传图片开始建立你的灵感库</div>
+    </div>
   </section>
 
   <section class="section view-panel" data-view-panel="life">
@@ -137,20 +158,6 @@
       <div class="section-note">Reading / Sound / Routine</div>
     </div>
     <div class="life-grid" id="life-grid" aria-label="生活记录"></div>
-  </section>
-
-  <section class="section view-panel" data-view-panel="now">
-    <div class="section-head">
-      <div class="section-title">Now</div>
-      <div class="section-note">Updated from site-content.json</div>
-    </div>
-    <div class="now-panel">
-      <div class="now-copy">
-        <h2>最近的我正在把这个站点变成一个能长期使用的个人系统。</h2>
-        <p>这里不追求完整履历，而是记录当前正在发生的工作、学习和生活节奏。</p>
-      </div>
-      <div class="now-list" id="now-list" aria-label="Now 状态"></div>
-    </div>
   </section>
 
   <div class="footer">静态页面 · <a href="https://icons8.com/icons" target="_blank" rel="noopener noreferrer">图标 Icons8</a> · Open-Meteo · CSS Houdini</div>
@@ -223,8 +230,49 @@
   </div>
 </div>
 
+<div class="inspiration-lightbox" id="inspiration-lightbox">
+  <button class="lightbox-close" id="lightbox-close">×</button>
+  <div class="lightbox-content">
+    <div class="lightbox-image-wrap">
+      <img class="lightbox-image" id="lightbox-image" src="" alt="" />
+    </div>
+    <div class="lightbox-info">
+      <h3 class="lightbox-title" id="lightbox-title">标题</h3>
+      <p class="lightbox-desc" id="lightbox-desc">描述</p>
+      <div class="lightbox-tags" id="lightbox-tags"></div>
+      <div class="lightbox-meta" id="lightbox-meta"></div>
+    </div>
+  </div>
+</div>
+
+<div class="inspiration-edit-panel" id="inspiration-edit-panel">
+  <div class="edit-panel-header">
+    <h3 class="edit-panel-title">编辑灵感</h3>
+    <button class="edit-panel-close" id="edit-panel-close">×</button>
+  </div>
+  <form id="inspiration-edit-form">
+    <div class="edit-form-group">
+      <label class="edit-form-label" for="edit-title">标题</label>
+      <input class="edit-form-input" type="text" id="edit-title" placeholder="为这个灵感起个名字" />
+    </div>
+    <div class="edit-form-group">
+      <label class="edit-form-label" for="edit-desc">描述</label>
+      <textarea class="edit-form-textarea" id="edit-desc" placeholder="记录一些想法或笔记"></textarea>
+    </div>
+    <div class="edit-form-group">
+      <label class="edit-form-label" for="edit-tags">标签（用逗号分隔）</label>
+      <input class="edit-form-input edit-tag-input" type="text" id="edit-tags" placeholder="UI, Color, Layout" />
+    </div>
+    <div class="edit-form-actions">
+      <button type="button" class="edit-btn edit-btn-primary" id="edit-save-btn">保存</button>
+      <button type="button" class="edit-btn edit-btn-danger" id="edit-delete-btn">删除</button>
+    </div>
+  </form>
+</div>
+
 <script src="app.js" defer></script>
 <script src="enhancements.js" defer></script>
+<script src="inspiration-system.js" defer></script>
 <script>
   // 增强功能按钮事件监听
   document.addEventListener('DOMContentLoaded', function() {
