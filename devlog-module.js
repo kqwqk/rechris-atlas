@@ -10,42 +10,59 @@ const DEVLOG_STORAGE_KEY = 'devLogEntries';
  * Initialize Dev Log module
  */
 async function initDevLog() {
+  if (initDevLog.initialized) return;
+  initDevLog.initialized = true;
   await loadDevLogData();
   renderDevLog();
 }
 
-/**
- * Load dev log data from localStorage or site-content.json
- */
-async function loadDevLogData() {
-  // Try localStorage first
+function readStoredDevLog() {
   try {
     const stored = localStorage.getItem(DEVLOG_STORAGE_KEY);
     if (stored) {
-      devLogEntries = JSON.parse(stored);
-      return;
+      const entries = JSON.parse(stored);
+      return Array.isArray(entries) ? entries : [];
     }
   } catch (e) {
     console.error('Failed to load dev log from localStorage:', e);
   }
+  return [];
+}
 
-  // Fallback to site-content.json
+async function fetchFileDevLog() {
   try {
-    const response = await fetch('site-content.json');
+    const response = await fetch('site-content.json', { cache: 'no-cache' });
+    if (!response.ok) return [];
     const data = await response.json();
-
-    if (data.devLog && Array.isArray(data.devLog)) {
-      devLogEntries = data.devLog;
-    } else {
-      // Use default entries if not in JSON
-      devLogEntries = getDefaultDevLogEntries();
-    }
-
-    saveToLocalStorage();
+    return data.devLog && Array.isArray(data.devLog) ? data.devLog : [];
   } catch (error) {
     console.error('Failed to load dev log data:', error);
-    devLogEntries = getDefaultDevLogEntries();
+    return [];
   }
+}
+
+function mergeDevLogEntries(...entryGroups) {
+  const merged = new Map();
+  entryGroups.flat().forEach((entry) => {
+    if (!entry || !entry.id) return;
+    if (!merged.has(entry.id)) {
+      merged.set(entry.id, entry);
+      return;
+    }
+    merged.set(entry.id, { ...merged.get(entry.id), ...entry });
+  });
+  return Array.from(merged.values());
+}
+
+/**
+ * Load dev log data from localStorage and site-content.json.
+ */
+async function loadDevLogData() {
+  const storedEntries = readStoredDevLog();
+  const fileEntries = await fetchFileDevLog();
+  const embeddedEntries = Array.isArray(window.DEVLOG_ENTRIES) ? window.DEVLOG_ENTRIES : [];
+  devLogEntries = mergeDevLogEntries(getDefaultDevLogEntries(), storedEntries, fileEntries, embeddedEntries);
+  saveToLocalStorage();
 }
 
 /**
@@ -207,7 +224,7 @@ function renderDevLogEntry(entry) {
   const impactClass = entry.impact || 'medium';
 
   return `
-    <div class="devlog-entry" data-impact="${impactClass}">
+    <div class="devlog-entry ${entry.details && entry.details.length > 0 ? 'has-details' : ''}" data-impact="${impactClass}">
       <div class="devlog-entry-marker"></div>
       <div class="devlog-entry-content">
         <div class="devlog-entry-header">
@@ -221,12 +238,6 @@ function renderDevLogEntry(entry) {
           <ul class="devlog-entry-details">
             ${entry.details.map(detail => `<li>${escapeHtml(detail)}</li>`).join('')}
           </ul>
-        ` : ''}
-
-        ${entry.tags && entry.tags.length > 0 ? `
-          <div class="devlog-entry-tags">
-            ${entry.tags.map(tag => `<span class="devlog-tag">${escapeHtml(tag)}</span>`).join('')}
-          </div>
         ` : ''}
       </div>
     </div>
@@ -281,3 +292,9 @@ if (typeof module !== 'undefined' && module.exports) {
 // Expose globally
 window.initDevLog = initDevLog;
 window.filterDevLog = filterDevLog;
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initDevLog);
+} else {
+  initDevLog();
+}

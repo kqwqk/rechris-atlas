@@ -2,9 +2,11 @@
 
 /**
  * 开发日志自动生成工具
- * 用法: node add-devlog.js
  *
- * 这个脚本会引导你创建一条新的开发日志记录
+ * 用法 1 (交互式): node add-devlog.js
+ * 用法 2 (命令行): node add-devlog.js --title "标题" --category feature --description "描述" --tags "tag1,tag2" --details "detail1|detail2" --impact high
+ *
+ * 这个脚本支持交互式和命令行两种方式添加开发日志
  */
 
 const fs = require('fs');
@@ -17,6 +19,26 @@ const rl = readline.createInterface({
 });
 
 const SITE_CONTENT_PATH = path.join(__dirname, 'site-content.json');
+const DEVLOG_DATA_PATH = path.join(__dirname, 'devlog-data.js');
+
+// 解析命令行参数
+function parseArgs() {
+  const args = process.argv.slice(2);
+  const params = {};
+
+  for (let i = 0; i < args.length; i++) {
+    if (args[i].startsWith('--')) {
+      const key = args[i].substring(2);
+      const value = args[i + 1];
+      if (value && !value.startsWith('--')) {
+        params[key] = value;
+        i++;
+      }
+    }
+  }
+
+  return params;
+}
 
 // 类别选项
 const CATEGORIES = {
@@ -144,6 +166,7 @@ async function addDevLog(newEntry) {
       JSON.stringify(siteContent, null, 2),
       'utf8'
     );
+    writeDevLogDataModule(siteContent.devLog);
 
     console.log('\n✅ 开发日志已添加！');
     console.log('\n预览:');
@@ -174,6 +197,12 @@ async function addDevLog(newEntry) {
   }
 }
 
+function writeDevLogDataModule(entries) {
+  const payload = Array.isArray(entries) ? entries : [];
+  const content = `window.DEVLOG_ENTRIES = ${JSON.stringify(payload, null, 2)};\n`;
+  fs.writeFileSync(DEVLOG_DATA_PATH, content, 'utf8');
+}
+
 async function main() {
   try {
     const devLogData = await collectDevLogData();
@@ -187,4 +216,62 @@ async function main() {
 }
 
 // 运行主程序
+async function main() {
+  try {
+    const cmdArgs = parseArgs();
+
+    // 如果有命令行参数，使用命令行模式
+    if (Object.keys(cmdArgs).length > 0) {
+      const devLogData = await createFromArgs(cmdArgs);
+      await addDevLog(devLogData);
+    } else {
+      // 否则使用交互式模式
+      const devLogData = await collectDevLogData();
+      await addDevLog(devLogData);
+    }
+  } catch (error) {
+    console.error('❌ 发生错误:', error.message);
+    process.exit(1);
+  } finally {
+    rl.close();
+  }
+}
+
+// 从命令行参数创建日志
+async function createFromArgs(args) {
+  const categoryMap = {
+    'milestone': 'milestone',
+    'feature': 'feature',
+    'enhancement': 'enhancement',
+    'refactor': 'refactor',
+    'bugfix': 'bugfix',
+    'maintenance': 'maintenance'
+  };
+
+  if (!args.title || !args.category || !args.description) {
+    throw new Error('缺少必需参数: --title, --category, --description');
+  }
+
+  const category = categoryMap[args.category];
+  if (!category) {
+    throw new Error('无效的类别: ' + args.category);
+  }
+
+  const tags = args.tags ? args.tags.split(',').map(t => t.trim()).filter(t => t) : [];
+  const details = args.details ? args.details.split('|').map(d => d.trim()).filter(d => d) : [];
+  const impact = args.impact || 'medium';
+  const date = args.date || getCurrentDate();
+
+  return {
+    id: generateId(),
+    date,
+    title: args.title.trim(),
+    category,
+    description: args.description.trim(),
+    tags,
+    details,
+    impact
+  };
+}
+
 main();

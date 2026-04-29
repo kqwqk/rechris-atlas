@@ -1,0 +1,346 @@
+/**
+ * 首页视觉优化样式
+ * Homepage Visual Enhancement Styles
+ */
+
+/* ==================== 欢迎语动画 ==================== */
+
+#greeting {
+  transition: opacity var(--motion-base) ease;
+}
+
+/* 欢迎语淡入动画 */
+@keyframes greetingFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-primary h1 {
+  animation: greetingFadeIn 0.6s ease-out;
+}
+
+/* ==================== 时钟优化 ==================== */
+
+.hero-time {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+/* ==================== 首页排版优化 ==================== */
+
+/* 优化 hero 区域的间距 */
+.hero {
+  padding-bottom: 0;
+}
+
+.hero-primary h1 {
+  margin-bottom: 16px;
+}
+
+.hero-kicker {
+  margin-bottom: 16px;
+}
+
+.hero-copy {
+  margin-bottom: 20px;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+}
+
+/* ==================== 天气卡片优化 ==================== */
+
+.hero-weather {
+  transition: border-color var(--motion-base) ease;
+}
+
+.hero-weather:hover {
+  border-color: var(--text);
+}
+
+.weather-temp {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.weather-desc {
+  letter-spacing: 0.02em;
+}
+
+.weather-meta {
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  color: var(--mid);
+  margin-top: 8px;
+}
+
+/* ==================== 分隔线优化 ==================== */
+
+.divider {
+  margin: 40px 0;
+  opacity: 0.6;
+  transition: opacity var(--motion-base) ease;
+}
+
+.divider:hover {
+  opacity: 1;
+}
+
+/* ==================== 插画区域优化 ==================== */
+
+.about-visual {
+  transition: opacity var(--motion-base) ease;
+}
+
+.about-duck-scene {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: opacity var(--motion-base) ease;
+}
+
+/* 图片加载时的占位 */
+.about-duck-scene[src=""] {
+  opacity: 0;
+  min-height: 400px;
+  background: var(--surface);
+}
+
+/* ==================== 页面加载动画 ==================== */
+
+@keyframes pageLoad {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page {
+  animation: pageLoad 0.4s ease-out;
+}
+
+/* ==================== 卡片悬停优化 ==================== */
+
+/* 统一所有卡片的悬停效果 */
+.launch-item,
+.inspiration-item,
+.life-card {
+  transition: border-color var(--motion-base) ease;
+}
+
+.launch-item:hover,
+.inspiration-item:hover,
+.life-card:hover {
+  border-color: var(--text);
+}
+
+/* ==================== 按钮交互优化 ==================== */
+
+/* 统一按钮的过渡效果 */
+button,
+.button,
+.nav-item,
+.filter-button,
+.life-filter-btn {
+  transition: color var(--motion-base) ease,
+              border-color var(--motion-base) ease,
+              opacity var(--motion-base) ease;
+}
+
+/* 禁用状态 */
+button:disabled,
+.button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ==================== 输入框优化 ==================== */
+
+input,
+textarea,
+select {
+  transition: border-color var(--motion-fast) ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* ==================== 图片懒加载优化 ==================== */
+
+img[loading="lazy"] {
+  opacity: 0;
+  transition: opacity var(--motion-base) ease;
+}
+
+img[loading="lazy"].loaded {
+  opacity: 1;
+}
+
+/* ==================== 滚动优化 ==================== */
+
+/* 平滑滚动 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 滚动条样式（仅 Webkit） */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 0;
+  transition: background var(--motion-base) ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--mid);
+}
+
+/* ==================== 选中文本优化 ==================== */
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+::-moz-selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* ==================== 焦点可见性优化 ==================== */
+
+/* 仅在键盘导航时显示焦点框 */
+:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ==================== 响应式优化 ==================== */
+
+@media (max-width: 768px) {
+  .hero {
+    padding-bottom: 0;
+  }
+
+  .hero-primary h1 {
+    margin-bottom: 12px;
+  }
+
+  .hero-kicker {
+    margin-bottom: 12px;
+  }
+
+  .hero-copy {
+    margin-bottom: 16px;
+  }
+
+  .divider {
+    margin: 32px 0;
+  }
+}
+
+/* ==================== 打印样式优化 ==================== */
+
+@media print {
+  /* 隐藏不必要的元素 */
+  .mode-indicator,
+  .audio-toggle,
+  .enhancements-panel,
+  .smart-theme-indicator,
+  .life-add-fab,
+  button {
+    display: none !important;
+  }
+
+  /* 优化打印布局 */
+  .page {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  /* 确保背景色打印 */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* ==================== 性能优化 ==================== */
+
+/* 使用 GPU 加速的元素 */
+.hero-primary h1,
+.about-duck-scene,
+.launch-item,
+.inspiration-item,
+.life-card {
+  will-change: auto;
+}
+
+/* 减少重绘 */
+.hero-weather,
+.weather-body {
+  contain: layout style;
+}
+
+/* ==================== 无障碍优化 ==================== */
+
+/* 减少动画（用户偏好） */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* 高对比度模式 */
+@media (prefers-contrast: high) {
+  .hero-weather,
+  .launch-item,
+  .inspiration-item,
+  .life-card {
+    border-width: 2px;
+  }
+
+  button,
+  .button {
+    border-bottom-width: 2px;
+  }
+}
+
+/* ==================== 暗色模式优化 ==================== */
+
+@media (prefers-color-scheme: dark) {
+  /* 如果用户系统偏好暗色，可以在这里添加额外优化 */
+}

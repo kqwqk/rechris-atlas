@@ -271,7 +271,7 @@ const TiltEffect = {
     });
 
     document.addEventListener('mouseleave', (e) => {
-      if (e.target.classList.contains('launch-tile')) {
+      if (e.target && e.target.classList && e.target.classList.contains('launch-tile')) {
         e.target.style.transform = '';
       }
     }, true);

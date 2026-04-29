@@ -1,0 +1,888 @@
+/**
+ * 摄影发布系统样式（符合设计规范）
+ * Photo Publishing System Styles
+ */
+
+/* ==================== 摄影发布容器 ==================== */
+
+.life-grid {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 0 40px;
+}
+
+.life-grid[data-filter="all"] {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1px;
+  background: var(--line);
+}
+
+/* ==================== 筛选按钮 ==================== */
+
+.life-filters {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+  padding: 0;
+  max-width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.life-filter-btn {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mid);
+  background: transparent;
+  border: 0;
+  border-bottom: 1.5px solid transparent;
+  padding: 6px 0 7px;
+  cursor: pointer;
+  transition: color var(--motion-base) ease,
+              border-color var(--motion-base) ease;
+}
+
+.life-filter-btn:hover {
+  color: var(--text);
+  border-bottom-color: var(--line);
+}
+
+.life-filter-btn.active {
+  color: var(--text);
+  border-bottom-color: var(--text);
+}
+
+.life-filter-icon {
+  display: none; /* 隐藏 emoji 图标 */
+}
+
+/* ==================== 月份分组 ==================== */
+
+.life-month-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.life-month-title {
+  grid-column: 1 / -1;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--mid);
+  margin-bottom: -4px;
+  padding-left: 0;
+  border-left: none;
+  letter-spacing: 0.05em;
+}
+
+/* ==================== 照片卡片 ==================== */
+
+.life-card {
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  padding: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+  transition: border-color var(--motion-base) ease;
+}
+
+.life-card:hover {
+  border-color: var(--text);
+}
+
+.life-card--photo-only {
+  border: 0;
+}
+
+.life-card--photo-only:hover {
+  border-color: transparent;
+}
+
+.life-card--photo-only .life-card-images-1 .life-card-image {
+  height: clamp(220px, 28vw, 360px);
+}
+
+.life-card--photo-only .life-card-images,
+.life-card--photo-only .life-card-image {
+  background: var(--bg);
+}
+
+/* 卡片头部 */
+.life-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px 0;
+  margin-bottom: 10px;
+}
+
+.life-card-type {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mid);
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.life-card-type-icon {
+  display: none; /* 隐藏 emoji */
+}
+
+.life-card-date {
+  font-size: 10px;
+  color: var(--mid);
+  letter-spacing: 0.05em;
+}
+
+/* 卡片主体 */
+.life-card-body {
+  padding: 0 14px;
+  margin-bottom: 14px;
+}
+
+.life-card-title {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text);
+  margin: 0 0 8px 0;
+  line-height: 1.5;
+}
+
+.life-card-content {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--mid);
+  margin: 0 0 14px 0;
+  white-space: pre-wrap;
+  letter-spacing: 0.02em;
+}
+
+/* 图片网格 */
+.life-card-images {
+  display: grid;
+  gap: 1px;
+  margin-bottom: 0;
+  border-radius: 0;
+  overflow: hidden;
+  background: var(--line);
+}
+
+.life-card-images-1 {
+  grid-template-columns: 1fr;
+}
+
+.life-card-images-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.life-card-images-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.life-card-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+  cursor: pointer;
+  transition: opacity var(--motion-base) ease;
+  border: 0;
+}
+
+.life-card-images-1 .life-card-image {
+  height: clamp(280px, 34vw, 420px);
+}
+
+.life-card-image:hover {
+  opacity: 0.8;
+}
+
+.life-photo-placeholder {
+  display: grid;
+  place-items: center;
+  height: 260px;
+  color: var(--mid);
+  border-bottom: 1px solid var(--line);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+
+/* 标签 */
+.life-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.life-card-tag {
+  font-size: 10px;
+  color: var(--mid);
+  background: transparent;
+  padding: 2px 6px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  letter-spacing: 0.05em;
+  transition: all var(--motion-fast) ease;
+}
+
+.life-card-tag:hover {
+  border-color: var(--text);
+  color: var(--text);
+}
+
+/* 卡片底部 */
+.life-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border-top: 1px solid var(--line);
+}
+
+.life-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 10px;
+  color: var(--mid);
+  letter-spacing: 0.05em;
+}
+
+.life-card-mood {
+  display: none; /* 隐藏 emoji */
+}
+
+.life-card-location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.life-card-location::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'%3E%3C/path%3E%3Ccircle cx='12' cy='10' r='3'%3E%3C/circle%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.6;
+}
+
+.life-card-rating {
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.05em;
+}
+
+.life-card-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.life-card-action-btn {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mid);
+  background: transparent;
+  border: 0;
+  border-bottom: 1.5px solid transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: color var(--motion-base) ease,
+              border-color var(--motion-base) ease;
+}
+
+.life-card-action-btn:hover {
+  color: var(--text);
+  border-bottom-color: var(--line);
+}
+
+.life-card-action-btn[data-action="edit"]::before {
+  content: 'EDIT';
+}
+
+.life-card-action-btn[data-action="delete"]::before {
+  content: 'DELETE';
+}
+
+/* ==================== 空状态 ==================== */
+
+.life-empty {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.life-empty-icon {
+  display: none; /* 隐藏 emoji */
+}
+
+.life-empty-text {
+  font-size: 12px;
+  color: var(--mid);
+  margin-bottom: 24px;
+  letter-spacing: 0.02em;
+}
+
+.life-add-btn {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mid);
+  background: transparent;
+  border: 0;
+  border-bottom: 1.5px solid transparent;
+  padding: 6px 0 7px;
+  cursor: pointer;
+  transition: color var(--motion-base) ease,
+              border-color var(--motion-base) ease;
+}
+
+.life-add-btn:hover {
+  color: var(--text);
+  border-bottom-color: var(--line);
+}
+
+/* ==================== 添加按钮 ==================== */
+
+.life-add-fab {
+  position: fixed;
+  right: 32px;
+  bottom: 32px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mid);
+  background: transparent;
+  border: 0;
+  border-bottom: 1.5px solid transparent;
+  padding: 6px 0 7px;
+  cursor: pointer;
+  transition: color var(--motion-base) ease,
+              border-color var(--motion-base) ease;
+  z-index: 100;
+}
+
+.life-add-fab:hover {
+  color: var(--text);
+  border-bottom-color: var(--line);
+}
+
+.life-add-fab::before {
+  content: 'PUBLISH PHOTO';
+}
+
+/* ==================== 照片详情 ==================== */
+
+body.life-detail-open {
+  overflow: hidden;
+}
+
+.life-detail-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-panel) ease;
+}
+
+.life-detail-panel.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.life-detail-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  border: 0;
+  cursor: pointer;
+}
+
+.life-detail-shell {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+  width: min(1180px, calc(100vw - 48px));
+  max-height: calc(100vh - 48px);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  transform: translateY(12px);
+  transition: transform var(--motion-panel) ease;
+  overflow: hidden;
+}
+
+.life-detail-panel.active .life-detail-shell {
+  transform: translateY(0);
+}
+
+.life-detail-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  color: var(--mid);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  padding: 6px 8px;
+  cursor: pointer;
+  transition: color var(--motion-base) ease,
+              border-color var(--motion-base) ease;
+}
+
+.life-detail-close::before {
+  content: 'CLOSE';
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+
+.life-detail-close:hover {
+  color: var(--text);
+  border-color: var(--text);
+}
+
+.life-detail-media {
+  min-height: min(72vh, 720px);
+  background: #050505;
+  display: grid;
+  place-items: center;
+}
+
+.life-detail-image {
+  width: 100%;
+  height: 100%;
+  max-height: calc(100vh - 48px);
+  object-fit: contain;
+  display: block;
+}
+
+.life-detail-info {
+  padding: 28px 28px 24px;
+  overflow-y: auto;
+}
+
+.life-detail-kicker {
+  font-size: 10px;
+  color: var(--mid);
+  letter-spacing: 0.12em;
+  margin-bottom: 12px;
+}
+
+.life-detail-title {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--text);
+  margin: 0 0 22px;
+}
+
+.life-detail-meta {
+  display: grid;
+  gap: 14px;
+  margin: 0 0 24px;
+}
+
+.life-detail-meta-row {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.life-detail-meta dt {
+  font-size: 10px;
+  color: var(--mid);
+  letter-spacing: 0.12em;
+}
+
+.life-detail-meta dd {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.life-detail-description {
+  margin: 0 0 20px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--mid);
+  white-space: pre-wrap;
+}
+
+.life-detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.life-detail-tag {
+  font-size: 10px;
+  color: var(--mid);
+  border: 1px solid var(--line);
+  padding: 3px 7px;
+  letter-spacing: 0.05em;
+}
+
+/* ==================== 添加/编辑面板 ==================== */
+
+.life-edit-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-panel) ease;
+}
+
+.life-edit-panel.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.life-edit-panel-content {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 0;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  transform: scale(0.95);
+  transition: transform var(--motion-panel) ease;
+}
+
+.life-edit-panel.active .life-edit-panel-content {
+  transform: scale(1);
+}
+
+.life-edit-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.life-edit-panel-title {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.life-edit-panel-close {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mid);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: color var(--motion-base) ease;
+}
+
+.life-edit-panel-close:hover {
+  color: var(--text);
+}
+
+.life-edit-panel-close::before {
+  content: 'CLOSE';
+}
+
+.life-edit-panel-body {
+  padding: 16px;
+}
+
+/* 表单样式 */
+.life-form-group {
+  margin-bottom: 16px;
+}
+
+.life-form-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--mid);
+  margin-bottom: 6px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.life-form-input,
+.life-form-textarea,
+.life-form-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  font-size: 12px;
+  color: var(--text);
+  background: var(--bg);
+  transition: border-color var(--motion-fast) ease;
+  font-family: inherit;
+  letter-spacing: 0.02em;
+}
+
+.life-form-input:focus,
+.life-form-textarea:focus,
+.life-form-select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.life-form-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* 类型选择器 */
+.life-type-selector {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.life-type-option {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mid);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  padding: 12px 8px;
+  cursor: pointer;
+  transition: all var(--motion-fast) ease;
+  text-align: center;
+}
+
+.life-type-option:hover {
+  border-color: var(--text);
+  color: var(--text);
+}
+
+.life-type-option.active {
+  border-color: var(--text);
+  color: var(--text);
+  background: transparent;
+}
+
+.life-type-option-icon {
+  display: none; /* 隐藏 emoji */
+}
+
+.life-type-option-label {
+  display: block;
+}
+
+/* 图片上传 */
+.life-image-upload {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.life-image-preview {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.life-image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.life-image-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 0;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--motion-fast) ease;
+}
+
+.life-image-preview:hover .life-image-remove {
+  opacity: 1;
+}
+
+.life-image-add {
+  width: 100px;
+  height: 100px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: var(--mid);
+  cursor: pointer;
+  transition: all var(--motion-fast) ease;
+}
+
+.life-image-add:hover {
+  border-color: var(--text);
+  color: var(--text);
+}
+
+/* 表单按钮 */
+.life-form-actions {
+  display: flex;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.life-form-btn {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mid);
+  background: transparent;
+  border: 0;
+  border-bottom: 1.5px solid transparent;
+  padding: 6px 0 7px;
+  cursor: pointer;
+  transition: color var(--motion-base) ease,
+              border-color var(--motion-base) ease;
+}
+
+.life-form-btn:hover {
+  color: var(--text);
+  border-bottom-color: var(--line);
+}
+
+.life-form-btn-primary {
+  color: var(--text);
+  border-bottom-color: var(--text);
+}
+
+.life-form-btn-secondary {
+  color: var(--mid);
+}
+
+/* ==================== 响应式设计 ==================== */
+
+@media (max-width: 768px) {
+  .life-filters {
+    padding: 0 16px;
+    gap: 12px;
+  }
+
+  .life-grid {
+    padding: 0 16px 40px;
+  }
+
+  .life-card {
+    padding: 0;
+  }
+
+  .life-type-selector {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .life-type-option {
+    padding: 10px 4px;
+    font-size: 9px;
+  }
+
+  .life-add-fab {
+    right: 20px;
+    bottom: 20px;
+  }
+
+  .life-detail-shell {
+    grid-template-columns: 1fr;
+    width: calc(100vw - 24px);
+    max-height: calc(100vh - 24px);
+  }
+
+  .life-detail-media {
+    min-height: 46vh;
+  }
+
+  .life-detail-image {
+    max-height: 48vh;
+  }
+
+  .life-detail-info {
+    padding: 20px 16px 18px;
+  }
+
+  .life-detail-meta-row {
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .life-edit-panel-content {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .life-edit-panel-header,
+  .life-edit-panel-body {
+    padding: 12px;
+  }
+}
+
+/* ==================== 主题适配 ==================== */
+
+/* 夜间模式 */
+body.night .life-card,
+body.midnight .life-card {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.night .life-card:hover,
+body.midnight .life-card:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+body.night .life-edit-panel-content,
+body.midnight .life-edit-panel-content {
+  background: var(--bg);
+  border-color: rgba(255, 255, 255, 0.1);
+}

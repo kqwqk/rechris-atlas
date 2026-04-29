@@ -355,7 +355,7 @@
   // ── Edit Panel ──
   function openEditPanel(item) {
     editingId = item.id;
-    document.getElementById('edit-title').value = item.title || '';
+    document.getElementById('inspiration-edit-title').value = item.title || '';
     document.getElementById('edit-desc').value = item.description || '';
     document.getElementById('edit-tags').value = item.tags.join(', ');
     editPanel.classList.add('active');
@@ -374,7 +374,7 @@
     const item = inspirations.find(i => i.id === editingId);
     if (!item) return;
 
-    const title = document.getElementById('edit-title').value.trim();
+    const title = document.getElementById('inspiration-edit-title').value.trim();
     const description = document.getElementById('edit-desc').value.trim();
     const tagsInput = document.getElementById('edit-tags').value.trim();
     const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];

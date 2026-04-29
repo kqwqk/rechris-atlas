@@ -893,6 +893,7 @@ function showToast(label) {
   clearTimeout(toast._timeout);
   toast._timeout = setTimeout(() => toast.classList.remove('visible'), 1500);
 }
+window.showToast = showToast;
 
 function updateDots(mode) {
   document.querySelectorAll('.mode-dot').forEach(dot => {
@@ -929,6 +930,7 @@ function setMode(mode, opts) {
   stopAll();
 
   currentMode = mode;
+  window.currentMode = currentMode;
 
   switch(mode) {
     case 'night':
@@ -1400,11 +1402,12 @@ function renderTaggedCards(gridId, items, className, metaKey) {
 function renderSiteContent() {
   if (document.getElementById('work-grid')) renderWorkCases();
   renderTaggedCards('inspiration-grid', siteContent.inspirations, 'inspiration-card', 'source');
-  renderTaggedCards('life-grid', siteContent.lifeRecords, 'life-card', 'meta');
 }
 
 function setActiveView(view) {
   if (!view) return;
+  const targetPanel = document.querySelector(`.view-panel[data-view-panel="${view}"]`);
+  if (targetPanel && targetPanel.hidden) view = 'home';
   activeView = view;
   document.body.classList.toggle('view-home', view === 'home');
   document.querySelectorAll('.nav-item').forEach((btn) => {
@@ -1419,11 +1422,12 @@ function setActiveView(view) {
 }
 
 function setupSiteNavigation() {
-  document.querySelectorAll('.nav-item').forEach((btn) => {
+  const visibleNavItems = Array.from(document.querySelectorAll('.nav-item')).filter((btn) => !btn.hidden);
+  visibleNavItems.forEach((btn) => {
     btn.addEventListener('click', () => setActiveView(btn.dataset.view));
   });
   const hash = (window.location.hash || '').replace(/^#/, '');
-  const views = Array.from(document.querySelectorAll('.nav-item')).map((btn) => btn.dataset.view);
+  const views = visibleNavItems.map((btn) => btn.dataset.view);
   if (hash === 'about' || hash === 'work') setActiveView('home');
   else if (views.includes(hash)) setActiveView(hash);
   else setActiveView('home');
@@ -1537,6 +1541,13 @@ let shortcutsServerPersist = false;
 /** 排序模式：'default' 或 'frequency' */
 let shortcutsSortMode = localStorage.getItem('shortcutsSortMode') || 'default';
 
+function syncGlobalAppState() {
+  window.shortcuts = shortcuts;
+  window.currentMode = currentMode;
+  window.renderLaunchGrid = renderLaunchGrid;
+  window.refreshWeatherIconForTheme = refreshWeatherIconForTheme;
+}
+
 async function fetchShortcutsFromServer() {
   try {
     const res = await fetch('/api/shortcuts', { cache: 'no-store' });
@@ -1585,7 +1596,7 @@ function openAddShortcutPanel() {
   hideShortcutContextMenu();
   shortcutSheetEditId = null;
   shortcutPendingDataUrlAdd = '';
-  const titleEl = document.getElementById('edit-title');
+  const titleEl = document.getElementById('shortcut-edit-title');
   if (titleEl) titleEl.textContent = '新增快捷方式';
   const hintAdd = document.getElementById('edit-hint-add');
   const hintEdit = document.getElementById('edit-hint-edit');
@@ -1615,7 +1626,7 @@ function openEditShortcutPanel(rowId) {
   if (!item) return;
   shortcutSheetEditId = rowId;
   shortcutPendingDataUrlEdit = (item.iconDataUrl || '').trim();
-  const titleEl = document.getElementById('edit-title');
+  const titleEl = document.getElementById('shortcut-edit-title');
   if (titleEl) titleEl.textContent = '编辑快捷方式';
   const hintAdd = document.getElementById('edit-hint-add');
   const hintEdit = document.getElementById('edit-hint-edit');
@@ -1654,6 +1665,7 @@ function persistShortcuts() {
   try {
     localStorage.setItem(STORAGE_SHORTCUTS, JSON.stringify(shortcuts));
   } catch (e) {}
+  syncGlobalAppState();
   if (!shortcutsServerPersist) return;
   void (async function () {
     try {
@@ -1707,6 +1719,7 @@ function renderLaunchGrid() {
   const grid = document.getElementById('launch-grid');
   const empty = document.getElementById('launch-empty');
   if (!grid || !empty) return;
+  syncGlobalAppState();
   renderToolFilters();
   grid.innerHTML = '';
   let list = visibleShortcuts();
@@ -2015,6 +2028,10 @@ function setupShortcutForms() {
 }
 
 function updateClock() {
+  // 已由 DynamicGreeting 类接管，保留此函数以防兼容性问题
+  // 如果 DynamicGreeting 未加载，使用简单版本
+  if (window.dynamicGreeting) return;
+
   const clockEl = document.getElementById('clock');
   const greetEl = document.getElementById('greeting');
   if (!clockEl || !greetEl) return;
@@ -2275,6 +2292,7 @@ function markGeolocationAskedThisSession() {
 }
 
 function renderWeatherFromApi(data, options) {
+  window.lastWeatherData = data;
   const cityLabel = (options && options.cityLabel) || '';
   const tempEl = document.getElementById('weather-temp');
   const descEl = document.getElementById('weather-desc');
@@ -2683,4 +2701,3 @@ if (devlogFilters) {
     }
   });
 }
-

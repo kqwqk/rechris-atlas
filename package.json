@@ -2,7 +2,16 @@
   "name": "theme-switch-page",
   "private": true,
   "description": "Static theme launch page (RTEACB)",
+  "scripts": {
+    "dev": "vite",
+    "build": "node check-photo-assets.js && vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
   "dependencies": {
     "@vercel/kv": "^3.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0",
+    "vite": "^8.0.10"
   }
 }
