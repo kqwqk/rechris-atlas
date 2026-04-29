@@ -76,5 +76,195 @@
       "summary": "收藏有情绪的城市片段和空间细节，作为界面氛围、色彩和叙事节奏的参考。",
       "tags": ["Photo", "City"]
     }
+  ],
+  "devLog": [
+    {
+      "id": "devlog-001",
+      "date": "2026-04-28",
+      "title": "开发日志系统上线",
+      "category": "feature",
+      "description": "实现开发日志主菜单，展示项目功能开发和维护的时间线",
+      "tags": ["开发日志", "时间线", "UI"],
+      "details": [
+        "新增开发日志页面和导航入口",
+        "实现 7 种类别筛选（全部、里程碑、新功能、优化、重构、Bug 修复、维护）",
+        "添加时间线可视化样式，包括时间轴、标记点和悬停动画",
+        "支持按月份分组显示",
+        "数据支持 localStorage 和 JSON 文件双重存储"
+      ],
+      "impact": "medium"
+    },
+    {
+      "id": "devlog-002",
+      "date": "2026-04-28",
+      "title": "移除 Now 模块优化站点结构",
+      "category": "refactor",
+      "description": "简化页面结构，移除冗余的 Now 模块，优化导航体验",
+      "tags": ["重构", "优化"],
+      "details": [
+        "移除 Now 模块相关代码",
+        "更新站点导航结构",
+        "优化页面布局和样式"
+      ],
+      "impact": "low"
+    },
+    {
+      "id": "devlog-003",
+      "date": "2026-04-27",
+      "title": "快捷方式增强功能",
+      "category": "feature",
+      "description": "实现快捷方式排序、导入导出和增强交互功能",
+      "tags": ["快捷方式", "导入导出", "排序"],
+      "details": [
+        "添加按使用频率排序功能",
+        "实现数据导出为 JSON 文件",
+        "支持从 JSON 文件导入快捷方式",
+        "优化拖拽排序体验",
+        "添加批量操作功能"
+      ],
+      "impact": "high"
+    },
+    {
+      "id": "devlog-004",
+      "date": "2026-04-27",
+      "title": "智能主题切换系统",
+      "category": "feature",
+      "description": "实现基于时间和天气的智能主题自动切换",
+      "tags": ["主题", "智能切换", "AI"],
+      "details": [
+        "根据当前时间自动切换主题（白天/夜晚/黄昏）",
+        "集成天气 API，根据天气状况切换主题",
+        "支持手动开关智能模式",
+        "平滑的主题过渡动画",
+        "状态持久化到 localStorage"
+      ],
+      "impact": "high"
+    },
+    {
+      "id": "devlog-005",
+      "date": "2026-04-27",
+      "title": "光标粒子特效",
+      "category": "feature",
+      "description": "添加跟随光标的粒子特效，提升交互趣味性",
+      "tags": ["特效", "交互", "Canvas"],
+      "details": [
+        "实现光标跟随粒子动画",
+        "支持开关控制",
+        "性能优化，避免影响页面流畅度",
+        "适配不同主题的粒子颜色"
+      ],
+      "impact": "medium"
+    },
+    {
+      "id": "devlog-006",
+      "date": "2026-04-26",
+      "title": "灵感收藏系统",
+      "category": "feature",
+      "description": "实现图片上传、标签管理、灯箱预览的灵感收藏功能",
+      "tags": ["灵感", "IndexedDB", "图片管理"],
+      "details": [
+        "支持拖拽上传图片",
+        "使用 IndexedDB 本地存储图片数据",
+        "标签筛选和搜索功能",
+        "灯箱预览和编辑功能",
+        "支持批量删除和导出"
+      ],
+      "impact": "high"
+    },
+    {
+      "id": "devlog-007",
+      "date": "2026-04-26",
+      "title": "主题页布局与收藏 UI 优化",
+      "category": "enhancement",
+      "description": "优化主题页面布局，提升收藏系统的用户体验",
+      "tags": ["UI", "布局", "优化"],
+      "details": [
+        "重新设计主题页布局",
+        "优化收藏卡片样式",
+        "改进响应式设计",
+        "提升移动端体验",
+        "统一视觉风格"
+      ],
+      "impact": "medium"
+    },
+    {
+      "id": "devlog-008",
+      "date": "2026-04-26",
+      "title": "性能与安全优化",
+      "category": "enhancement",
+      "description": "实施性能优化和安全加固措施",
+      "tags": ["性能", "安全", "CSP"],
+      "details": [
+        "添加 Content Security Policy (CSP) 头",
+        "实现资源缓存策略",
+        "优化图片加载性能",
+        "添加安全响应头（X-Frame-Options, X-Content-Type-Options）",
+        "优化 JavaScript 执行性能"
+      ],
+      "impact": "high"
+    },
+    {
+      "id": "devlog-009",
+      "date": "2026-04-26",
+      "title": "站点内容与插画资源",
+      "category": "feature",
+      "description": "添加站点内容管理和自定义插画资源",
+      "tags": ["内容", "插画", "资源"],
+      "details": [
+        "创建 site-content.json 内容配置文件",
+        "添加自定义插画资源",
+        "实现内容动态加载",
+        "支持多语言内容配置"
+      ],
+      "impact": "medium"
+    },
+    {
+      "id": "devlog-010",
+      "date": "2026-04-10",
+      "title": "主题启动页完整功能",
+      "category": "milestone",
+      "description": "完成主题启动页的核心功能开发",
+      "tags": ["里程碑", "主题", "启动页"],
+      "details": [
+        "实现 6 种主题模式（白昼/晴朗/夜色/月光/雨天/雪天）",
+        "Canvas 特效系统（星空、月亮、雨、雪、落叶）",
+        "天气 API 集成（Open-Meteo）",
+        "快捷方式 CRUD 功能",
+        "键盘快捷键支持（D/S/N/M/R/W）",
+        "环境音效（森林音）"
+      ],
+      "impact": "high"
+    },
+    {
+      "id": "devlog-011",
+      "date": "2026-04-10",
+      "title": "Vercel 部署配置",
+      "category": "feature",
+      "description": "配置 Vercel 部署环境和优化设置",
+      "tags": ["部署", "Vercel", "配置"],
+      "details": [
+        "创建 vercel.json 配置文件",
+        "配置 CDN 缓存策略",
+        "设置安全响应头",
+        "配置 Clean URLs",
+        "优化静态资源加载"
+      ],
+      "impact": "medium"
+    },
+    {
+      "id": "devlog-012",
+      "date": "2026-04-03",
+      "title": "项目初始化",
+      "category": "milestone",
+      "description": "从 theme-switch.pages.dev 导入初始项目代码",
+      "tags": ["里程碑", "初始化"],
+      "details": [
+        "导入基础 HTML/CSS/JavaScript 代码",
+        "建立项目文件结构",
+        "初始化 Git 仓库",
+        "配置基础开发环境"
+      ],
+      "impact": "high"
+    }
   ]
 }

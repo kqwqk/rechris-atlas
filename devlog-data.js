@@ -1,0 +1,465 @@
+window.DEVLOG_ENTRIES = [
+  {
+    "id": "devlog-1777465702046",
+    "date": "2026-04-29",
+    "title": "收紧开发日志条目边距",
+    "category": "enhancement",
+    "description": "移除标签展示后，优化开发日志条目内部和条目之间的下边距，让时间线更紧凑。",
+    "tags": [
+      "开发日志",
+      "间距",
+      "界面优化"
+    ],
+    "details": [
+      "缩小日志条目之间的距离",
+      "收紧卡片内边距与详情列表下边距",
+      "为有详情的日志增加状态类以精确控制留白"
+    ],
+    "impact": "low"
+  },
+  {
+    "id": "devlog-1777465615947",
+    "date": "2026-04-29",
+    "title": "修复部署照片路径",
+    "category": "bugfix",
+    "description": "修正摄影页照片数据引用不存在文件的问题，改为引用 assets/photos 中真实存在的图片，并增加资源路径检查。",
+    "tags": [
+      "摄影",
+      "部署",
+      "图片路径"
+    ],
+    "details": [
+      "photo-records-data.js 改为真实 DSC 文件路径",
+      "新增照片资源检查脚本避免缺失图片进入构建",
+      "构建流程加入图片路径校验"
+    ],
+    "impact": "medium"
+  },
+  {
+    "id": "devlog-1777465469534",
+    "date": "2026-04-29",
+    "title": "隐藏开发日志标签行",
+    "category": "enhancement",
+    "description": "移除开发日志时间线中每条日志底部的标签展示，让日志内容更简洁。",
+    "tags": [
+      "开发日志",
+      "界面优化"
+    ],
+    "details": [
+      "删除日志条目底部 tag 行渲染",
+      "移除对应 tag 样式",
+      "保留数据字段以兼容已有日志结构"
+    ],
+    "impact": "low"
+  },
+  {
+    "id": "devlog-1777464852683",
+    "date": "2026-04-29",
+    "title": "摄影照片改为项目文件存储",
+    "category": "enhancement",
+    "description": "将摄影页照片来源迁移到 assets/photos 文件夹和 photo-records-data.js 数据文件，减少对浏览器 localStorage 的依赖。",
+    "tags": [
+      "摄影",
+      "照片存储",
+      "数据结构"
+    ],
+    "details": [
+      "新增 assets/photos 作为项目内照片目录",
+      "新增 photo-records-data.js 管理照片元数据",
+      "摄影页优先读取项目照片记录并保留本地草稿兼容"
+    ],
+    "impact": "medium"
+  },
+  {
+    "id": "devlog-1777464642969",
+    "date": "2026-04-29",
+    "title": "新增照片详情页",
+    "category": "feature",
+    "description": "为摄影页照片增加点击详情层，集中展示拍摄时间、地点、镜头信息、说明和标签。",
+    "tags": [
+      "摄影",
+      "详情页",
+      "镜头信息"
+    ],
+    "details": [
+      "ALL 照片墙点击照片可打开详情",
+      "发布表单新增拍摄时间和镜头信息字段",
+      "旧示例照片自动补全默认拍摄参数"
+    ],
+    "impact": "medium"
+  },
+  {
+    "id": "devlog-1777464366459",
+    "date": "2026-04-29",
+    "title": "修复摄影页文字覆盖",
+    "category": "bugfix",
+    "description": "移除旧版通用生活内容对摄影页的覆盖，确保 ALL 页面只由照片墙渲染。",
+    "tags": [
+      "摄影",
+      "照片墙",
+      "修复"
+    ],
+    "details": [
+      "停止旧站点内容渲染器写入 life-grid",
+      "保留摄影发布系统对照片流和分类页的控制"
+    ],
+    "impact": "low"
+  },
+  {
+    "id": "devlog-1777464272017",
+    "date": "2026-04-29",
+    "title": "摄影 ALL 视图纯照片化",
+    "category": "enhancement",
+    "description": "优化摄影页 ALL 筛选结果，仅展示照片墙，隐藏月份、标题、说明、标签和操作文字。",
+    "tags": [
+      "摄影",
+      "照片墙",
+      "优化"
+    ],
+    "details": [
+      "ALL 视图改为独立纯照片网格",
+      "无照片的旧记录不再出现在 ALL 中",
+      "分类视图保留照片说明与编辑入口"
+    ],
+    "impact": "low"
+  },
+  {
+    "id": "devlog-1777464126132",
+    "date": "2026-04-29",
+    "title": "摄影发布页改版",
+    "category": "feature",
+    "description": "将生活页面调整为以照片发布为主的摄影页面，并优化照片卡片、分类筛选和发布表单。",
+    "tags": [
+      "摄影",
+      "生活页面",
+      "发布"
+    ],
+    "details": [
+      "导航与页面标题改为摄影发布",
+      "默认内容更换为照片优先的摄影样例",
+      "发布表单要求上传照片并提供摄影分类"
+    ],
+    "impact": "medium"
+  },
+  {
+    "id": "devlog-1777463588889",
+    "date": "2026-04-29",
+    "title": "修复开发日志页运行提示",
+    "category": "bugfix",
+    "description": "修复 file:// 验证时发现的鼠标移出事件报错，保持开发日志页运行干净。",
+    "tags": [
+      "开发日志",
+      "交互",
+      "修复"
+    ],
+    "details": [
+      "为快捷入口 3D 倾斜的 mouseleave 事件增加安全判断"
+    ],
+    "impact": "low"
+  },
+  {
+    "id": "devlog-1777463519248",
+    "date": "2026-04-29",
+    "title": "开发日志页面直写展示",
+    "category": "bugfix",
+    "description": "让开发日志页面直接加载日志数据，避免 file:// 打开时只写 JSON 但页面不显示。",
+    "tags": [
+      "开发日志",
+      "展示",
+      "修复"
+    ],
+    "details": [
+      "新增 devlog-data.js 作为页面直接加载的数据源",
+      "开发日志模块改为自启动并合并内置数据",
+      "后续 add-devlog 会同步更新页面数据"
+    ],
+    "impact": "medium"
+  },
+  {
+    "id": "devlog-1777463369386",
+    "date": "2026-04-29",
+    "title": "临时隐藏灵感页面",
+    "category": "enhancement",
+    "description": "暂时隐藏灵感导航和页面入口，保留代码结构以便后续重新设计。",
+    "tags": [
+      "灵感",
+      "导航",
+      "优化"
+    ],
+    "details": [
+      "隐藏灵感导航按钮与页面面板",
+      "访问旧的 #inspiration 链接时自动回到首页"
+    ],
+    "impact": "low"
+  },
+  {
+    "id": "devlog-1777463272885",
+    "date": "2026-04-29",
+    "title": "Hero 间距调整与日志规则",
+    "category": "enhancement",
+    "description": "将 Hero 下边距归零，并明确后续改动同步补充开发日志。",
+    "tags": [
+      "Hero",
+      "开发日志",
+      "优化"
+    ],
+    "details": [
+      "Hero 区域下边距从 40px 调整为 0px",
+      "后续代码改动同步添加简短开发日志"
+    ],
+    "impact": "low"
+  },
+  {
+    "id": "devlog-1777378909653",
+    "date": "2026-04-28",
+    "title": "完善开发日志系统和历史数据",
+    "category": "enhancement",
+    "description": "补充项目从初始化到现在的完整开发历史，添加自动化工具和使用文档",
+    "tags": [
+      "开发日志",
+      "文档",
+      "自动化"
+    ],
+    "details": [
+      "在 site-content.json 添加 12 条历史开发日志",
+      "创建 add-devlog.js 自动化脚本支持命令行和交互式两种模式",
+      "编写 DEVLOG_GUIDE.md 完整使用指南",
+      "记录所有重要功能和优化的时间线"
+    ],
+    "impact": "medium"
+  },
+  {
+    "id": "devlog-001",
+    "date": "2026-04-28",
+    "title": "开发日志系统上线",
+    "category": "feature",
+    "description": "实现开发日志主菜单，展示项目功能开发和维护的时间线",
+    "tags": [
+      "开发日志",
+      "时间线",
+      "UI"
+    ],
+    "details": [
+      "新增开发日志页面和导航入口",
+      "实现 7 种类别筛选（全部、里程碑、新功能、优化、重构、Bug 修复、维护）",
+      "添加时间线可视化样式，包括时间轴、标记点和悬停动画",
+      "支持按月份分组显示",
+      "数据支持 localStorage 和 JSON 文件双重存储"
+    ],
+    "impact": "medium"
+  },
+  {
+    "id": "devlog-002",
+    "date": "2026-04-28",
+    "title": "移除 Now 模块优化站点结构",
+    "category": "refactor",
+    "description": "简化页面结构，移除冗余的 Now 模块，优化导航体验",
+    "tags": [
+      "重构",
+      "优化"
+    ],
+    "details": [
+      "移除 Now 模块相关代码",
+      "更新站点导航结构",
+      "优化页面布局和样式"
+    ],
+    "impact": "low"
+  },
+  {
+    "id": "devlog-003",
+    "date": "2026-04-27",
+    "title": "快捷方式增强功能",
+    "category": "feature",
+    "description": "实现快捷方式排序、导入导出和增强交互功能",
+    "tags": [
+      "快捷方式",
+      "导入导出",
+      "排序"
+    ],
+    "details": [
+      "添加按使用频率排序功能",
+      "实现数据导出为 JSON 文件",
+      "支持从 JSON 文件导入快捷方式",
+      "优化拖拽排序体验",
+      "添加批量操作功能"
+    ],
+    "impact": "high"
+  },
+  {
+    "id": "devlog-004",
+    "date": "2026-04-27",
+    "title": "智能主题切换系统",
+    "category": "feature",
+    "description": "实现基于时间和天气的智能主题自动切换",
+    "tags": [
+      "主题",
+      "智能切换",
+      "AI"
+    ],
+    "details": [
+      "根据当前时间自动切换主题（白天/夜晚/黄昏）",
+      "集成天气 API，根据天气状况切换主题",
+      "支持手动开关智能模式",
+      "平滑的主题过渡动画",
+      "状态持久化到 localStorage"
+    ],
+    "impact": "high"
+  },
+  {
+    "id": "devlog-005",
+    "date": "2026-04-27",
+    "title": "光标粒子特效",
+    "category": "feature",
+    "description": "添加跟随光标的粒子特效，提升交互趣味性",
+    "tags": [
+      "特效",
+      "交互",
+      "Canvas"
+    ],
+    "details": [
+      "实现光标跟随粒子动画",
+      "支持开关控制",
+      "性能优化，避免影响页面流畅度",
+      "适配不同主题的粒子颜色"
+    ],
+    "impact": "medium"
+  },
+  {
+    "id": "devlog-006",
+    "date": "2026-04-26",
+    "title": "灵感收藏系统",
+    "category": "feature",
+    "description": "实现图片上传、标签管理、灯箱预览的灵感收藏功能",
+    "tags": [
+      "灵感",
+      "IndexedDB",
+      "图片管理"
+    ],
+    "details": [
+      "支持拖拽上传图片",
+      "使用 IndexedDB 本地存储图片数据",
+      "标签筛选和搜索功能",
+      "灯箱预览和编辑功能",
+      "支持批量删除和导出"
+    ],
+    "impact": "high"
+  },
+  {
+    "id": "devlog-007",
+    "date": "2026-04-26",
+    "title": "主题页布局与收藏 UI 优化",
+    "category": "enhancement",
+    "description": "优化主题页面布局，提升收藏系统的用户体验",
+    "tags": [
+      "UI",
+      "布局",
+      "优化"
+    ],
+    "details": [
+      "重新设计主题页布局",
+      "优化收藏卡片样式",
+      "改进响应式设计",
+      "提升移动端体验",
+      "统一视觉风格"
+    ],
+    "impact": "medium"
+  },
+  {
+    "id": "devlog-008",
+    "date": "2026-04-26",
+    "title": "性能与安全优化",
+    "category": "enhancement",
+    "description": "实施性能优化和安全加固措施",
+    "tags": [
+      "性能",
+      "安全",
+      "CSP"
+    ],
+    "details": [
+      "添加 Content Security Policy (CSP) 头",
+      "实现资源缓存策略",
+      "优化图片加载性能",
+      "添加安全响应头（X-Frame-Options, X-Content-Type-Options）",
+      "优化 JavaScript 执行性能"
+    ],
+    "impact": "high"
+  },
+  {
+    "id": "devlog-009",
+    "date": "2026-04-26",
+    "title": "站点内容与插画资源",
+    "category": "feature",
+    "description": "添加站点内容管理和自定义插画资源",
+    "tags": [
+      "内容",
+      "插画",
+      "资源"
+    ],
+    "details": [
+      "创建 site-content.json 内容配置文件",
+      "添加自定义插画资源",
+      "实现内容动态加载",
+      "支持多语言内容配置"
+    ],
+    "impact": "medium"
+  },
+  {
+    "id": "devlog-010",
+    "date": "2026-04-10",
+    "title": "主题启动页完整功能",
+    "category": "milestone",
+    "description": "完成主题启动页的核心功能开发",
+    "tags": [
+      "里程碑",
+      "主题",
+      "启动页"
+    ],
+    "details": [
+      "实现 6 种主题模式（白昼/晴朗/夜色/月光/雨天/雪天）",
+      "Canvas 特效系统（星空、月亮、雨、雪、落叶）",
+      "天气 API 集成（Open-Meteo）",
+      "快捷方式 CRUD 功能",
+      "键盘快捷键支持（D/S/N/M/R/W）",
+      "环境音效（森林音）"
+    ],
+    "impact": "high"
+  },
+  {
+    "id": "devlog-011",
+    "date": "2026-04-10",
+    "title": "Vercel 部署配置",
+    "category": "feature",
+    "description": "配置 Vercel 部署环境和优化设置",
+    "tags": [
+      "部署",
+      "Vercel",
+      "配置"
+    ],
+    "details": [
+      "创建 vercel.json 配置文件",
+      "配置 CDN 缓存策略",
+      "设置安全响应头",
+      "配置 Clean URLs",
+      "优化静态资源加载"
+    ],
+    "impact": "medium"
+  },
+  {
+    "id": "devlog-012",
+    "date": "2026-04-03",
+    "title": "项目初始化",
+    "category": "milestone",
+    "description": "从 theme-switch.pages.dev 导入初始项目代码",
+    "tags": [
+      "里程碑",
+      "初始化"
+    ],
+    "details": [
+      "导入基础 HTML/CSS/JavaScript 代码",
+      "建立项目文件结构",
+      "初始化 Git 仓库",
+      "配置基础开发环境"
+    ],
+    "impact": "high"
+  }
+];
