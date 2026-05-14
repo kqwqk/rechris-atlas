@@ -3,371 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>RECHRIS — UI Designer</title>
+  <title>RECHRIS ATLAS — Design, Photo & Daily Systems</title>
+  <meta name="description" content="RECHRIS ATLAS 是 RECHRIS 的个人图谱：设计作品、摄影发布、工具收藏与开发日志。">
+  <meta name="theme-color" content="#f6f3ed" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#101114" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="%SITE_URL%/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:site_name" content="RECHRIS ATLAS">
+  <meta property="og:title" content="RECHRIS ATLAS — Design, Photo & Daily Systems">
+  <meta property="og:description" content="RECHRIS 的个人图谱：设计作品、摄影发布、工具收藏与开发日志。">
+  <meta property="og:url" content="%SITE_URL%/">
+  <meta property="og:image" content="%SITE_URL%/assets/generated/display/about-duck-day.jpg">
+  <meta property="og:image:alt" content="RECHRIS ATLAS 个人图谱主题插画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RECHRIS ATLAS — Design, Photo & Daily Systems">
+  <meta name="twitter:description" content="RECHRIS 的个人图谱：设计作品、摄影发布、工具收藏与开发日志。">
+  <meta name="twitter:image" content="%SITE_URL%/assets/generated/display/about-duck-day.jpg">
   <link rel="preconnect" href="https://api.open-meteo.com" crossorigin>
   <link rel="preconnect" href="https://geocoding-api.open-meteo.com" crossorigin>
-  <link rel="icon" type="image/png" sizes="48x48" href="https://img.icons8.com/ios-filled/50/888888/sun.png">
-  <link rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/96/888888/sun.png">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="enhancements.css">
-  <link rel="stylesheet" href="inspiration-system.css">
-  <link rel="stylesheet" href="devlog-module.css">
-  <link rel="stylesheet" href="life-records.css">
-  <link rel="stylesheet" href="visual-enhancements.css">
+  <link rel="icon" type="image/svg+xml" href="assets/icons/ui/sun.svg">
+  <link rel="apple-touch-icon" href="assets/icons/ui/apple-touch-icon.svg">
 </head>
 <body class="light">
-
-<div id="moon-overlay">
-  <div class="moon-light-beam"></div>
-  <div class="stars"><canvas id="stars-canvas"></canvas></div>
-  <div class="moon-canvas-wrap">
-    <canvas id="moon-canvas" width="480" height="480"></canvas>
-  </div>
-</div>
-
-<div id="leaves-overlay">
-  <video id="leaves-video" src="assets/leaves.mp4" autoplay muted loop playsinline></video>
-</div>
-
-<div id="rain-overlay">
-  <div class="rain-fog"></div>
-  <canvas id="rain-canvas"></canvas>
-</div>
-
-<div id="snow-overlay">
-  <div class="snow-glow"></div>
-  <canvas id="snow-canvas"></canvas>
-</div>
-
-<audio id="forest-audio" src="assets/forest.mp3" loop preload="auto"></audio>
-
-<div class="mode-indicator">
-  <div class="mode-dot" data-mode="day" title="Day (D)"></div>
-  <div class="mode-dot" data-mode="sunny" title="Sunny (S)"></div>
-  <div class="mode-dot" data-mode="night" title="Night (N)"></div>
-  <div class="mode-dot" data-mode="midnight" title="Moonlight (M)"></div>
-  <div class="mode-dot" data-mode="rain" title="Rainy (R)"></div>
-  <div class="mode-dot" data-mode="snow" title="Snowy (W)"></div>
-</div>
-
-<div class="page">
-  <header class="header">
-    <div class="logo">RECHRIS</div>
-    <nav class="site-nav" aria-label="站点导航">
-      <button type="button" class="nav-item active" data-view="home">首页</button>
-      <button type="button" class="nav-item" data-view="tools">收藏</button>
-      <button type="button" class="nav-item" data-view="inspiration" hidden>灵感</button>
-      <button type="button" class="nav-item" data-view="life">摄影</button>
-      <button type="button" class="nav-item" data-view="devlog">开发日志</button>
-    </nav>
-  </header>
-
-  <section class="hero">
-    <div class="hero-primary">
-      <h1 id="greeting">你好</h1>
-      <p class="hero-kicker">UI Designer · Product Thinking · Daily Systems</p>
-      <p class="hero-copy">把收藏、作品集和生活记录收进同一个安静的界面。白天处理设计协作，夜里收藏灵感，也给日常留一点空气。</p>
-      <p class="hero-time" id="clock" aria-live="polite"></p>
-    </div>
-    <aside class="hero-weather" id="hero-weather" aria-label="天气">
-      <div class="weather-body">
-        <div class="weather-head-row">
-          <div class="weather-icon-wrap" aria-hidden="true">
-            <img class="weather-icon" id="weather-icon" alt="" width="36" height="36" decoding="async" />
-          </div>
-          <div class="weather-text-stack">
-            <div class="weather-temp" id="weather-temp">—</div>
-            <div class="weather-desc" id="weather-desc">加载中…</div>
-          </div>
-        </div>
-        <div class="weather-meta" id="weather-meta"></div>
-      </div>
-    </aside>
-  </section>
-
-  <div class="divider"></div>
-
-  <section class="section view-panel active" data-view-panel="home">
-    <div class="about-visual home-immersive-visual" aria-label="生活在杭州、每天努力工作的 UI 设计师鸭子主题插画">
-      <img class="about-duck-scene" id="about-duck-scene" src="assets/generated/about-duck-day.png" width="1200" height="720" alt="生活在杭州、每天努力工作的 UI 设计师鸭子主题插画" fetchpriority="high" decoding="async">
-    </div>
-  </section>
-
-  <section class="section view-panel" data-view-panel="tools">
-    <div class="section-head section-head--tools">
-      <div class="tool-filters" id="tool-filters" role="tablist" aria-label="收藏分类"></div>
-      <div class="tools-actions">
-        <button type="button" class="ghost-btn privacy-toggle" id="privacy-toggle" aria-pressed="false" title="当前隐藏私人入口">
-          公开模式
-        </button>
-        <button type="button" class="tools-sort-btn" id="btn-sort-shortcuts" title="按使用频率排序">
-          <svg class="tools-sort-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <path d="M3 6h18M7 12h10M11 18h2" />
-          </svg>
-          <span class="tools-sort-label">排序</span>
-        </button>
-        <button type="button" class="tools-export-btn" id="btn-export-shortcuts" title="导出数据">
-          <svg class="tools-export-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5-5 5 5M12 5v12" />
-          </svg>
-          <span class="tools-export-label">导出</span>
-        </button>
-        <button type="button" class="tools-import-btn" id="btn-import-shortcuts" title="导入数据">
-          <svg class="tools-import-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5 5-5-5M12 3v12" />
-          </svg>
-          <span class="tools-import-label">导入</span>
-        </button>
-        <button type="button" class="tools-add-link" id="btn-new-shortcut" title="新增快捷方式">
-          <svg class="tools-add-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <path d="M12 5v14M5 12h14" />
-          </svg>
-          <span class="tools-add-label">新增</span>
-        </button>
-      </div>
-    </div>
-    <div id="launch-empty" class="launch-empty hidden">暂无快捷方式 — 点击「新增」或切换到私人模式查看。</div>
-    <div class="launch-grid" id="launch-grid" role="navigation" aria-label="快捷方式网格，可拖动调整顺序"></div>
-  </section>
-
-  <section class="section view-panel" data-view-panel="inspiration" hidden>
-    <div class="section-head">
-      <div class="section-title">灵感收藏</div>
-      <div class="section-note">Reference / Notes / Patterns</div>
-    </div>
-
-    <div class="inspiration-upload-zone" id="inspiration-upload-zone">
-      <img class="upload-icon" src="https://img.icons8.com/ios/50/upload--v1.png" alt="" />
-      <div class="upload-text">点击或拖拽图片到这里上传</div>
-      <div class="upload-hint">支持 JPG、PNG、GIF，最大 5MB</div>
-      <input type="file" class="upload-file-input" id="inspiration-file-input" accept="image/*" multiple />
-    </div>
-
-    <div class="inspiration-filters" id="inspiration-filters">
-      <span class="filter-label">标签筛选：</span>
-      <div class="filter-tag active" data-tag="all">全部</div>
-    </div>
-
-    <div class="inspiration-grid" id="inspiration-grid" aria-label="灵感收藏墙"></div>
-
-    <div class="inspiration-empty" id="inspiration-empty">
-      <div class="inspiration-empty-icon">
-        <img src="https://img.icons8.com/ios/50/000000/image.png" alt="Empty" style="width: 48px; height: 48px; opacity: 0.3;">
-      </div>
-      <div class="inspiration-empty-text">还没有收藏任何灵感</div>
-      <div class="inspiration-empty-hint">上传图片开始建立你的灵感库</div>
-    </div>
-  </section>
-
-  <section class="section view-panel" data-view-panel="devlog">
-    <div class="section-head">
-      <div class="section-title">开发日志</div>
-      <div class="section-note">Development Timeline / Features / Maintenance</div>
-    </div>
-
-    <div class="devlog-container">
-      <div class="devlog-filters" id="devlog-filters">
-        <button type="button" class="devlog-filter-btn active" data-filter="all">全部</button>
-        <button type="button" class="devlog-filter-btn" data-filter="milestone">里程碑</button>
-        <button type="button" class="devlog-filter-btn" data-filter="feature">新功能</button>
-        <button type="button" class="devlog-filter-btn" data-filter="enhancement">优化</button>
-        <button type="button" class="devlog-filter-btn" data-filter="refactor">重构</button>
-        <button type="button" class="devlog-filter-btn" data-filter="bugfix">Bug 修复</button>
-        <button type="button" class="devlog-filter-btn" data-filter="maintenance">维护</button>
-      </div>
-
-      <div class="devlog-timeline" id="devlog-timeline"></div>
-
-      <div class="devlog-empty hidden" id="devlog-empty">
-        <div class="devlog-empty-icon">📝</div>
-        <div class="devlog-empty-text">暂无开发日志</div>
-        <div class="devlog-empty-hint">开发记录将在这里显示</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section view-panel" data-view-panel="life">
-    <div class="section-head">
-      <div class="section-title">摄影发布</div>
-      <div class="section-note">Photo Journal / Published Frames</div>
-    </div>
-    <div class="life-filters" id="life-filters"></div>
-    <div class="life-grid" id="life-grid" aria-label="摄影发布"></div>
-  </section>
-
-  <div class="footer">静态页面 · <a href="https://icons8.com/icons" target="_blank" rel="noopener noreferrer">图标 Icons8</a> · Open-Meteo · CSS Houdini</div>
-</div>
-
-<div class="mode-toast" id="toast"></div>
-
-<input type="file" id="import-shortcuts-file" accept=".json" style="display: none;" />
-
-<div id="shortcut-ctx-menu" class="shortcut-ctx-menu hidden" role="menu" aria-hidden="true">
-  <button type="button" class="shortcut-ctx-item" role="menuitem" data-ctx-action="edit">编辑</button>
-  <button type="button" class="shortcut-ctx-item shortcut-ctx-item-danger" role="menuitem" data-ctx-action="delete">删除</button>
-</div>
-
-<button type="button" class="audio-toggle" id="audio-toggle" title="环境音开关">♫</button>
-
-<div class="enhancements-panel">
-  <button type="button" class="enhancement-toggle" id="toggle-smart-theme" data-tooltip="智能主题" title="智能主题">
-    <img src="https://img.icons8.com/ios/50/artificial-intelligence.png" alt="智能主题" class="enhancement-icon" />
-  </button>
-  <button type="button" class="enhancement-toggle" id="toggle-cursor-particles" data-tooltip="光标粒子" title="光标粒子">
-    <img src="https://img.icons8.com/ios/50/sparkling.png" alt="光标粒子" class="enhancement-icon" />
-  </button>
-</div>
-
-<div class="smart-theme-indicator" id="smart-theme-indicator">Auto</div>
-
-<div id="edit-panel" class="edit-panel" aria-hidden="true">
-  <div class="edit-panel-backdrop" id="edit-backdrop"></div>
-  <div class="edit-panel-sheet" role="dialog" aria-labelledby="shortcut-edit-title">
-    <div class="edit-panel-header">
-      <h2 id="shortcut-edit-title" class="edit-title">新增快捷方式</h2>
-      <button type="button" class="ghost-btn" id="btn-close-edit">保存</button>
-    </div>
-    <p class="edit-hint" id="edit-hint-add">填写一项新快捷方式。名称、网址必填。远程图标仅使用 <a href="https://icons8.com/icons" target="_blank" rel="noopener noreferrer">Icons8</a> 的 <strong>iOS Filled</strong>（<code>…/ios-filled/96/图标名.png</code>，线面实心单色）；留空则按网址自动匹配。支持 Emoji 或本地上传覆盖。数据保存在 localStorage。</p>
-    <p class="edit-hint hidden" id="edit-hint-edit">修改当前快捷方式。远程图标规则与新增相同：Icons8 iOS Filled，否则按网址匹配。</p>
-
-    <form id="form-shortcut-add" class="shortcut-form" autocomplete="off">
-      <label class="shortcut-form-label" for="sfa-title">名称</label>
-      <input class="shortcut-form-input" type="text" id="sfa-title" placeholder="例如：邮箱" />
-      <label class="shortcut-form-label" for="sfa-url">网址</label>
-      <input class="shortcut-form-input" type="text" id="sfa-url" placeholder="example.com 或 https://…" />
-      <label class="shortcut-form-label" for="sfa-emoji">Emoji 图标</label>
-      <input class="shortcut-form-input" type="text" id="sfa-emoji" placeholder="单个或几个 Emoji" />
-      <label class="shortcut-form-label" for="sfa-iconurl">图片地址（可选，优先于 Emoji）</label>
-      <input class="shortcut-form-input" type="text" id="sfa-iconurl" placeholder="https://img.icons8.com/ios-filled/96/github.png" />
-      <div class="shortcut-form-actions">
-        <input type="file" id="sfa-file" class="file-input-hidden" accept="image/*" />
-        <button type="button" class="ghost-btn" id="sfa-btn-upload">上传图标</button>
-        <button type="button" class="ghost-btn" id="sfa-btn-clear-img">清除自定义图</button>
-      </div>
-    </form>
-
-    <form id="form-shortcut-edit" class="shortcut-form hidden" autocomplete="off">
-      <label class="shortcut-form-label" for="sfe-title">名称</label>
-      <input class="shortcut-form-input" type="text" id="sfe-title" placeholder="例如：邮箱" />
-      <label class="shortcut-form-label" for="sfe-url">网址</label>
-      <input class="shortcut-form-input" type="text" id="sfe-url" placeholder="example.com 或 https://…" />
-      <label class="shortcut-form-label" for="sfe-emoji">Emoji 图标</label>
-      <input class="shortcut-form-input" type="text" id="sfe-emoji" placeholder="单个或几个 Emoji" />
-      <label class="shortcut-form-label" for="sfe-iconurl">图片地址（可选，优先于 Emoji）</label>
-      <input class="shortcut-form-input" type="text" id="sfe-iconurl" placeholder="https://img.icons8.com/ios-filled/96/github.png" />
-      <div class="shortcut-form-actions">
-        <input type="file" id="sfe-file" class="file-input-hidden" accept="image/*" />
-        <button type="button" class="ghost-btn" id="sfe-btn-upload">上传图标</button>
-        <button type="button" class="ghost-btn" id="sfe-btn-clear-img">清除自定义图</button>
-        <button type="button" class="ghost-btn danger" id="sfe-btn-delete">删除此项</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<div class="inspiration-lightbox" id="inspiration-lightbox">
-  <button class="lightbox-close" id="lightbox-close">×</button>
-  <div class="lightbox-content">
-    <div class="lightbox-image-wrap">
-      <img class="lightbox-image" id="lightbox-image" src="" alt="" />
-    </div>
-    <div class="lightbox-info">
-      <h3 class="lightbox-title" id="lightbox-title">标题</h3>
-      <p class="lightbox-desc" id="lightbox-desc">描述</p>
-      <div class="lightbox-tags" id="lightbox-tags"></div>
-      <div class="lightbox-meta" id="lightbox-meta"></div>
-    </div>
-  </div>
-</div>
-
-<div class="inspiration-edit-panel" id="inspiration-edit-panel">
-  <div class="edit-panel-header">
-    <h3 class="edit-panel-title">编辑灵感</h3>
-    <button class="edit-panel-close" id="edit-panel-close">×</button>
-  </div>
-  <form id="inspiration-edit-form">
-    <div class="edit-form-group">
-      <label class="edit-form-label" for="inspiration-edit-title">标题</label>
-      <input class="edit-form-input" type="text" id="inspiration-edit-title" placeholder="为这个灵感起个名字" />
-    </div>
-    <div class="edit-form-group">
-      <label class="edit-form-label" for="edit-desc">描述</label>
-      <textarea class="edit-form-textarea" id="edit-desc" placeholder="记录一些想法或笔记"></textarea>
-    </div>
-    <div class="edit-form-group">
-      <label class="edit-form-label" for="edit-tags">标签（用逗号分隔）</label>
-      <input class="edit-form-input edit-tag-input" type="text" id="edit-tags" placeholder="UI, Color, Layout" />
-    </div>
-    <div class="edit-form-actions">
-      <button type="button" class="edit-btn edit-btn-primary" id="edit-save-btn">保存</button>
-      <button type="button" class="edit-btn edit-btn-danger" id="edit-delete-btn">删除</button>
-    </div>
-  </form>
-</div>
-
-<script src="app.js" defer></script>
-<script src="enhancements.js" defer></script>
-<script src="inspiration-system.js" defer></script>
-<script src="devlog-data.js" defer></script>
-<script src="devlog-module.js" defer></script>
-<script src="photo-records-data.js" defer></script>
-<script src="life-records.js" defer></script>
-<script src="life-record-form.js" defer></script>
-<script src="dynamic-greeting.js" defer></script>
-<script src="image-lazy-loader.js" defer></script>
-<script>
-  // 增强功能按钮事件监听
-  document.addEventListener('DOMContentLoaded', function() {
-    // 智能主题切换
-    const smartThemeBtn = document.getElementById('toggle-smart-theme');
-    if (smartThemeBtn) {
-      smartThemeBtn.addEventListener('click', function() {
-        if (window.SmartTheme) {
-          window.SmartTheme.toggle();
-          this.classList.toggle('active', window.SmartTheme.enabled);
-          document.getElementById('smart-theme-indicator').classList.toggle('active', window.SmartTheme.enabled);
-        }
-      });
-
-      // 初始状态
-      const enabled = localStorage.getItem('smartThemeEnabled') === 'true';
-      smartThemeBtn.classList.toggle('active', enabled);
-      document.getElementById('smart-theme-indicator').classList.toggle('active', enabled);
-    }
-
-    // 光标粒子切换
-    const particlesBtn = document.getElementById('toggle-cursor-particles');
-    if (particlesBtn) {
-      particlesBtn.addEventListener('click', function() {
-        if (window.CursorParticles) {
-          window.CursorParticles.toggle();
-          this.classList.toggle('active', window.CursorParticles.enabled);
-        }
-      });
-
-      // 初始状态
-      const enabled = localStorage.getItem('cursorParticlesEnabled') === 'true';
-      particlesBtn.classList.toggle('active', enabled);
-    }
-
-    // 初始化生活记录系统
-    if (typeof LifeRecordsManager !== 'undefined' && typeof LifeRecordForm !== 'undefined') {
-      window.lifeRecordsManager = new LifeRecordsManager();
-      window.lifeRecordForm = new LifeRecordForm(window.lifeRecordsManager);
-      window.lifeRecordsManager.setFormComponent(window.lifeRecordForm);
-      window.lifeRecordsManager.renderFilters();
-    }
-
-    // 初始化动态欢迎语系统
-    if (typeof DynamicGreeting !== 'undefined') {
-      window.dynamicGreeting = new DynamicGreeting();
-    }
-
-    // 初始化图片懒加载
-    if (typeof ImageLazyLoader !== 'undefined') {
-      window.imageLazyLoader = new ImageLazyLoader();
-    }
-  });
-</script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "RECHRIS ATLAS",
+    "alternateName": "RECHRIS",
+    "jobTitle": "UI Designer",
+    "url": "%SITE_URL%/",
+    "image": "%SITE_URL%/assets/generated/display/about-duck-day.jpg",
+    "knowsAbout": ["UI Design", "Product Design", "Photography", "Frontend"],
+    "sameAs": []
+  }
+  </script>
+  <div id="root"></div>
+  <script type="module" src="./src/main.jsx"></script>
 </body>
 </html>

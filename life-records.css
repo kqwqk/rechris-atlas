@@ -8,7 +8,7 @@
 .life-grid {
   max-width: 1180px;
   margin: 0 auto;
-  padding: 0 0 40px;
+  padding: 0;
 }
 
 .life-grid[data-filter="all"] {
@@ -415,8 +415,8 @@ body.life-detail-open {
 .life-detail-shell {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
-  width: min(1180px, calc(100vw - 48px));
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.55fr);
+  width: min(1280px, calc(100vw - 48px));
   max-height: calc(100vh - 48px);
   background: var(--bg);
   border: 1px solid var(--line);
@@ -433,7 +433,7 @@ body.life-detail-open {
   position: absolute;
   top: 14px;
   right: 14px;
-  z-index: 2;
+  z-index: 5;
   color: var(--mid);
   background: var(--bg);
   border: 1px solid var(--line);
@@ -455,23 +455,162 @@ body.life-detail-open {
 }
 
 .life-detail-media {
+  position: relative;
   min-height: min(72vh, 720px);
   background: #050505;
-  display: grid;
-  place-items: center;
+  overflow: hidden;
 }
 
-.life-detail-image {
+.life-detail-viewport {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+}
+
+.life-detail-preview {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  max-height: calc(100vh - 48px);
   object-fit: contain;
   display: block;
+  transition: opacity var(--motion-panel) ease,
+              filter var(--motion-panel) ease;
+}
+
+.life-detail-preview {
+  filter: blur(18px);
+  opacity: 0.42;
+  transform: scale(1.04);
+}
+
+.life-detail-stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  cursor: grab;
+  will-change: transform;
+  transform-origin: 50% 50%;
+  transition: opacity var(--motion-panel) ease;
+}
+
+.life-detail-stage .life-detail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+.life-detail-stage:active {
+  cursor: grabbing;
+}
+
+.life-detail-viewport.is-loaded .life-detail-stage {
+  opacity: 1;
+}
+
+.life-detail-viewport.is-loaded .life-detail-preview {
+  opacity: 0;
+  filter: blur(8px);
+}
+
+.life-detail-viewport.is-error::after {
+  content: 'IMAGE LOAD FAILED';
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+}
+
+.life-detail-loader {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+  height: 1px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.life-detail-loader[hidden] {
+  display: none;
+}
+
+.life-detail-loader-bar {
+  display: block;
+  width: 46%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.78);
+  animation: life-detail-loading 1.2s ease-in-out infinite;
+}
+
+.life-detail-toolbar {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  z-index: 4;
+  display: flex;
+  gap: 6px;
+  padding: 5px;
+  background: rgba(5, 5, 5, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(16px);
+}
+
+.life-detail-toolbar button {
+  width: 32px;
+  height: 30px;
+  color: rgba(255, 255, 255, 0.82);
+  background: transparent;
+  border: 0;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color var(--motion-base) ease,
+              background var(--motion-base) ease;
+}
+
+.life-detail-toolbar button:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.life-detail-scale {
+  position: absolute;
+  left: 18px;
+  top: 18px;
+  z-index: 4;
+  color: rgba(255, 255, 255, 0.82);
+  background: rgba(5, 5, 5, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 5px 8px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity var(--motion-base) ease,
+              transform var(--motion-base) ease;
+  backdrop-filter: blur(16px);
+}
+
+.life-detail-scale.active {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .life-detail-info {
   padding: 28px 28px 24px;
   overflow-y: auto;
+}
+
+.life-detail-header {
+  margin-bottom: 18px;
 }
 
 .life-detail-kicker {
@@ -486,21 +625,92 @@ body.life-detail-open {
   font-weight: 400;
   line-height: 1.4;
   color: var(--text);
-  margin: 0 0 22px;
+  margin: 0;
+}
+
+.life-detail-summary {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--mid);
+  white-space: pre-wrap;
+}
+
+.life-param-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.life-param-card {
+  min-width: 0;
+  min-height: 86px;
+  display: grid;
+  align-content: space-between;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(127, 127, 127, 0.04);
+}
+
+.life-param-icon {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 10px;
+  letter-spacing: 0;
+}
+
+.life-param-label {
+  font-size: 10px;
+  color: var(--mid);
+  letter-spacing: 0.12em;
+}
+
+.life-param-value {
+  min-width: 0;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.life-detail-section {
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+}
+
+.life-detail-section h4 {
+  margin: 0 0 12px;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
 }
 
 .life-detail-meta {
   display: grid;
-  gap: 14px;
-  margin: 0 0 24px;
+  gap: 0;
+  margin: 0;
 }
 
 .life-detail-meta-row {
   display: grid;
-  grid-template-columns: 88px minmax(0, 1fr);
+  grid-template-columns: 92px minmax(0, 1fr);
   gap: 16px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--line);
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(127, 127, 127, 0.16);
+}
+
+.life-detail-meta-row:last-child {
+  border-bottom: 0;
 }
 
 .life-detail-meta dt {
@@ -517,7 +727,7 @@ body.life-detail-open {
 }
 
 .life-detail-description {
-  margin: 0 0 20px;
+  margin: 0;
   font-size: 13px;
   line-height: 1.8;
   color: var(--mid);
@@ -536,6 +746,16 @@ body.life-detail-open {
   border: 1px solid var(--line);
   padding: 3px 7px;
   letter-spacing: 0.05em;
+}
+
+@keyframes life-detail-loading {
+  0% {
+    transform: translateX(-110%);
+  }
+
+  100% {
+    transform: translateX(250%);
+  }
 }
 
 /* ==================== 添加/编辑面板 ==================== */
@@ -811,7 +1031,7 @@ body.life-detail-open {
   }
 
   .life-grid {
-    padding: 0 16px 40px;
+    padding: 0 16px;
   }
 
   .life-card {
@@ -841,10 +1061,6 @@ body.life-detail-open {
 
   .life-detail-media {
     min-height: 46vh;
-  }
-
-  .life-detail-image {
-    max-height: 48vh;
   }
 
   .life-detail-info {

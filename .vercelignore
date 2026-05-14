@@ -1,0 +1,8 @@
+.DS_Store
+.cursor/
+.claude/
+node_modules/
+dist/
+
+*.md
+package.json.new

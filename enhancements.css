@@ -338,9 +338,13 @@ body.snow .weather-icon {
 /* ── 响应式适配 ── */
 @media (max-width: 768px) {
   .enhancements-panel {
-    bottom: 70px;
-    right: 14px;
+    bottom: max(20px, env(safe-area-inset-bottom, 0px));
+    right: max(14px, env(safe-area-inset-right, 0px));
     gap: 6px;
+  }
+
+  body:not(.view-home) .enhancements-panel {
+    display: none;
   }
 
   .enhancement-toggle {

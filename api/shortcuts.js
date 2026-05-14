@@ -8,8 +8,7 @@
  *
  * 安全（重要）：只要配置了 KV，**务必** 设置 SHORTCUTS_WRITE_SECRET。PUT/POST 需带
  *   Authorization: Bearer <密钥>
- * 未设置 secret 时写入仍被接受（便于本地/预览），**生产环境公网站点请勿长期如此**；不设 secret 的公开部署等同任何人可改 KV 中的列表。
- * 需要彻底禁止匿名写时，请设置密钥并在可信环境（自写脚本/CI、带秘钥的私有客户端）同步，或在前端不调用 persist（仅用 localStorage）。
+ * 未设置 secret 时，服务端默认只读。临时调试需要匿名写入时，显式设置 SHORTCUTS_ALLOW_UNSAFE_WRITE=1。
  */
 const path = require('path');
 const fs = require('fs');
@@ -76,7 +75,10 @@ module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
 
   const hasKv = Boolean(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
-  res.setHeader('X-Server-Persist', hasKv ? '1' : '0');
+  const writeSecret = process.env.SHORTCUTS_WRITE_SECRET;
+  const allowUnsafeWrite = process.env.SHORTCUTS_ALLOW_UNSAFE_WRITE === '1';
+  const canPersist = hasKv && Boolean(writeSecret || allowUnsafeWrite);
+  res.setHeader('X-Server-Persist', canPersist ? '1' : '0');
 
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -108,10 +110,16 @@ module.exports = async (req, res) => {
       res.statusCode = 503;
       return res.end(JSON.stringify({ error: 'KV not configured', hint: 'Add Vercel KV to this project' }));
     }
-    const secret = process.env.SHORTCUTS_WRITE_SECRET;
-    if (secret) {
+    if (!writeSecret && !allowUnsafeWrite) {
+      res.statusCode = 403;
+      return res.end(JSON.stringify({
+        error: 'SHORTCUTS_WRITE_SECRET not configured',
+        hint: 'Set SHORTCUTS_WRITE_SECRET for server writes, or SHORTCUTS_ALLOW_UNSAFE_WRITE=1 for temporary local debugging'
+      }));
+    }
+    if (writeSecret) {
       const auth = req.headers.authorization || '';
-      if (auth !== 'Bearer ' + secret) {
+      if (auth !== 'Bearer ' + writeSecret) {
         res.statusCode = 401;
         return res.end(JSON.stringify({ error: 'Unauthorized' }));
       }

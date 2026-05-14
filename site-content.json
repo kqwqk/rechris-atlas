@@ -123,6 +123,401 @@
   ],
   "devLog": [
     {
+      "id": "devlog-1778759292492",
+      "date": "2026-05-14",
+      "title": "摄影详情页图片质量优化",
+      "category": "enhancement",
+      "description": "详情页改用原图，列表页使用轻量缩略图，平衡速度与画质",
+      "tags": [
+        "摄影模块",
+        "图片优化",
+        "性能优化"
+      ],
+      "details": [
+        "列表页使用 720px 缩略图（thumbs/），从 7.9MB 降至 3.7MB",
+        "详情页直接加载原图（138MB），保证最佳画质",
+        "调整构建配置支持原图复制到 dist/assets/photos/",
+        "更新资源预算至 280MB，构建产物总计 246.8MB"
+      ],
+      "impact": "high"
+    },
+    {
+      "id": "devlog-1778118954574",
+      "date": "2026-05-07",
+      "title": "完成站点性能与稳定性优化",
+      "category": "enhancement",
+      "description": "按优化计划收口收藏数据源、摄影懒加载、动效日志清理和资源体积预算检查。",
+      "tags": [
+        "performance",
+        "shortcuts",
+        "photos",
+        "build"
+      ],
+      "details": [
+        "收藏页改为以项目默认文件作为入口数据源，避免浏览器旧缓存覆盖线上内容",
+        "摄影模块与 Panzoom、EXIF 依赖拆到独立懒加载包，未进入摄影页前不加载",
+        "天气主题动效改为动态加载并统一同步状态，生产环境不再输出调试日志",
+        "构建流程新增收藏数据校验、未使用依赖检查和资源体积预算检查"
+      ],
+      "impact": "medium"
+    },
+    {
+      "id": "devlog-1778071325580",
+      "date": "2026-05-06",
+      "title": "完善收藏编辑弹窗",
+      "category": "bugfix",
+      "description": "修复收藏编辑弹窗位置、阴影和分类不可编辑的问题。",
+      "tags": [
+        "shortcuts",
+        "editor",
+        "category"
+      ],
+      "details": [
+        "编辑弹窗从右侧抽屉改为居中对话框，去掉左侧多余投影",
+        "新增收藏分类选择字段，保存时写入显式 category",
+        "收藏列表优先读取显式分类，旧数据继续使用自动归类兜底",
+        "新增收藏会默认使用当前筛选分类"
+      ],
+      "impact": "medium"
+    },
+    {
+      "id": "devlog-1778069934918",
+      "date": "2026-05-06",
+      "title": "优化深色主题收藏图标着色",
+      "category": "bugfix",
+      "description": "修复 Night、Moonlight、Rainy 深色主题下收藏页单色图标对比度不足的问题。",
+      "tags": [
+        "shortcuts",
+        "icons",
+        "dark-theme"
+      ],
+      "details": [
+        "为 Icons8 单色收藏图标增加识别 class",
+        "仅在 Night、Moonlight、Rainy 深色主题下把单色图标染成浅灰",
+        "保留彩色或自定义图片原色，避免整体反色",
+        "补回收藏图标基础尺寸和键盘焦点样式"
+      ],
+      "impact": "medium"
+    },
+    {
+      "id": "devlog-1778056982988",
+      "date": "2026-05-06",
+      "title": "修复收藏页图标显示",
+      "category": "bugfix",
+      "description": "收藏图标 DOM 存在但视觉不可见的问题已修复，避免被全局懒加载透明样式隐藏。",
+      "tags": [
+        "shortcuts",
+        "icons",
+        "react"
+      ],
+      "details": [
+        "收藏快捷方式图标改为 eager 加载，不再匹配全局 img lazy 透明规则",
+        "保留异步解码与 no-referrer，避免影响外链图标请求",
+        "本地构建、摄影资源检查与站点冒烟检查均通过"
+      ],
+      "impact": "medium"
+    },
+    {
+      "id": "devlog-1778050518001",
+      "date": "2026-05-06",
+      "title": "项目更名为 RECHRIS ATLAS",
+      "category": "maintenance",
+      "description": "统一站点、代码包与部署项目命名，为新的个人图谱品牌做准备。",
+      "tags": [
+        "branding",
+        "vercel",
+        "codex"
+      ],
+      "details": [
+        "站点 SEO、分享卡片和结构化信息改为 RECHRIS ATLAS",
+        "React 顶部品牌和摄影模块说明同步更新",
+        "包名调整为 rechris-atlas，并准备同步 Vercel 与本地目录名称"
+      ],
+      "impact": "medium"
+    },
+    {
+      "id": "devlog-1778048992364",
+      "date": "2026-05-06",
+      "title": "清理 React 重构遗留文件",
+      "category": "maintenance",
+      "description": "删除旧脚本、阶段性文档、测试页面、构建产物和误放的嵌套项目，让项目目录只保留当前 React 站点真源。",
+      "tags": [
+        "清理",
+        "React",
+        "维护"
+      ],
+      "details": [
+        "删除不再加载的 app.js、weather-module.js、devlog-module.js、life-records.js 等 classic script",
+        "删除旧测试页、阶段性总结文档、旧部署脚本和 package.json.new",
+        "删除可重新生成的 dist 目录，并把 dist 与 .cursor 加入 .gitignore",
+        "保留照片资源、React 源码、数据文件、Vibma 插件和开发日志工具",
+        "清理后重新运行照片检查、冒烟检查和 Vite 构建"
+      ],
+      "impact": "medium"
+    },
+    {
+      "id": "devlog-1778048259885",
+      "date": "2026-05-06",
+      "title": "全站 React 重构",
+      "category": "refactor",
+      "description": "将站点从 index.html + classic script 迁移为 React 单入口，统一接管首页、收藏、摄影、开发日志、天气和主题切换。",
+      "tags": [
+        "React",
+        "重构",
+        "架构"
+      ],
+      "details": [
+        "index.html 缩减为 SEO/meta、#root 和 src/main.jsx 入口",
+        "src/main.jsx 统一渲染首页、收藏、摄影、开发日志和天气",
+        "摄影模块改为 React 组件导出，由全站入口挂载",
+        "移除页面对 app.js、weather-module.js、devlog-module.js、life-records.js 等旧脚本的依赖",
+        "冒烟检查新增 React 接管与旧脚本移除约束"
+      ],
+      "impact": "high"
+    },
+    {
+      "id": "devlog-1777607198643",
+      "date": "2026-05-01",
+      "title": "收藏页改为文件真源",
+      "category": "bugfix",
+      "description": "修复线上收藏页与本地不一致的问题，线上默认以项目文件中的收藏数据为准。",
+      "tags": [
+        "收藏",
+        "部署",
+        "数据源"
+      ],
+      "details": [
+        "收藏页启动时优先读取 default-shortcuts.json",
+        "关闭线上 /api/shortcuts 对页面数据的覆盖",
+        "本地编辑后的收藏部署后可与线上保持一致"
+      ],
+      "impact": "medium"
+    },
+    {
+      "id": "devlog-1777606983578",
+      "date": "2026-05-01",
+      "title": "摄影缩略图改为四列",
+      "category": "enhancement",
+      "description": "摄影发布页缩略图改为桌面四列布局，并统一缩略图间距为 1px。",
+      "tags": [
+        "摄影",
+        "缩略图",
+        "布局"
+      ],
+      "details": [
+        "摄影网格改为桌面 4 列固定排布",
+        "缩略图卡片间距统一为 1px",
+        "平板降为 3 列，手机降为 2 列"
+      ],
+      "impact": "low"
+    },
+    {
+      "id": "devlog-1777606629048",
+      "date": "2026-05-01",
+      "title": "摄影筛选条移除",
+      "category": "enhancement",
+      "description": "摄影发布页移除缩略图下方的筛选条，默认直接展示完整照片墙。",
+      "tags": [
+        "摄影",
+        "界面简化",
+        "照片墙"
+      ],
+      "details": [
+        "移除摄影模块中的分类筛选按钮",
+        "摄影页默认直接展示按同步时间排序后的全部照片",
+        "清理对应的筛选状态逻辑"
+      ],
+      "impact": "low"
+    },
+    {
+      "id": "devlog-1777605749588",
+      "date": "2026-05-01",
+      "title": "照片详情说明位置优化",
+      "category": "enhancement",
+      "description": "照片详情面板将说明文字上移到标题下方，取消独立说明分组标题。",
+      "tags": [
+        "摄影",
+        "详情面板",
+        "信息层级"
+      ],
+      "details": [
+        "标题下方直接展示照片说明",
+        "移除右侧面板底部的说明分组标题",
+        "无说明时不再展示占位文案"
+      ],
+      "impact": "low"
+    },
+    {
+      "id": "devlog-1777605524021",
+      "date": "2026-05-01",
+      "title": "摄影默认按同步时间排序",
+      "category": "enhancement",
+      "description": "摄影页面默认将最近同步进项目的照片排在前面。",
+      "tags": [
+        "摄影",
+        "排序",
+        "照片同步"
+      ],
+      "details": [
+        "照片记录新增 publishedAt 用于区分同步时间",
+        "摄影列表优先按 publishedAt/updatedAt/createdAt 倒序展示",
+        "没有同步时间的旧记录按文件记录顺序倒排兜底",
+        "后续 photos:sync 会自动写入同步时间"
+      ],
+      "impact": "medium"
+    },
+    {
+      "id": "devlog-1777605361668",
+      "date": "2026-05-01",
+      "title": "摄影照片批量同步",
+      "category": "enhancement",
+      "description": "同步 photos 目录中的新照片，并移除摄影缩略图区域底部多余留白。",
+      "tags": [
+        "摄影",
+        "照片同步",
+        "布局"
+      ],
+      "details": [
+        "新增 photos:sync 脚本串联预览图生成和照片记录追加",
+        "为 12 张新原图生成预览图并写入 photo-records-data.js",
+        "移除摄影网格底部 40px padding"
+      ],
+      "impact": "medium"
+    },
+    {
+      "id": "devlog-1777604699528",
+      "date": "2026-05-01",
+      "title": "本地文件编辑模式上线",
+      "category": "feature",
+      "description": "在本地开发服务中编辑收藏和照片信息，并直接写回项目文件。",
+      "tags": [
+        "本地编辑",
+        "摄影",
+        "收藏"
+      ],
+      "details": [
+        "Vite 本地接口写入 default-shortcuts.json",
+        "照片详情编辑写入 photo-records-data.js",
+        "线上隐藏收藏新增、导入、导出和编辑删除入口",
+        "本地编辑无需管理员密码"
+      ],
+      "impact": "medium"
+    },
+    {
+      "id": "devlog-1777603659852",
+      "date": "2026-05-01",
+      "title": "摄影信息面板层级精简",
+      "category": "enhancement",
+      "description": "精简照片详情右侧信息面板，减少低价值 EXIF 分组展示",
+      "tags": [
+        "摄影",
+        "信息面板",
+        "体验"
+      ],
+      "details": [
+        "移除拍摄模式、位置信息、标签独立分组",
+        "经纬度直接并入基本信息",
+        "基本信息删除地点和类型条目"
+      ],
+      "impact": "medium"
+    },
+    {
+      "id": "devlog-1777603270651",
+      "date": "2026-05-01",
+      "title": "摄影详情弹框布局优化",
+      "category": "enhancement",
+      "description": "统一摄影缩略图比例，并将照片详情弹框调整为 32px 全屏边距布局",
+      "tags": [
+        "摄影",
+        "布局",
+        "体验"
+      ],
+      "details": [
+        "摄影页缩略图统一为 1:1 正方形裁切",
+        "详情弹框撑满视口并保留 32px 四周间距",
+        "左侧照片查看区域铺满可用空间，照片无法铺满时保持居中显示"
+      ],
+      "impact": "medium"
+    },
+    {
+      "id": "devlog-1777538724370",
+      "date": "2026-04-30",
+      "title": "天气模块从主脚本拆分",
+      "category": "refactor",
+      "description": "将 Open-Meteo 天气与自动主题逻辑从 app.js 拆到独立模块",
+      "tags": [
+        "天气",
+        "模块化",
+        "维护"
+      ],
+      "details": [
+        "新增 weather-module.js 暴露 ThemeWeather 接口",
+        "app.js 通过模块接口刷新天气图标和定时更新",
+        "构建流程复制天气模块并校验加载顺序",
+        "主脚本减少约 420 行天气代码"
+      ],
+      "impact": "medium"
+    },
+    {
+      "id": "devlog-1777538378530",
+      "date": "2026-04-30",
+      "title": "摄影数据模块化与预览图流水线",
+      "category": "refactor",
+      "description": "将摄影记录改为模块导出，并补充照片预览图生成脚本",
+      "tags": [
+        "摄影",
+        "React",
+        "维护"
+      ],
+      "details": [
+        "摄影数据从 window 副作用迁移为 ESM 导出",
+        "React 摄影模块直接导入照片记录",
+        "新增 photos:previews 脚本用于生成照片预览图",
+        "冒烟检查覆盖摄影数据模块化约束"
+      ],
+      "impact": "medium"
+    },
+    {
+      "id": "devlog-1777538103294",
+      "date": "2026-04-30",
+      "title": "P0 维护护栏上线",
+      "category": "maintenance",
+      "description": "收紧构建、开发日志和快捷方式写入的基础安全检查",
+      "tags": [
+        "维护",
+        "构建",
+        "安全"
+      ],
+      "details": [],
+      "impact": "medium"
+    },
+    {
+      "id": "devlog-1777536504173",
+      "date": "2026-04-30",
+      "title": "摄影模块 React 大版本上线",
+      "category": "milestone",
+      "description": "摄影页面完成 React 重构并上线照片详情能力，集成 EXIF 读取、拍摄参数卡片、原图渐进加载和 Panzoom 缩放，同时修复部署后的图片加载、弹框定位和大屏布局问题。",
+      "tags": [
+        "摄影",
+        "React",
+        "EXIF",
+        "Panzoom",
+        "照片详情",
+        "部署"
+      ],
+      "details": [
+        "用 React 接管摄影照片墙和详情弹框",
+        "集成 exifr 读取原图 EXIF 并展示光圈、快门、ISO、焦距参数卡片",
+        "接入 Panzoom 支持 FIT、1:1、滚轮缩放和拖拽查看",
+        "生成并接入预览图，照片墙使用缩略图，详情弹框加载原图",
+        "修复生产构建脚本顺序导致照片为空的问题",
+        "删除公开模式/私人模式入口，简化收藏页模式",
+        "修复缩略图透明、EXIF 对象渲染崩溃、弹框 fixed 定位和 1440px 以上大屏黑边偏移问题",
+        "完成多轮 Vercel 生产部署与线上验证"
+      ],
+      "impact": "high"
+    },
+    {
       "id": "devlog-1777465702046",
       "date": "2026-04-29",
       "title": "收紧开发日志条目边距",

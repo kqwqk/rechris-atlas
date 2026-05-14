@@ -382,6 +382,15 @@ body.view-home .view-panel[data-view-panel="home"] {
   animation: panelEnter var(--motion-panel) var(--ease-out) both;
 }
 
+.panel-loading {
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+  color: var(--mid);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
 @keyframes panelEnter {
   from {
     opacity: 0;
@@ -915,29 +924,6 @@ body.snow #snow-overlay { opacity: 1; }
   transform: translateX(-50%) translateY(0);
 }
 
-/* ── Audio toggle ── */
-.audio-toggle {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-  background: var(--bg);
-  color: var(--mid);
-  font-size: 14px;
-  cursor: pointer;
-  z-index: 1001;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: border-color var(--motion-base) ease, color var(--motion-base) ease, transform var(--motion-fast) var(--ease-out);
-}
-.audio-toggle:hover { border-color: var(--mid); color: var(--text); }
-.audio-toggle:active { transform: scale(var(--press-scale)); }
-.audio-toggle.muted { opacity: 0.4; }
-
 /* ── Launch grid & edit sheet (extension) ── */
 .section-head {
   display: flex;
@@ -1191,7 +1177,22 @@ body.snow #snow-overlay { opacity: 1; }
   height: 16px;
   object-fit: contain;
   border-radius: 3px;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, filter var(--motion-base) ease;
+}
+
+
+
+body.night .launch-icon img.is-monochrome-icon,
+body.midnight .launch-icon img.is-monochrome-icon,
+body.rain .launch-icon img.is-monochrome-icon {
+  filter: brightness(0) invert(92%) brightness(96%) contrast(88%);
+  opacity: 0.9;
+}
+
+body.night .launch-tile:hover .launch-icon img.is-monochrome-icon,
+body.midnight .launch-tile:hover .launch-icon img.is-monochrome-icon,
+body.rain .launch-tile:hover .launch-icon img.is-monochrome-icon {
+  opacity: 1;
 }
 
 .launch-icon img[data-src] {
@@ -1285,6 +1286,10 @@ body.snow #snow-overlay { opacity: 1; }
   position: fixed;
   inset: 0;
   z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
   pointer-events: none;
   opacity: 0;
   transition: opacity var(--motion-drawer) var(--ease-out);
@@ -1298,6 +1303,7 @@ body.snow #snow-overlay { opacity: 1; }
 .edit-panel-backdrop {
   position: absolute;
   inset: 0;
+  border: 0;
   background: rgba(0, 0, 0, 0.5);
 }
 
@@ -1310,21 +1316,21 @@ body.rain .edit-panel-backdrop { background: rgba(30, 35, 42, 0.72); }
 body.snow .edit-panel-backdrop { background: rgba(180, 195, 210, 0.78); }
 
 .edit-panel-sheet {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: min(440px, 100vw);
+  position: relative;
+  z-index: 1;
+  width: min(460px, calc(100vw - 48px));
+  max-height: calc(100dvh - 48px);
   background: var(--bg);
-  border-left: 1px solid var(--line);
-  padding: 28px 22px 48px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 24px 22px 28px;
   overflow-y: auto;
-  transform: translateX(100%);
+  transform: translateY(14px) scale(0.98);
   transition: transform var(--motion-drawer) var(--ease-drawer);
-  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.15);
+  box-shadow: none;
 }
 
-.edit-panel.open .edit-panel-sheet { transform: translateX(0); }
+.edit-panel.open .edit-panel-sheet { transform: translateY(0) scale(1); }
 
 .edit-panel-header {
   display: flex;
@@ -1351,6 +1357,18 @@ body.snow .edit-panel-backdrop { background: rgba(180, 195, 210, 0.78); }
 
 .hidden {
   display: none !important;
+}
+
+.local-edit-only {
+  display: none !important;
+}
+
+body.local-edit-enabled .local-edit-only {
+  display: inline-flex !important;
+}
+
+body.local-edit-enabled .shortcut-ctx-item.local-edit-only {
+  display: flex !important;
 }
 
 .shortcut-form {
@@ -1641,14 +1659,6 @@ body.snow .edit-panel-backdrop { background: rgba(180, 195, 210, 0.78); }
     letter-spacing: 0.06em;
   }
 
-  .audio-toggle {
-    bottom: max(14px, env(safe-area-inset-bottom, 0px));
-    right: max(14px, env(safe-area-inset-right, 0px));
-    width: 44px;
-    height: 44px;
-    font-size: 15px;
-  }
-
   .mode-toast {
     left: max(16px, env(safe-area-inset-left, 0px));
     right: max(16px, env(safe-area-inset-right, 0px));
@@ -1676,9 +1686,14 @@ body.snow .edit-panel-backdrop { background: rgba(180, 195, 210, 0.78); }
     font-size: 14px;
   }
 
+  .edit-panel {
+    align-items: flex-end;
+    padding: 16px;
+  }
+
   .edit-panel-sheet {
     width: 100%;
-    max-width: 100%;
+    max-height: calc(100dvh - 32px);
     padding-top: max(20px, env(safe-area-inset-top, 0px));
     padding-bottom: max(28px, env(safe-area-inset-bottom, 0px));
     padding-left: max(16px, env(safe-area-inset-left, 0px));

@@ -196,23 +196,23 @@ html {
   scroll-behavior: smooth;
 }
 
-/* 滚动条样式（仅 Webkit） */
-::-webkit-scrollbar {
+/* 原生滚动条样式（WebKit 兜底） */
+html:not(.os-ready) ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-::-webkit-scrollbar-track {
+html:not(.os-ready) ::-webkit-scrollbar-track {
   background: transparent;
 }
 
-::-webkit-scrollbar-thumb {
+html:not(.os-ready) ::-webkit-scrollbar-thumb {
   background: var(--line);
   border-radius: 0;
   transition: background var(--motion-base) ease;
 }
 
-::-webkit-scrollbar-thumb:hover {
+html:not(.os-ready) ::-webkit-scrollbar-thumb:hover {
   background: var(--mid);
 }
 
@@ -269,7 +269,6 @@ html {
 @media print {
   /* 隐藏不必要的元素 */
   .mode-indicator,
-  .audio-toggle,
   .enhancements-panel,
   .smart-theme-indicator,
   .life-add-fab,

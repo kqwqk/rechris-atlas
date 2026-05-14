@@ -1,16 +1,26 @@
 {
-  "name": "theme-switch-page",
+  "name": "rechris-atlas",
   "private": true,
-  "description": "Static theme launch page (RTEACB)",
+  "description": "RECHRIS ATLAS personal design, photo, and daily systems site",
   "scripts": {
     "dev": "vite",
-    "build": "node check-photo-assets.js && vite build",
+    "photos:previews": "node scripts/generate-photo-previews.js",
+    "site:images": "node scripts/generate-site-images.js",
+    "photos:enrich": "node scripts/enrich-photo-records.js",
+    "photos:sync": "npm run photos:previews && node scripts/sync-photo-records.js && npm run photos:enrich",
+    "smoke": "node scripts/smoke-check.js",
+    "build": "node check-photo-assets.js && npm run smoke && vite build && node scripts/check-asset-budgets.js",
     "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {
-    "@vercel/kv": "^3.0.0"
+    "@panzoom/panzoom": "^4.6.2",
+    "@vercel/kv": "^3.0.0",
+    "exifr": "^7.1.3",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.1",
     "esbuild": "^0.28.0",
     "vite": "^8.0.10"
   }
