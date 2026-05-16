@@ -48,11 +48,11 @@ export class StarsEffect {
   generateStars() {
     // Star color temperatures
     const colors = [
-      [200, 210, 230],  // cool white
-      [220, 215, 200],  // warm white
-      [170, 195, 240],  // blue-white
-      [240, 225, 180],  // yellow
-      [230, 195, 175],  // orange
+      [200, 210, 230], // cool white
+      [220, 215, 200], // warm white
+      [170, 195, 240], // blue-white
+      [240, 225, 180], // yellow
+      [230, 195, 175] // orange
     ];
 
     // Adjust star count based on performance mode
@@ -63,17 +63,19 @@ export class StarsEffect {
       const isBright = Math.random() < 0.12;
       const c = colors[Math.floor(Math.random() * colors.length)];
       this.stars.push({
-        x: Math.random() * 100,  // percent
-        y: Math.random() * 60,   // percent — upper 60% of sky
-        baseR: isBright ? (1.2 + Math.random() * 1.2) : (0.4 + Math.random() * 0.8),
-        r: c[0], g: c[1], b: c[2],
-        baseAlpha: isBright ? (0.5 + Math.random() * 0.3) : (0.15 + Math.random() * 0.25),
+        x: Math.random() * 100, // percent
+        y: Math.random() * 60, // percent — upper 60% of sky
+        baseR: isBright ? 1.2 + Math.random() * 1.2 : 0.4 + Math.random() * 0.8,
+        r: c[0],
+        g: c[1],
+        b: c[2],
+        baseAlpha: isBright ? 0.5 + Math.random() * 0.3 : 0.15 + Math.random() * 0.25,
         phase: Math.random() * Math.PI * 2,
         speed: 0.3 + Math.random() * 0.8,
-        flickerAmp: isBright ? (0.15 + Math.random() * 0.2) : (0.08 + Math.random() * 0.12),
+        flickerAmp: isBright ? 0.15 + Math.random() * 0.2 : 0.08 + Math.random() * 0.12,
         flashPhase: Math.random() * Math.PI * 2,
         flashSpeed: 0.05 + Math.random() * 0.1,
-        isBright,
+        isBright
       });
     }
   }
@@ -83,7 +85,9 @@ export class StarsEffect {
     if (this.performanceMode === 'high') return 150;
 
     // Auto mode: adjust based on device
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
     const isLowEnd = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
 
     if (isMobile || isLowEnd) return 100;
@@ -101,6 +105,7 @@ export class StarsEffect {
       // Auto-adjust performance mode
       if (this.performanceMode === 'auto') {
         if (this.actualFPS < 45 && this.stars.length > 80) {
+          // eslint-disable-next-line no-console
           if (import.meta.env.DEV) console.log('Stars: Low FPS detected, reducing star count');
           this.stars = this.stars.slice(0, 80);
         }
@@ -112,7 +117,7 @@ export class StarsEffect {
     if (!this.active) return;
 
     const t = time * 0.001; // seconds
-    const dt = this.lastTime ? t - this.lastTime : 0.016;
+    // const dt = this.lastTime ? t - this.lastTime : 0.016;
     this.lastTime = t;
 
     // Performance monitoring
@@ -121,8 +126,8 @@ export class StarsEffect {
     this.ctx.clearRect(0, 0, this.W, this.H);
 
     for (const s of this.stars) {
-      const px = s.x * this.W / 100;
-      const py = s.y * this.H / 100;
+      const px = (s.x * this.W) / 100;
+      const py = (s.y * this.H) / 100;
 
       // Primary oscillation — smooth breathing
       const osc = Math.sin(s.phase + t * s.speed);
@@ -178,7 +183,9 @@ export class StarsEffect {
     if (['auto', 'high', 'low'].includes(mode)) {
       this.performanceMode = mode;
       this.generateStars();
-      if (import.meta.env.DEV) console.log(`Stars performance mode: ${mode}, star count: ${this.stars.length}`);
+      // eslint-disable-next-line no-console
+      if (import.meta.env.DEV)
+        console.log(`Stars performance mode: ${mode}, star count: ${this.stars.length}`);
     }
   }
 

@@ -1,9 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import {
-  MODES,
-  THEME_IMAGE_FILES,
-  VIEWS
-} from './app-constants.js';
+import { useEffect, useState } from 'react';
+import { MODES, THEME_IMAGE_FILES, VIEWS } from './app-constants.js';
 import { formatClock } from './app-utils.js';
 import { useWeather } from './features/weather.js';
 import '../enhancements.css';
@@ -14,7 +10,9 @@ export function SceneOverlays() {
     <>
       <div id="moon-overlay">
         <div className="moon-light-beam" />
-        <div className="stars"><canvas id="stars-canvas" /></div>
+        <div className="stars">
+          <canvas id="stars-canvas" />
+        </div>
         <div className="moon-canvas-wrap">
           <canvas id="moon-canvas" width="480" height="480" />
         </div>
@@ -75,28 +73,46 @@ export function Header({ view, onView }) {
 export function Hero({ mode, setMode, showToast }) {
   const clock = useClock();
   const greeting = useGreeting();
-  const weather = useWeather({ setMode, showToast });
+  const weather = useWeather({ setMode, showToast, mode });
   return (
     <section className="hero">
       <div className="hero-primary">
         <h1 id="greeting">{greeting}</h1>
         <p className="hero-kicker">Design Atlas · Photo Journal · Daily Systems</p>
-        <p className="hero-copy">把收藏、作品集和生活记录收进同一个安静的界面。白天处理设计协作，夜里收藏灵感，也给日常留一点空气。</p>
-        <p className="hero-time" id="clock" aria-live="polite">{clock}</p>
+        <p className="hero-copy">
+          把收藏、作品集和生活记录收进同一个安静的界面。白天处理设计协作，夜里收藏灵感，也给日常留一点空气。
+        </p>
+        <p className="hero-time" id="clock" aria-live="polite">
+          {clock}
+        </p>
       </div>
       <aside className="hero-weather" id="hero-weather" aria-label="天气">
         <div className="weather-body">
           <div className="weather-head-row">
             <div className="weather-icon-wrap" aria-hidden="true">
-              <img className="weather-icon" id="weather-icon" src={weather.icon} alt="" width="36" height="36" decoding="async" />
+              <img
+                className="weather-icon"
+                id="weather-icon"
+                src={weather.icon}
+                alt=""
+                width="36"
+                height="36"
+                decoding="async"
+              />
             </div>
             <div className="weather-text-stack">
-              <div className="weather-temp" id="weather-temp">{weather.temp}</div>
-              <div className="weather-desc" id="weather-desc">{weather.desc}</div>
+              <div className="weather-temp" id="weather-temp">
+                {weather.temp}
+              </div>
+              <div className="weather-desc" id="weather-desc">
+                {weather.desc}
+              </div>
             </div>
           </div>
           <div className="weather-meta" id="weather-meta">
-            <button className="weather-city-trigger" type="button" onClick={weather.changeCity}>{weather.city}</button>
+            <button className="weather-city-trigger" type="button" onClick={weather.changeCity}>
+              {weather.city}
+            </button>
             {weather.meta ? ` · ${weather.meta}` : ''}
           </div>
         </div>
@@ -107,7 +123,10 @@ export function Hero({ mode, setMode, showToast }) {
 
 export function Home({ mode }) {
   return (
-    <div className="about-visual home-immersive-visual" aria-label="生活在杭州、每天努力工作的 UI 设计师主题插画">
+    <div
+      className="about-visual home-immersive-visual"
+      aria-label="生活在杭州、每天努力工作的 UI 设计师主题插画"
+    >
       <img
         className="about-duck-scene"
         id="about-duck-scene"
@@ -132,18 +151,32 @@ export function SectionHead({ title, note }) {
 }
 
 export function EnhancementPanel({ showToast }) {
-  const [particles, setParticles] = useState(() => localStorage.getItem('cursorParticlesEnabled') === 'true');
+  const [particles, setParticles] = useState(
+    () => localStorage.getItem('cursorParticlesEnabled') === 'true'
+  );
   return (
     <div className="enhancements-panel">
-      <button type="button" className="enhancement-toggle" data-tooltip="智能主题" title="智能主题" onClick={() => showToast('智能主题已由天气自动处理')}>
+      <button
+        type="button"
+        className="enhancement-toggle"
+        data-tooltip="智能主题"
+        title="智能主题"
+        onClick={() => showToast('智能主题已由天气自动处理')}
+      >
         <img src="assets/icons/ui/ai.svg" alt="智能主题" className="enhancement-icon" />
       </button>
-      <button type="button" className={`enhancement-toggle ${particles ? 'active' : ''}`} data-tooltip="光标粒子" title="光标粒子" onClick={() => {
-        const next = !particles;
-        setParticles(next);
-        localStorage.setItem('cursorParticlesEnabled', String(next));
-        showToast(next ? '光标粒子已启用' : '光标粒子已关闭');
-      }}>
+      <button
+        type="button"
+        className={`enhancement-toggle ${particles ? 'active' : ''}`}
+        data-tooltip="光标粒子"
+        title="光标粒子"
+        onClick={() => {
+          const next = !particles;
+          setParticles(next);
+          localStorage.setItem('cursorParticlesEnabled', String(next));
+          showToast(next ? '光标粒子已启用' : '光标粒子已关闭');
+        }}
+      >
         <img src="assets/icons/ui/sparkles.svg" alt="光标粒子" className="enhancement-icon" />
       </button>
     </div>

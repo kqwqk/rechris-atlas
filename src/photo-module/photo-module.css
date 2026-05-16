@@ -6,7 +6,7 @@
 }
 
 .photo-card-image,
-.photo-card-image[loading="lazy"] {
+.photo-card-image[loading='lazy'] {
   opacity: 1;
 }
 
@@ -105,8 +105,9 @@
   opacity: 0.42;
   filter: blur(18px);
   transform: scale(1.04);
-  transition: opacity var(--motion-panel) ease,
-              filter var(--motion-panel) ease;
+  transition:
+    opacity var(--motion-panel) ease,
+    filter var(--motion-panel) ease;
 }
 
 .photo-viewer-viewport.is-loaded .photo-viewer-preview {
@@ -285,7 +286,7 @@
   cursor: pointer;
 }
 
-.photo-local-edit-actions button[type="submit"] {
+.photo-local-edit-actions button[type='submit'] {
   background: var(--text);
   color: var(--bg);
   border-color: var(--text);

@@ -48,19 +48,139 @@ export class SnowEffect {
   getLayerConfig(mode) {
     const configs = {
       low: [
-        { count: 20, sizeMin: 3.2, sizeMax: 5.2, speedMin: 1.15, speedMax: 1.9, wobble: 0.65, alphaMin: 0.62, alphaMax: 0.82, driftMin: -0.34, driftMax: 0.34, windWeight: 1.35, detail: 1, branchScale: 1.12, glow: 0 },
-        { count: 50, sizeMin: 1.9, sizeMax: 3.3, speedMin: 0.72, speedMax: 1.28, wobble: 0.45, alphaMin: 0.36, alphaMax: 0.62, driftMin: -0.24, driftMax: 0.24, windWeight: 1.04, detail: 0, branchScale: 0.9, glow: 0 },
+        {
+          count: 20,
+          sizeMin: 3.2,
+          sizeMax: 5.2,
+          speedMin: 1.15,
+          speedMax: 1.9,
+          wobble: 0.65,
+          alphaMin: 0.62,
+          alphaMax: 0.82,
+          driftMin: -0.34,
+          driftMax: 0.34,
+          windWeight: 1.35,
+          detail: 1,
+          branchScale: 1.12,
+          glow: 0
+        },
+        {
+          count: 50,
+          sizeMin: 1.9,
+          sizeMax: 3.3,
+          speedMin: 0.72,
+          speedMax: 1.28,
+          wobble: 0.45,
+          alphaMin: 0.36,
+          alphaMax: 0.62,
+          driftMin: -0.24,
+          driftMax: 0.24,
+          windWeight: 1.04,
+          detail: 0,
+          branchScale: 0.9,
+          glow: 0
+        }
       ],
       medium: [
-        { count: 25, sizeMin: 3.2, sizeMax: 5.2, speedMin: 1.15, speedMax: 1.9, wobble: 0.65, alphaMin: 0.62, alphaMax: 0.82, driftMin: -0.34, driftMax: 0.34, windWeight: 1.35, detail: 2, branchScale: 1.12, glow: 0.1 },
-        { count: 60, sizeMin: 1.9, sizeMax: 3.3, speedMin: 0.72, speedMax: 1.28, wobble: 0.45, alphaMin: 0.36, alphaMax: 0.62, driftMin: -0.24, driftMax: 0.24, windWeight: 1.04, detail: 1, branchScale: 0.9, glow: 0.05 },
-        { count: 100, sizeMin: 0.8, sizeMax: 1.55, speedMin: 0.4, speedMax: 0.9, wobble: 0.24, alphaMin: 0.12, alphaMax: 0.32, driftMin: -0.14, driftMax: 0.15, windWeight: 0.78, detail: 0, branchScale: 0.6, glow: 0 },
+        {
+          count: 25,
+          sizeMin: 3.2,
+          sizeMax: 5.2,
+          speedMin: 1.15,
+          speedMax: 1.9,
+          wobble: 0.65,
+          alphaMin: 0.62,
+          alphaMax: 0.82,
+          driftMin: -0.34,
+          driftMax: 0.34,
+          windWeight: 1.35,
+          detail: 2,
+          branchScale: 1.12,
+          glow: 0.1
+        },
+        {
+          count: 60,
+          sizeMin: 1.9,
+          sizeMax: 3.3,
+          speedMin: 0.72,
+          speedMax: 1.28,
+          wobble: 0.45,
+          alphaMin: 0.36,
+          alphaMax: 0.62,
+          driftMin: -0.24,
+          driftMax: 0.24,
+          windWeight: 1.04,
+          detail: 1,
+          branchScale: 0.9,
+          glow: 0.05
+        },
+        {
+          count: 100,
+          sizeMin: 0.8,
+          sizeMax: 1.55,
+          speedMin: 0.4,
+          speedMax: 0.9,
+          wobble: 0.24,
+          alphaMin: 0.12,
+          alphaMax: 0.32,
+          driftMin: -0.14,
+          driftMax: 0.15,
+          windWeight: 0.78,
+          detail: 0,
+          branchScale: 0.6,
+          glow: 0
+        }
       ],
       high: [
-        { count: 34, sizeMin: 3.2, sizeMax: 5.2, speedMin: 1.15, speedMax: 1.9, wobble: 0.65, alphaMin: 0.62, alphaMax: 0.82, driftMin: -0.34, driftMax: 0.34, windWeight: 1.35, detail: 2, branchScale: 1.12, glow: 0.2 },
-        { count: 84, sizeMin: 1.9, sizeMax: 3.3, speedMin: 0.72, speedMax: 1.28, wobble: 0.45, alphaMin: 0.36, alphaMax: 0.62, driftMin: -0.24, driftMax: 0.24, windWeight: 1.04, detail: 1, branchScale: 0.9, glow: 0.08 },
-        { count: 150, sizeMin: 0.8, sizeMax: 1.55, speedMin: 0.4, speedMax: 0.9, wobble: 0.24, alphaMin: 0.12, alphaMax: 0.32, driftMin: -0.14, driftMax: 0.15, windWeight: 0.78, detail: 0, branchScale: 0.6, glow: 0.02 },
-      ],
+        {
+          count: 34,
+          sizeMin: 3.2,
+          sizeMax: 5.2,
+          speedMin: 1.15,
+          speedMax: 1.9,
+          wobble: 0.65,
+          alphaMin: 0.62,
+          alphaMax: 0.82,
+          driftMin: -0.34,
+          driftMax: 0.34,
+          windWeight: 1.35,
+          detail: 2,
+          branchScale: 1.12,
+          glow: 0.2
+        },
+        {
+          count: 84,
+          sizeMin: 1.9,
+          sizeMax: 3.3,
+          speedMin: 0.72,
+          speedMax: 1.28,
+          wobble: 0.45,
+          alphaMin: 0.36,
+          alphaMax: 0.62,
+          driftMin: -0.24,
+          driftMax: 0.24,
+          windWeight: 1.04,
+          detail: 1,
+          branchScale: 0.9,
+          glow: 0.08
+        },
+        {
+          count: 150,
+          sizeMin: 0.8,
+          sizeMax: 1.55,
+          speedMin: 0.4,
+          speedMax: 0.9,
+          wobble: 0.24,
+          alphaMin: 0.12,
+          alphaMax: 0.32,
+          driftMin: -0.14,
+          driftMax: 0.15,
+          windWeight: 0.78,
+          detail: 0,
+          branchScale: 0.6,
+          glow: 0.02
+        }
+      ]
     };
 
     return configs[mode] || configs.medium;
@@ -86,7 +206,7 @@ export class SnowEffect {
       rotationSpeed: (Math.random() - 0.5) * 0.01,
       detail: layer.detail,
       branchScale: layer.branchScale,
-      glow: layer.glow,
+      glow: layer.glow
     };
   }
 
@@ -95,7 +215,7 @@ export class SnowEffect {
    */
   spawnFlakes() {
     this.flakes = [];
-    this.layers.forEach(layer => {
+    this.layers.forEach((layer) => {
       for (let i = 0; i < layer.count; i++) {
         this.flakes.push(this.createFlake(layer, true));
       }
@@ -231,22 +351,25 @@ export class SnowEffect {
 
       // Reset at bottom
       if (f.y > this.H + f.size * 6) {
-        this.flakes[i] = this.createFlake({
-          count: 1,
-          sizeMin: f.size * 0.85,
-          sizeMax: f.size * 1.05,
-          speedMin: Math.max(0.2, f.speed * 0.92),
-          speedMax: f.speed * 1.08,
-          wobble: f.wobbleAmp,
-          alphaMin: Math.max(0.1, f.alpha * 0.92),
-          alphaMax: Math.min(0.9, f.alpha * 1.05),
-          driftMin: f.baseDrift - 0.05,
-          driftMax: f.baseDrift + 0.05,
-          windWeight: f.windWeight,
-          detail: f.detail,
-          branchScale: f.branchScale,
-          glow: f.glow,
-        }, false);
+        this.flakes[i] = this.createFlake(
+          {
+            count: 1,
+            sizeMin: f.size * 0.85,
+            sizeMax: f.size * 1.05,
+            speedMin: Math.max(0.2, f.speed * 0.92),
+            speedMax: f.speed * 1.08,
+            wobble: f.wobbleAmp,
+            alphaMin: Math.max(0.1, f.alpha * 0.92),
+            alphaMax: Math.min(0.9, f.alpha * 1.05),
+            driftMin: f.baseDrift - 0.05,
+            driftMax: f.baseDrift + 0.05,
+            windWeight: f.windWeight,
+            detail: f.detail,
+            branchScale: f.branchScale,
+            glow: f.glow
+          },
+          false
+        );
         continue;
       }
 
@@ -298,7 +421,9 @@ export class SnowEffect {
         this.spawnFlakes();
       }
 
-      if (import.meta.env.DEV) console.log(`Snow performance mode: ${mode}, flake count: ${this.flakes.length}`);
+      // eslint-disable-next-line no-console
+      if (import.meta.env.DEV)
+        console.log(`Snow performance mode: ${mode}, flake count: ${this.flakes.length}`);
     }
   }
 
@@ -309,7 +434,7 @@ export class SnowEffect {
     return {
       active: this.active,
       flakeCount: this.flakes.length,
-      performanceMode: this.performanceMode,
+      performanceMode: this.performanceMode
     };
   }
 }
@@ -327,7 +452,7 @@ export function createSnowEffect() {
     start: () => snow.start(),
     stop: () => snow.stop(),
     setPerformanceMode: (mode) => snow.setPerformanceMode(mode),
-    getStats: () => snow.getStats(),
+    getStats: () => snow.getStats()
   };
 
   return snow;

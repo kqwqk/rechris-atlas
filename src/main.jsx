@@ -1,11 +1,14 @@
-import React, { Suspense, lazy, useEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import '../styles.css';
 import '../visual-enhancements.css';
 import { MODES, THEME_LOCK_KEY, THEME_STORAGE_KEY, VIEWS } from './app-constants.js';
 import { applyBodyTheme, syncSceneEffects, viewFromHash } from './app-utils.js';
-import { Devlog } from './features/devlog.jsx';
-import { Shortcuts } from './features/shortcuts.jsx';
+import { ErrorBoundary } from './components/ErrorBoundary.jsx';
+import { trackPageView, trackEvent } from './utils/performance.js';
+import { updatePageMeta } from './utils/seo.js';
 import {
   EnhancementPanel,
   Header,
@@ -17,6 +20,10 @@ import {
 } from './layout.jsx';
 
 const PhotoJournalApp = lazy(() => import('./photo-module/main.jsx'));
+const Devlog = lazy(() => import('./features/devlog.jsx').then((m) => ({ default: m.Devlog })));
+const Shortcuts = lazy(() =>
+  import('./features/shortcuts.jsx').then((m) => ({ default: m.Shortcuts }))
+);
 
 function App() {
   const [view, setView] = useState(() => viewFromHash());
@@ -46,6 +53,13 @@ function App() {
     if (window.location.hash.replace(/^#/, '') !== view) {
       window.history.replaceState(null, '', `#${view}`);
     }
+
+    // 更新页面元数据
+    updatePageMeta(view);
+
+    // 追踪页面浏览
+    const viewLabel = VIEWS.find((v) => v.id === view)?.label || view;
+    trackPageView(viewLabel);
   }, [view]);
 
   useEffect(() => {
@@ -74,16 +88,18 @@ function App() {
         import('./features/canvas-effects/moon.js'),
         import('./features/canvas-effects/rain.js'),
         import('./features/canvas-effects/snow.js')
-      ]).then(([stars, moon, rain, snow]) => {
-        const effects = {
-          stars: stars.createStarsEffect(),
-          rain: rain.createRainEffect(),
-          snow: snow.createSnowEffect()
-        };
-        moon.createMoonEffect();
-        effectsRef.current = effects;
-        return effects;
-      }).catch(() => null);
+      ])
+        .then(([stars, moon, rain, snow]) => {
+          const effects = {
+            stars: stars.createStarsEffect(),
+            rain: rain.createRainEffect(),
+            snow: snow.createSnowEffect()
+          };
+          moon.createMoonEffect();
+          effectsRef.current = effects;
+          return effects;
+        })
+        .catch(() => null);
     }
 
     effectsLoadingRef.current.then((effects) => {
@@ -114,42 +130,103 @@ function App() {
   const setMode = (nextMode, fromUser = true) => {
     if (fromUser) localStorage.setItem(THEME_LOCK_KEY, '1');
     setModeState(nextMode);
-    showToast(MODES.find((item) => item.id === nextMode)?.label || nextMode);
+    const modeLabel = MODES.find((item) => item.id === nextMode)?.label || nextMode;
+    showToast(modeLabel);
+
+    // 追踪主题切换
+    if (fromUser) {
+      trackEvent('theme_change', { theme: nextMode, label: modeLabel });
+    }
   };
 
   return (
     <>
+      <a href="#main-content" className="skip-to-content">
+        跳转到主内容
+      </a>
       <SceneOverlays />
       <ModeIndicator mode={mode} onMode={setMode} />
       <div className="page">
         <Header view={view} onView={setView} />
         <Hero mode={mode} setMode={setModeState} showToast={showToast} />
         <div className="divider" />
-        <main>
-          <section className={`section view-panel ${view === 'home' ? 'active' : ''}`} data-view-panel="home">
+        <main id="main-content">
+          <section
+            className={`section view-panel ${view === 'home' ? 'active' : ''}`}
+            data-view-panel="home"
+            aria-label="首页"
+          >
             <Home mode={mode} />
           </section>
-          <section className={`section view-panel ${view === 'tools' ? 'active' : ''}`} data-view-panel="tools">
-            {view === 'tools' && <Shortcuts showToast={showToast} />}
+          <section
+            className={`section view-panel ${view === 'tools' ? 'active' : ''}`}
+            data-view-panel="tools"
+            aria-label="设计收藏"
+          >
+            {view === 'tools' && (
+              <Suspense
+                fallback={
+                  <div className="panel-loading" role="status" aria-live="polite">
+                    收藏内容加载中
+                  </div>
+                }
+              >
+                <Shortcuts showToast={showToast} />
+              </Suspense>
+            )}
           </section>
-          <section className={`section view-panel ${view === 'life' ? 'active' : ''}`} data-view-panel="life">
+          <section
+            className={`section view-panel ${view === 'life' ? 'active' : ''}`}
+            data-view-panel="life"
+            aria-label="摄影作品"
+          >
             {view === 'life' && (
               <>
                 <SectionHead title="摄影发布" note="RECHRIS ATLAS / Published Frames" />
-                <Suspense fallback={<div className="panel-loading">摄影内容加载中</div>}>
+                <Suspense
+                  fallback={
+                    <div className="panel-loading" role="status" aria-live="polite">
+                      摄影内容加载中
+                    </div>
+                  }
+                >
                   <PhotoJournalApp />
                 </Suspense>
               </>
             )}
           </section>
-          <section className={`section view-panel ${view === 'devlog' ? 'active' : ''}`} data-view-panel="devlog">
-            {view === 'devlog' && <Devlog />}
+          <section
+            className={`section view-panel ${view === 'devlog' ? 'active' : ''}`}
+            data-view-panel="devlog"
+            aria-label="开发日志"
+          >
+            {view === 'devlog' && (
+              <Suspense
+                fallback={
+                  <div className="panel-loading" role="status" aria-live="polite">
+                    开发日志加载中
+                  </div>
+                }
+              >
+                <Devlog />
+              </Suspense>
+            )}
           </section>
         </main>
-        <div className="footer">静态页面 · React · Open-Meteo · CSS Houdini</div>
+        <footer className="footer">静态页面 · React · Open-Meteo · CSS Houdini</footer>
       </div>
-      <div className={`mode-toast ${toast ? 'visible' : ''}`} id="toast">{toast}</div>
+      <div
+        className={`mode-toast ${toast ? 'visible' : ''}`}
+        id="toast"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        {toast}
+      </div>
       <EnhancementPanel showToast={showToast} />
+      <Analytics />
+      <SpeedInsights />
     </>
   );
 }
@@ -163,4 +240,8 @@ function useToast(setToast) {
   };
 }
 
-createRoot(document.getElementById('root')).render(<App />);
+createRoot(document.getElementById('root')).render(
+  <ErrorBoundary>
+    <App />
+  </ErrorBoundary>
+);

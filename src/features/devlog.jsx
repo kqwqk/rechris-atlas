@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import siteContent from '../../site-content.json';
 import '../../devlog-module.css';
 import { SectionHead } from '../layout.jsx';
@@ -37,7 +37,12 @@ export function Devlog() {
       <div className="devlog-container">
         <div className="devlog-filters">
           {FILTERS.map(([id, label]) => (
-            <button key={id} type="button" className={`devlog-filter-btn ${filter === id ? 'active' : ''}`} onClick={() => setFilter(id)}>
+            <button
+              key={id}
+              type="button"
+              className={`devlog-filter-btn ${filter === id ? 'active' : ''}`}
+              onClick={() => setFilter(id)}
+            >
               {label}
             </button>
           ))}
@@ -47,7 +52,9 @@ export function Devlog() {
             <div className="devlog-month" key={month}>
               <div className="devlog-month-header">{month}</div>
               <div className="devlog-entries">
-                {items.map((entry) => <DevlogEntry key={entry.id} entry={entry} />)}
+                {items.map((entry) => (
+                  <DevlogEntry key={entry.id} entry={entry} />
+                ))}
               </div>
             </div>
           ))}
@@ -59,20 +66,29 @@ export function Devlog() {
 
 function DevlogEntry({ entry }) {
   const date = new Date(entry.date);
-  const dateText = Number.isNaN(date.getTime()) ? entry.date : date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' });
+  const dateText = Number.isNaN(date.getTime())
+    ? entry.date
+    : date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' });
   return (
-    <article className={`devlog-entry ${entry.details?.length ? 'has-details' : ''}`} data-impact={entry.impact || 'medium'}>
+    <article
+      className={`devlog-entry ${entry.details?.length ? 'has-details' : ''}`}
+      data-impact={entry.impact || 'medium'}
+    >
       <div className="devlog-entry-marker" />
       <div className="devlog-entry-content">
         <div className="devlog-entry-header">
           <div className="devlog-entry-date">{dateText}</div>
-          <div className={`devlog-entry-category ${entry.category}`}>{CATEGORY_LABELS[entry.category] || entry.category}</div>
+          <div className={`devlog-entry-category ${entry.category}`}>
+            {CATEGORY_LABELS[entry.category] || entry.category}
+          </div>
         </div>
         <h3 className="devlog-entry-title">{entry.title}</h3>
         <p className="devlog-entry-description">{entry.description}</p>
         {entry.details?.length ? (
           <ul className="devlog-entry-details">
-            {entry.details.map((detail) => <li key={detail}>{detail}</li>)}
+            {entry.details.map((detail) => (
+              <li key={detail}>{detail}</li>
+            ))}
           </ul>
         ) : null}
       </div>

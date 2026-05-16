@@ -47,19 +47,91 @@ export class RainEffect {
   getLayerConfig(mode) {
     const configs = {
       low: [
-        { count: 40,  lenMin: 12, lenMax: 22, speed: 20, w: 1.0, color: [200,210,225], alphaMin: 0.20, alphaMax: 0.38 },
-        { count: 80,  lenMin: 7,  lenMax: 15, speed: 14, w: 0.7, color: [185,195,212], alphaMin: 0.12, alphaMax: 0.25 },
+        {
+          count: 40,
+          lenMin: 12,
+          lenMax: 22,
+          speed: 20,
+          w: 1.0,
+          color: [200, 210, 225],
+          alphaMin: 0.2,
+          alphaMax: 0.38
+        },
+        {
+          count: 80,
+          lenMin: 7,
+          lenMax: 15,
+          speed: 14,
+          w: 0.7,
+          color: [185, 195, 212],
+          alphaMin: 0.12,
+          alphaMax: 0.25
+        }
       ],
       medium: [
-        { count: 50,  lenMin: 12, lenMax: 22, speed: 20, w: 1.0, color: [200,210,225], alphaMin: 0.20, alphaMax: 0.38 },
-        { count: 100, lenMin: 7,  lenMax: 15, speed: 14, w: 0.7, color: [185,195,212], alphaMin: 0.12, alphaMax: 0.25 },
-        { count: 80,  lenMin: 4,  lenMax: 9,  speed: 9,  w: 0.4, color: [170,180,200], alphaMin: 0.06, alphaMax: 0.15 },
+        {
+          count: 50,
+          lenMin: 12,
+          lenMax: 22,
+          speed: 20,
+          w: 1.0,
+          color: [200, 210, 225],
+          alphaMin: 0.2,
+          alphaMax: 0.38
+        },
+        {
+          count: 100,
+          lenMin: 7,
+          lenMax: 15,
+          speed: 14,
+          w: 0.7,
+          color: [185, 195, 212],
+          alphaMin: 0.12,
+          alphaMax: 0.25
+        },
+        {
+          count: 80,
+          lenMin: 4,
+          lenMax: 9,
+          speed: 9,
+          w: 0.4,
+          color: [170, 180, 200],
+          alphaMin: 0.06,
+          alphaMax: 0.15
+        }
       ],
       high: [
-        { count: 70,  lenMin: 12, lenMax: 22, speed: 20, w: 1.0, color: [200,210,225], alphaMin: 0.20, alphaMax: 0.38 },
-        { count: 150, lenMin: 7,  lenMax: 15, speed: 14, w: 0.7, color: [185,195,212], alphaMin: 0.12, alphaMax: 0.25 },
-        { count: 120, lenMin: 4,  lenMax: 9,  speed: 9,  w: 0.4, color: [170,180,200], alphaMin: 0.06, alphaMax: 0.15 },
-      ],
+        {
+          count: 70,
+          lenMin: 12,
+          lenMax: 22,
+          speed: 20,
+          w: 1.0,
+          color: [200, 210, 225],
+          alphaMin: 0.2,
+          alphaMax: 0.38
+        },
+        {
+          count: 150,
+          lenMin: 7,
+          lenMax: 15,
+          speed: 14,
+          w: 0.7,
+          color: [185, 195, 212],
+          alphaMin: 0.12,
+          alphaMax: 0.25
+        },
+        {
+          count: 120,
+          lenMin: 4,
+          lenMax: 9,
+          speed: 9,
+          w: 0.4,
+          color: [170, 180, 200],
+          alphaMin: 0.06,
+          alphaMax: 0.15
+        }
+      ]
     };
 
     return configs[mode] || configs.medium;
@@ -71,7 +143,7 @@ export class RainEffect {
   spawnDrops() {
     this.drops = [];
 
-    this.layers.forEach(layer => {
+    this.layers.forEach((layer) => {
       for (let i = 0; i < layer.count; i++) {
         this.drops.push({
           x: Math.random() * (this.W + 60) - 30,
@@ -84,7 +156,7 @@ export class RainEffect {
           b: layer.color[2],
           alpha: layer.alphaMin + Math.random() * (layer.alphaMax - layer.alphaMin),
           drift: 1.5 + Math.random() * 1, // slight wind drift
-          splashChance: layer.w > 1 ? 0.3 : 0.05,
+          splashChance: layer.w > 1 ? 0.3 : 0.05
         });
       }
     });
@@ -122,7 +194,7 @@ export class RainEffect {
             maxR: 2 + Math.random() * 3,
             alpha: 0.2 + Math.random() * 0.15,
             life: 0,
-            maxLife: 8 + Math.random() * 6,
+            maxLife: 8 + Math.random() * 6
           });
         }
         d.y = -d.len - Math.random() * 80;
@@ -190,7 +262,9 @@ export class RainEffect {
         this.spawnDrops();
       }
 
-      if (import.meta.env.DEV) console.log(`Rain performance mode: ${mode}, drop count: ${this.drops.length}`);
+      // eslint-disable-next-line no-console
+      if (import.meta.env.DEV)
+        console.log(`Rain performance mode: ${mode}, drop count: ${this.drops.length}`);
     }
   }
 
@@ -202,7 +276,7 @@ export class RainEffect {
       active: this.active,
       dropCount: this.drops.length,
       splashCount: this.splashes.length,
-      performanceMode: this.performanceMode,
+      performanceMode: this.performanceMode
     };
   }
 }
@@ -220,7 +294,7 @@ export function createRainEffect() {
     start: () => rain.start(),
     stop: () => rain.stop(),
     setPerformanceMode: (mode) => rain.setPerformanceMode(mode),
-    getStats: () => rain.getStats(),
+    getStats: () => rain.getStats()
   };
 
   return rain;

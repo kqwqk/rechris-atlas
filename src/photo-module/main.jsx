@@ -1,7 +1,8 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Panzoom from '@panzoom/panzoom';
 import { PHOTO_RECORDS } from '../../photo-records-data.js';
+import { trackEvent } from '../utils/performance.js';
 import '../../life-records.css';
 import './photo-module.css';
 
@@ -31,18 +32,22 @@ async function savePhotoRecordToProject(record) {
 }
 
 function getFileRecords() {
-  return Array.isArray(PHOTO_RECORDS) ? PHOTO_RECORDS.map(record => ({ ...record })) : [];
+  return Array.isArray(PHOTO_RECORDS) ? PHOTO_RECORDS.map((record) => ({ ...record })) : [];
 }
 
 function isLegacyDefaultRecord(record) {
-  return record && ['life-001', 'life-002', 'life-003', 'life-004', 'life-005'].includes(record.id) && !record.createdAt;
+  return (
+    record &&
+    ['life-001', 'life-002', 'life-003', 'life-004', 'life-005'].includes(record.id) &&
+    !record.createdAt
+  );
 }
 
 function getStoredRecords() {
   try {
     const value = window.localStorage.getItem(STORAGE_KEY);
     const records = value ? JSON.parse(value) : [];
-    return Array.isArray(records) ? records.filter(record => !isLegacyDefaultRecord(record)) : [];
+    return Array.isArray(records) ? records.filter((record) => !isLegacyDefaultRecord(record)) : [];
   } catch {
     return [];
   }
@@ -50,8 +55,8 @@ function getStoredRecords() {
 
 function getRecords() {
   const fileRecords = getFileRecords();
-  const fileIds = new Set(fileRecords.map(record => record.id));
-  const localRecords = getStoredRecords().filter(record => !fileIds.has(record.id));
+  const fileIds = new Set(fileRecords.map((record) => record.id));
+  const localRecords = getStoredRecords().filter((record) => !fileIds.has(record.id));
   return [...localRecords, ...fileRecords];
 }
 
@@ -74,18 +79,11 @@ function sortRecordsByFreshness(records) {
 }
 
 function getPreviewImage(record, index, fallback) {
-  return [
-    record.thumbnails?.[index],
-    record.images?.[index],
-    fallback
-  ].find(Boolean);
+  return [record.thumbnails?.[index], record.images?.[index], fallback].find(Boolean);
 }
 
 function getOriginalImage(record, index, fallback) {
-  return [
-    record.images?.[index],
-    fallback
-  ].find(Boolean);
+  return [record.images?.[index], fallback].find(Boolean);
 }
 
 function formatDate(dateString) {
@@ -116,7 +114,10 @@ function formatDetailTime(record) {
 
 function formatExifDate(value) {
   if (!value) return '';
-  const date = value instanceof Date ? value : new Date(String(value).replace(/^(\d{4}):(\d{2}):(\d{2})/, '$1-$2-$3'));
+  const date =
+    value instanceof Date
+      ? value
+      : new Date(String(value).replace(/^(\d{4}):(\d{2}):(\d{2})/, '$1-$2-$3'));
   if (Number.isNaN(date.getTime())) return String(value);
   return new Intl.DateTimeFormat('zh-CN', {
     year: 'numeric',
@@ -128,12 +129,18 @@ function formatExifDate(value) {
 }
 
 function formatDisplayValue(value) {
-  if (value == null || value === '') return '';
+  if (value === null || value === undefined || value === '') return '';
   if (value instanceof Date) return formatExifDate(value);
   if (Array.isArray(value)) return value.map(formatDisplayValue).filter(Boolean).join(', ');
   if (typeof value === 'object') {
     return Object.entries(value)
-      .filter(([, entryValue]) => entryValue != null && entryValue !== '' && typeof entryValue !== 'object')
+      .filter(
+        ([, entryValue]) =>
+          entryValue !== null &&
+          entryValue !== undefined &&
+          entryValue !== '' &&
+          typeof entryValue !== 'object'
+      )
       .map(([key, entryValue]) => `${key}: ${entryValue}`)
       .join(' · ');
   }
@@ -181,9 +188,10 @@ export default function PhotoJournalApp() {
     checkLocalEditAvailable().then(setLocalEditEnabled);
   }, []);
 
-  const displayRecords = useMemo(() => (
-    sortRecordsByFreshness(records.filter(record => record.images?.length))
-  ), [records]);
+  const displayRecords = useMemo(
+    () => sortRecordsByFreshness(records.filter((record) => record.images?.length)),
+    [records]
+  );
 
   return (
     <>
@@ -192,14 +200,16 @@ export default function PhotoJournalApp() {
           <div className="life-empty">
             <div className="life-empty-text">还没有发布照片，先上传一组画面吧</div>
           </div>
-        ) : displayRecords.map(record => (
-          <PhotoCard
-            key={record.id}
-            record={record}
-            photoOnly
-            onOpen={(index) => setActivePhoto({ record, index })}
-          />
-        ))}
+        ) : (
+          displayRecords.map((record) => (
+            <PhotoCard
+              key={record.id}
+              record={record}
+              photoOnly
+              onOpen={(index) => setActivePhoto({ record, index })}
+            />
+          ))
+        )}
       </div>
 
       {activePhoto && (
@@ -209,10 +219,14 @@ export default function PhotoJournalApp() {
           onClose={() => setActivePhoto(null)}
           localEditEnabled={localEditEnabled}
           onSaveRecord={(nextRecord) => {
-            setRecords(current => current.map(record => (record.id === nextRecord.id ? nextRecord : record)));
-            setActivePhoto(current => current && current.record.id === nextRecord.id
-              ? { ...current, record: nextRecord }
-              : current);
+            setRecords((current) =>
+              current.map((record) => (record.id === nextRecord.id ? nextRecord : record))
+            );
+            setActivePhoto((current) =>
+              current && current.record.id === nextRecord.id
+                ? { ...current, record: nextRecord }
+                : current
+            );
           }}
         />
       )}
@@ -225,20 +239,28 @@ function PhotoCard({ record, photoOnly, onOpen }) {
   const images = record.images || [];
 
   return (
-    <article className={`life-card ${photoOnly ? 'life-card--photo-only' : ''}`} data-id={record.id}>
+    <article
+      className={`life-card ${photoOnly ? 'life-card--photo-only' : ''}`}
+      data-id={record.id}
+    >
       <div className={`life-card-images life-card-images-${Math.min(images.length, 3)}`}>
         {images.slice(0, 9).map((image, index) => {
           const preview = getPreviewImage(record, index, image);
-          const label = record.title
-            ? `打开照片：${record.title}`
-            : `打开照片 ${index + 1}`;
+          const label = record.title ? `打开照片：${record.title}` : `打开照片 ${index + 1}`;
           return (
             <button
               key={`${record.id}-${index}`}
               type="button"
               className="photo-card-button"
               aria-label={label}
-              onClick={() => onOpen(index)}
+              onClick={() => {
+                onOpen(index);
+                trackEvent('photo_open', {
+                  photo_id: record.id,
+                  photo_title: record.title || 'untitled',
+                  index
+                });
+              }}
             >
               <img
                 src={preview}
@@ -266,7 +288,11 @@ function PhotoCard({ record, photoOnly, onOpen }) {
             <p className="life-card-content">{record.content}</p>
             {record.tags?.length ? (
               <div className="life-card-tags">
-                {record.tags.map(tag => <span key={tag} className="life-card-tag">{tag}</span>)}
+                {record.tags.map((tag) => (
+                  <span key={tag} className="life-card-tag">
+                    {tag}
+                  </span>
+                ))}
               </div>
             ) : null}
           </div>
@@ -300,9 +326,10 @@ function PhotoDetailModal({ record, imageIndex, onClose, localEditEnabled, onSav
   const fallback = record.images[imageIndex];
   const originalSrc = getOriginalImage(record, imageIndex, fallback);
   const previewSrc = getPreviewImage(record, imageIndex, fallback);
-  const exifData = record.exif && typeof record.exif === 'object' && Object.keys(record.exif).length
-    ? record.exif
-    : null;
+  const exifData =
+    record.exif && typeof record.exif === 'object' && Object.keys(record.exif).length
+      ? record.exif
+      : null;
   const exifStatus = exifData ? 'ready' : 'unavailable';
   const merged = mergeExif(record, exifData);
 
@@ -322,7 +349,15 @@ function PhotoDetailModal({ record, imageIndex, onClose, localEditEnabled, onSav
     });
     panzoomRef.current?.destroy();
     panzoomRef.current = null;
-  }, [originalSrc, record.title, record.content, record.date, record.time]);
+  }, [
+    originalSrc,
+    record.title,
+    record.content,
+    record.date,
+    record.time,
+    record.location,
+    record.lens
+  ]);
 
   const saveDraft = async () => {
     const nextRecord = {
@@ -366,6 +401,7 @@ function PhotoDetailModal({ record, imageIndex, onClose, localEditEnabled, onSav
     };
   }, []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const computeFitStage = () => {
     const viewport = viewportRef.current;
     if (!viewport || !naturalSize) return { width: 1, height: 1, fitScale: 1 };
@@ -379,6 +415,7 @@ function PhotoDetailModal({ record, imageIndex, onClose, localEditEnabled, onSav
     };
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const fitImage = (animate = true) => {
     const next = computeFitStage();
     setStageSize({ width: next.width, height: next.height });
@@ -394,6 +431,7 @@ function PhotoDetailModal({ record, imageIndex, onClose, localEditEnabled, onSav
     const actualScale = Math.max(naturalSize.width / fit.width, naturalSize.height / fit.height);
     panzoomRef.current.zoom(actualScale, { animate: true });
     setScale(actualScale);
+    trackEvent('photo_zoom', { zoom_level: '1:1', photo_id: record.id });
   };
 
   useEffect(() => {
@@ -433,20 +471,41 @@ function PhotoDetailModal({ record, imageIndex, onClose, localEditEnabled, onSav
       panzoom.destroy();
       if (panzoomRef.current === panzoom) panzoomRef.current = null;
     };
-  }, [loaded, naturalSize?.width, naturalSize?.height]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loaded, naturalSize?.width, naturalSize?.height, computeFitStage, fitImage, naturalSize]);
 
   const modal = (
-    <div className="photo-detail-panel active" role="dialog" aria-modal="true" aria-labelledby="photo-detail-title">
-      <button className="life-detail-backdrop" type="button" onClick={onClose} aria-label="关闭照片详情" />
+    <div
+      className="photo-detail-panel active"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="photo-detail-title"
+    >
+      <button
+        className="life-detail-backdrop"
+        type="button"
+        onClick={onClose}
+        aria-label="关闭照片详情"
+      />
       <div className="photo-detail-shell">
-        <button className="life-detail-close" type="button" onClick={onClose} aria-label="关闭照片详情" />
+        <button
+          className="life-detail-close"
+          type="button"
+          onClick={onClose}
+          aria-label="关闭照片详情"
+        />
         <div
           className="photo-viewer-media"
           style={{
-            '--photo-aspect-ratio': naturalSize ? `${naturalSize.width} / ${naturalSize.height}` : '3 / 2'
+            '--photo-aspect-ratio': naturalSize
+              ? `${naturalSize.width} / ${naturalSize.height}`
+              : '3 / 2'
           }}
         >
-          <div className={`photo-viewer-viewport ${loaded ? 'is-loaded' : 'is-loading'}`} ref={viewportRef}>
+          <div
+            className={`photo-viewer-viewport ${loaded ? 'is-loaded' : 'is-loading'}`}
+            ref={viewportRef}
+          >
             <img className="photo-viewer-preview" src={previewSrc} alt="" aria-hidden="true" />
             <div
               className="photo-viewer-stage"
@@ -473,10 +532,18 @@ function PhotoDetailModal({ record, imageIndex, onClose, localEditEnabled, onSav
             )}
           </div>
           <div className="photo-viewer-toolbar" aria-label="图片缩放控制">
-            <button type="button" onClick={() => panzoomRef.current?.zoomOut()}>-</button>
-            <button type="button" onClick={() => fitImage(true)}>FIT</button>
-            <button type="button" onClick={zoomActual}>1:1</button>
-            <button type="button" onClick={() => panzoomRef.current?.zoomIn()}>+</button>
+            <button type="button" onClick={() => panzoomRef.current?.zoomOut()}>
+              -
+            </button>
+            <button type="button" onClick={() => fitImage(true)}>
+              FIT
+            </button>
+            <button type="button" onClick={zoomActual}>
+              1:1
+            </button>
+            <button type="button" onClick={() => panzoomRef.current?.zoomIn()}>
+              +
+            </button>
           </div>
           <div className="photo-viewer-scale">{scale.toFixed(1)}x</div>
         </div>
@@ -523,11 +590,12 @@ function PhotoInfoPanel({
   onCancelEdit,
   onSave
 }) {
-  const statusText = {
-    loading: 'EXIF 读取中',
-    ready: 'EXIF 已读取',
-    unavailable: 'EXIF 不可用'
-  }[exifStatus] || '';
+  const statusText =
+    {
+      loading: 'EXIF 读取中',
+      ready: 'EXIF 已读取',
+      unavailable: 'EXIF 不可用'
+    }[exifStatus] || '';
 
   const parameterCards = [
     ['光圈', merged.aperture || '未记录', 'A'],
@@ -536,10 +604,12 @@ function PhotoInfoPanel({
     ['焦距', merged.focal || '未记录', 'F']
   ];
 
-  const gpsRows = merged.gps ? [
-    ['纬度', merged.gps.latitude],
-    ['经度', merged.gps.longitude]
-  ].filter(([, value]) => value) : [];
+  const gpsRows = merged.gps
+    ? [
+        ['纬度', merged.gps.latitude],
+        ['经度', merged.gps.longitude]
+      ].filter(([, value]) => value)
+    : [];
   const basicRows = [
     ['拍摄时间', merged.dateTime || formatDetailTime(record)],
     ['地点', record.location || '未记录'],
@@ -553,25 +623,36 @@ function PhotoInfoPanel({
   return (
     <aside className="photo-detail-info">
       <div className="life-detail-header">
-        <div className="life-detail-kicker">{(record.type || 'PHOTO').toUpperCase()} · {statusText}</div>
-        <h3 className="life-detail-title" id="photo-detail-title">{record.title || '未命名照片'}</h3>
+        <div className="life-detail-kicker">
+          {(record.type || 'PHOTO').toUpperCase()} · {statusText}
+        </div>
+        <h3 className="life-detail-title" id="photo-detail-title">
+          {record.title || '未命名照片'}
+        </h3>
         {!editing && record.content ? (
           <p className="life-detail-summary">{record.content}</p>
         ) : null}
         {localEditEnabled && !editing ? (
-          <button className="photo-local-edit-btn" type="button" onClick={onEdit}>编辑信息</button>
+          <button className="photo-local-edit-btn" type="button" onClick={onEdit}>
+            编辑信息
+          </button>
         ) : null}
       </div>
       {editing ? (
-        <form className="photo-local-edit-form" onSubmit={(event) => {
-          event.preventDefault();
-          onSave();
-        }}>
+        <form
+          className="photo-local-edit-form"
+          onSubmit={(event) => {
+            event.preventDefault();
+            onSave();
+          }}
+        >
           <label>
             <span>名称</span>
             <input
               value={draft.title}
-              onChange={(event) => onDraftChange(current => ({ ...current, title: event.target.value }))}
+              onChange={(event) =>
+                onDraftChange((current) => ({ ...current, title: event.target.value }))
+              }
             />
           </label>
           <label>
@@ -579,7 +660,9 @@ function PhotoInfoPanel({
             <textarea
               rows="4"
               value={draft.content}
-              onChange={(event) => onDraftChange(current => ({ ...current, content: event.target.value }))}
+              onChange={(event) =>
+                onDraftChange((current) => ({ ...current, content: event.target.value }))
+              }
             />
           </label>
           <div className="photo-local-edit-row">
@@ -588,7 +671,9 @@ function PhotoInfoPanel({
               <input
                 type="date"
                 value={draft.date}
-                onChange={(event) => onDraftChange(current => ({ ...current, date: event.target.value }))}
+                onChange={(event) =>
+                  onDraftChange((current) => ({ ...current, date: event.target.value }))
+                }
               />
             </label>
             <label>
@@ -596,7 +681,9 @@ function PhotoInfoPanel({
               <input
                 type="time"
                 value={draft.time}
-                onChange={(event) => onDraftChange(current => ({ ...current, time: event.target.value }))}
+                onChange={(event) =>
+                  onDraftChange((current) => ({ ...current, time: event.target.value }))
+                }
               />
             </label>
           </div>
@@ -605,7 +692,9 @@ function PhotoInfoPanel({
             <input
               value={draft.location}
               placeholder="例如：杭州 · 曲院风荷"
-              onChange={(event) => onDraftChange(current => ({ ...current, location: event.target.value }))}
+              onChange={(event) =>
+                onDraftChange((current) => ({ ...current, location: event.target.value }))
+              }
             />
           </label>
           <label>
@@ -613,12 +702,18 @@ function PhotoInfoPanel({
             <input
               value={draft.lens}
               placeholder="例如：NIKKOR Z 24-120mm f/4 S"
-              onChange={(event) => onDraftChange(current => ({ ...current, lens: event.target.value }))}
+              onChange={(event) =>
+                onDraftChange((current) => ({ ...current, lens: event.target.value }))
+              }
             />
           </label>
           <div className="photo-local-edit-actions">
-            <button type="button" onClick={onCancelEdit} disabled={saving}>取消</button>
-            <button type="submit" disabled={saving}>{saving ? '保存中' : '保存到项目文件'}</button>
+            <button type="button" onClick={onCancelEdit} disabled={saving}>
+              取消
+            </button>
+            <button type="submit" disabled={saving}>
+              {saving ? '保存中' : '保存到项目文件'}
+            </button>
           </div>
         </form>
       ) : null}

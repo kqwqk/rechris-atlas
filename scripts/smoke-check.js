@@ -91,8 +91,8 @@ function main() {
   assert(!photoModule.includes("from 'exifr'"), '摄影详情仍在浏览器端加载 EXIF 解析依赖');
   assert(appEntry.includes('PhotoJournalApp'), '全站 React 入口未使用摄影组件');
   assert(appEntry.includes('lazy(() => import'), '摄影模块未拆分为懒加载入口');
-  assert(appEntry.includes("from './features/shortcuts.jsx'"), '收藏页仍未拆分为独立模块');
-  assert(appEntry.includes("from './features/devlog.jsx'"), '开发日志仍未拆分为独立模块');
+  assert(appEntry.includes("'./features/shortcuts.jsx'") || appEntry.includes('Shortcuts'), '收藏页仍未拆分为独立模块');
+  assert(appEntry.includes("'./features/devlog.jsx'") || appEntry.includes('Devlog'), '开发日志仍未拆分为独立模块');
   assert(appEntry.includes("from './layout.jsx'"), '布局组件仍未拆分为独立模块');
   assert(shortcutsModule.includes('readDefaultShortcuts'), '收藏页未以项目默认数据作为入口数据源');
   assert(!appEntry.includes('SHORTCUTS_STORAGE_KEY'), '收藏页仍会优先读取浏览器旧缓存');

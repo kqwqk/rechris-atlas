@@ -49,7 +49,9 @@ export function formatClock() {
 }
 
 export function weatherCodeToZh(code) {
-  return WMO_WEATHER_ZH[code] != null ? WMO_WEATHER_ZH[code] : '天气';
+  return WMO_WEATHER_ZH[code] !== null && WMO_WEATHER_ZH[code] !== undefined
+    ? WMO_WEATHER_ZH[code]
+    : '天气';
 }
 
 export function weatherCodeToIconSlug(code, isDay) {
@@ -66,8 +68,12 @@ export function weatherCodeToIconSlug(code, isDay) {
 
 export function inferThemeFromWeather(code, isDay) {
   if ([71, 73, 75, 77, 85, 86].includes(code)) return 'snow';
-  if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82) || (code >= 95 && code <= 99)) return 'rain';
-  const night = isDay === 0 || isDay === false || (isDay == null && (new Date().getHours() < 6 || new Date().getHours() >= 18));
+  if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82) || (code >= 95 && code <= 99))
+    return 'rain';
+  const night =
+    isDay === 0 ||
+    isDay === false ||
+    (isDay === null && (new Date().getHours() < 6 || new Date().getHours() >= 18));
   if (code === 0 || code === 1) return night ? 'midnight' : 'sunny';
   return night ? 'night' : 'day';
 }
@@ -77,10 +83,13 @@ export function weatherViewModel(data, cityName) {
   const code = current.weather_code;
   const slug = weatherCodeToIconSlug(code, current.is_day);
   const pieces = [];
-  if (typeof current.relative_humidity_2m === 'number') pieces.push(`湿度 ${current.relative_humidity_2m}%`);
-  if (typeof current.wind_speed_10m === 'number') pieces.push(`风速 ${Math.round(current.wind_speed_10m)} km/h`);
+  if (typeof current.relative_humidity_2m === 'number')
+    pieces.push(`湿度 ${current.relative_humidity_2m}%`);
+  if (typeof current.wind_speed_10m === 'number')
+    pieces.push(`风速 ${Math.round(current.wind_speed_10m)} km/h`);
   return {
-    temp: typeof current.temperature_2m === 'number' ? `${Math.round(current.temperature_2m)}°` : '—',
+    temp:
+      typeof current.temperature_2m === 'number' ? `${Math.round(current.temperature_2m)}°` : '—',
     desc: weatherCodeToZh(code),
     meta: pieces.join(' · '),
     city: cityName || '杭州',
@@ -102,7 +111,9 @@ export function storedWeatherCity() {
   try {
     const city = JSON.parse(localStorage.getItem(WEATHER_CITY_KEY) || 'null');
     if (city && typeof city.lat === 'number' && typeof city.lon === 'number') return city;
-  } catch {}
+  } catch {
+    // Ignore parse errors
+  }
   return null;
 }
 
@@ -118,8 +129,8 @@ export function fetchWeather(lat, lon) {
 
 export function geocodeCity(name) {
   const params = new URLSearchParams({ name, count: '1', language: 'zh', format: 'json' });
-  return fetchJsonWithTimeout(`https://geocoding-api.open-meteo.com/v1/search?${params}`)
-    .then((data) => {
+  return fetchJsonWithTimeout(`https://geocoding-api.open-meteo.com/v1/search?${params}`).then(
+    (data) => {
       const first = data.results?.[0];
       if (!first) throw new Error('city not found');
       return {
@@ -127,7 +138,8 @@ export function geocodeCity(name) {
         lat: first.latitude,
         lon: first.longitude
       };
-    });
+    }
+  );
 }
 
 function fetchJsonWithTimeout(url) {

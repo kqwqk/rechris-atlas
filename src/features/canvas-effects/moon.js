@@ -23,7 +23,7 @@ export class MoonEffect {
    */
   createSeededRandom(seed = 42) {
     let currentSeed = seed;
-    return function() {
+    return function () {
       currentSeed = (currentSeed * 16807 + 0) % 2147483647;
       return (currentSeed - 1) / 2147483646;
     };
@@ -37,7 +37,8 @@ export class MoonEffect {
 
     const S = this.canvas.width; // 480px - supersampled, displayed at 90px CSS
     const R = S / 2;
-    const cx = R, cy = R;
+    const cx = R,
+      cy = R;
     const ctx = this.ctx;
 
     // Seeded random for consistent appearance
@@ -60,16 +61,20 @@ export class MoonEffect {
 
     // 2) Lunar maria — soft dark regions (seas)
     const maria = [
-      { x: 0.36, y: 0.30, rx: 0.20, ry: 0.13, a: 0.10 },
+      { x: 0.36, y: 0.3, rx: 0.2, ry: 0.13, a: 0.1 },
       { x: 0.46, y: 0.54, rx: 0.15, ry: 0.11, a: 0.08 },
-      { x: 0.56, y: 0.40, rx: 0.11, ry: 0.15, a: 0.07 },
-      { x: 0.30, y: 0.62, rx: 0.13, ry: 0.10, a: 0.06 },
+      { x: 0.56, y: 0.4, rx: 0.11, ry: 0.15, a: 0.07 },
+      { x: 0.3, y: 0.62, rx: 0.13, ry: 0.1, a: 0.06 }
     ];
 
-    maria.forEach(m => {
+    maria.forEach((m) => {
       const g = ctx.createRadialGradient(
-        m.x * S, m.y * S, 0,
-        m.x * S, m.y * S, Math.max(m.rx, m.ry) * S
+        m.x * S,
+        m.y * S,
+        0,
+        m.x * S,
+        m.y * S,
+        Math.max(m.rx, m.ry) * S
       );
       g.addColorStop(0, `rgba(75, 72, 65, ${m.a})`);
       g.addColorStop(0.5, `rgba(80, 77, 70, ${m.a * 0.4})`);
@@ -84,20 +89,17 @@ export class MoonEffect {
     const craters = [
       { x: 0.32, y: 0.28, r: 0.055 },
       { x: 0.52, y: 0.35, r: 0.035 },
-      { x: 0.40, y: 0.56, r: 0.045 },
-      { x: 0.60, y: 0.58, r: 0.03 },
+      { x: 0.4, y: 0.56, r: 0.045 },
+      { x: 0.6, y: 0.58, r: 0.03 }
     ];
 
-    craters.forEach(cr => {
+    craters.forEach((cr) => {
       const px = cr.x * S;
       const py = cr.y * S;
       const pr = cr.r * S;
 
       // Shadow
-      const shadow = ctx.createRadialGradient(
-        px + pr * 0.12, py + pr * 0.12, pr * 0.2,
-        px, py, pr
-      );
+      const shadow = ctx.createRadialGradient(px + pr * 0.12, py + pr * 0.12, pr * 0.2, px, py, pr);
       shadow.addColorStop(0, 'rgba(50, 45, 40, 0.10)');
       shadow.addColorStop(0.8, 'rgba(50, 45, 40, 0.05)');
       shadow.addColorStop(1, 'transparent');
@@ -124,10 +126,7 @@ export class MoonEffect {
     ctx.fillRect(0, 0, S, S);
 
     // 5) Earthshine — very faint blue on dark limb
-    const earthshine = ctx.createRadialGradient(
-      cx + R * 0.65, cy, 0,
-      cx + R * 0.65, cy, R * 0.5
-    );
+    const earthshine = ctx.createRadialGradient(cx + R * 0.65, cy, 0, cx + R * 0.65, cy, R * 0.5);
     earthshine.addColorStop(0, 'rgba(100, 130, 180, 0.03)');
     earthshine.addColorStop(1, 'transparent');
     ctx.fillStyle = earthshine;
@@ -173,7 +172,7 @@ export class MoonEffect {
   /**
    * Performance mode (moon is static, no performance impact)
    */
-  setPerformanceMode(mode) {
+  setPerformanceMode(_mode) {
     // Moon is static, performance mode doesn't affect it
   }
 

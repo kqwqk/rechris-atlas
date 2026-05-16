@@ -16,13 +16,16 @@ import {
 } from '../app-utils.js';
 
 export function useWeather({ setMode, showToast }) {
-  const [weather, setWeather] = useState(() => cachedWeather() || {
-    temp: '—',
-    desc: '加载中…',
-    meta: '',
-    city: storedWeatherCity()?.name || '杭州',
-    icon: WEATHER_ICON_FILES.clouds
-  });
+  const [weather, setWeather] = useState(
+    () =>
+      cachedWeather() || {
+        temp: '—',
+        desc: '加载中…',
+        meta: '',
+        city: storedWeatherCity()?.name || '杭州',
+        icon: WEATHER_ICON_FILES.clouds
+      }
+  );
 
   useEffect(() => {
     let cancelled = false;

@@ -1,15 +1,13 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import defaultShortcuts from '../../default-shortcuts.json';
-import {
-  CATEGORY_LABELS,
-  CATEGORY_ORDER,
-  EDITABLE_CATEGORY_IDS
-} from '../app-constants.js';
+import { CATEGORY_LABELS, CATEGORY_ORDER, EDITABLE_CATEGORY_IDS } from '../app-constants.js';
 
 export function Shortcuts({ showToast }) {
   const [shortcuts, setShortcuts] = useState(() => readDefaultShortcuts());
   const [category, setCategory] = useState('all');
-  const [sortMode, setSortMode] = useState(() => localStorage.getItem('shortcutsSortMode') || 'default');
+  const [sortMode, setSortMode] = useState(
+    () => localStorage.getItem('shortcutsSortMode') || 'default'
+  );
   const [localEdit, setLocalEdit] = useState(false);
   const [editing, setEditing] = useState(null);
   const [dragId, setDragId] = useState('');
@@ -28,7 +26,10 @@ export function Shortcuts({ showToast }) {
   }, [shortcuts]);
 
   const visible = useMemo(() => {
-    let list = category === 'all' ? shortcuts : shortcuts.filter((item) => shortcutCategory(item) === category);
+    let list =
+      category === 'all'
+        ? shortcuts
+        : shortcuts.filter((item) => shortcutCategory(item) === category);
     if (sortMode === 'name') {
       list = [...list].sort((a, b) => shortcutLabel(a).localeCompare(shortcutLabel(b), 'zh-CN'));
     }
@@ -110,7 +111,9 @@ export function Shortcuts({ showToast }) {
       iconEmoji: draft.iconEmoji.trim() || '·',
       iconUrl: draft.iconUrl.trim(),
       iconDataUrl: draft.iconDataUrl || '',
-      category: EDITABLE_CATEGORY_IDS.includes(draft.category) ? draft.category : shortcutCategory(draft)
+      category: EDITABLE_CATEGORY_IDS.includes(draft.category)
+        ? draft.category
+        : shortcutCategory(draft)
     };
     const next = draft.id
       ? shortcuts.map((item) => (item.id === draft.id ? nextItem : item))
@@ -141,49 +144,81 @@ export function Shortcuts({ showToast }) {
           ))}
         </div>
         <div className="tools-actions">
-          <button type="button" className="tools-sort-btn" onClick={() => {
-            const next = sortMode === 'default' ? 'name' : 'default';
-            setSortMode(next);
-            localStorage.setItem('shortcutsSortMode', next);
-          }}>排序</button>
+          <button
+            type="button"
+            className="tools-sort-btn"
+            onClick={() => {
+              const next = sortMode === 'default' ? 'name' : 'default';
+              setSortMode(next);
+              localStorage.setItem('shortcutsSortMode', next);
+            }}
+          >
+            排序
+          </button>
           {localEdit && (
             <>
-              <button type="button" className="tools-export-btn local-edit-only" onClick={exportShortcuts}>导出</button>
-              <button type="button" className="tools-import-btn local-edit-only" onClick={() => importInputRef.current?.click()}>导入</button>
-              <button type="button" className="tools-add-link local-edit-only" onClick={() => setEditing(emptyShortcut(category === 'all' ? 'other' : category))}>新增</button>
+              <button
+                type="button"
+                className="tools-export-btn local-edit-only"
+                onClick={exportShortcuts}
+              >
+                导出
+              </button>
+              <button
+                type="button"
+                className="tools-import-btn local-edit-only"
+                onClick={() => importInputRef.current?.click()}
+              >
+                导入
+              </button>
+              <button
+                type="button"
+                className="tools-add-link local-edit-only"
+                onClick={() => setEditing(emptyShortcut(category === 'all' ? 'other' : category))}
+              >
+                新增
+              </button>
             </>
           )}
         </div>
       </div>
-      <input ref={importInputRef} type="file" accept=".json,application/json" hidden onChange={importShortcuts} />
+      <input
+        ref={importInputRef}
+        type="file"
+        accept=".json,application/json"
+        hidden
+        onChange={importShortcuts}
+      />
       {!visible.length ? (
         <div className="launch-empty">暂无快捷方式</div>
       ) : (
         <div className="launch-grid" role="navigation" aria-label="快捷方式网格，可拖动调整顺序">
-          {(category === 'all' ? CATEGORY_ORDER.filter((id) => id !== 'all') : [category]).map((groupId) => {
-            const items = grouped[groupId] || [];
-            if (!items.length) return null;
-            return (
-              <section className="launch-group" key={groupId}>
-                <div className="launch-group-head">
-                  <div className="launch-group-title">{CATEGORY_LABELS[groupId] || groupId}</div>
-                  <div className="tool-group-count">{String(items.length).padStart(2, '0')}</div>
-                </div>
-                <div className="launch-group-grid">
-                  {items.map((item) => (
-                    <ShortcutTile
-                      key={item.id}
-                      item={item}
-                      canEdit={localEdit}
-                      onEdit={() => setEditing(item)}
-                      onDragStart={() => setDragId(item.id)}
-                      onDrop={() => onDrop(item.id)}
-                    />
-                  ))}
-                </div>
-              </section>
-            );
-          })}
+          {(category === 'all' ? CATEGORY_ORDER.filter((id) => id !== 'all') : [category]).map(
+            (groupId) => {
+              const items = grouped[groupId] || [];
+              if (!items.length) return null;
+              return (
+                <section className="launch-group" key={groupId}>
+                  <div className="launch-group-head">
+                    <div className="launch-group-title">{CATEGORY_LABELS[groupId] || groupId}</div>
+                    <div className="tool-group-count">{String(items.length).padStart(2, '0')}</div>
+                  </div>
+                  <div className="launch-group-grid">
+                    {items.map((item) => (
+                      <ShortcutTile
+                        key={item.id}
+                        item={item}
+                        canEdit={localEdit}
+                        onEdit={() => setEditing(item)}
+                        onDragStart={() => setDragId(item.id)}
+                        onDrop={() => onDrop(item.id)}
+                      />
+                    ))}
+                  </div>
+                </section>
+              );
+            }
+          )}
         </div>
       )}
       {editing && (
@@ -221,7 +256,18 @@ function ShortcutTile({ item, canEdit, onEdit, onDragStart, onDrop }) {
       }}
     >
       <div className="launch-icon">
-        {icon ? <img className={isMonochromeShortcutIcon(icon) ? 'is-monochrome-icon' : undefined} src={icon} alt="" loading="eager" decoding="async" referrerPolicy="no-referrer" /> : (item.iconEmoji || '·')}
+        {icon ? (
+          <img
+            className={isMonochromeShortcutIcon(icon) ? 'is-monochrome-icon' : undefined}
+            src={icon}
+            alt=""
+            loading="eager"
+            decoding="async"
+            referrerPolicy="no-referrer"
+          />
+        ) : (
+          item.iconEmoji || '·'
+        )}
       </div>
       <div className="launch-name">{label}</div>
     </button>
@@ -241,34 +287,76 @@ function ShortcutEditor({ initial, onClose, onSubmit, onDelete }) {
   return (
     <div className="edit-panel open" aria-hidden="false">
       <button className="edit-panel-backdrop" type="button" onClick={onClose} aria-label="关闭" />
-      <div className="edit-panel-sheet" role="dialog" aria-modal="true" aria-labelledby="shortcut-edit-title">
+      <div
+        className="edit-panel-sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="shortcut-edit-title"
+      >
         <div className="edit-panel-header">
-          <h2 id="shortcut-edit-title" className="edit-title">{draft.id ? '编辑快捷方式' : '新增快捷方式'}</h2>
-          <button type="button" className="ghost-btn" onClick={() => onSubmit(draft)}>保存</button>
+          <h2 id="shortcut-edit-title" className="edit-title">
+            {draft.id ? '编辑快捷方式' : '新增快捷方式'}
+          </h2>
+          <button type="button" className="ghost-btn" onClick={() => onSubmit(draft)}>
+            保存
+          </button>
         </div>
         <p className="edit-hint">React 本地编辑模式会把收藏写回项目文件，名称和网址必填。</p>
-        <form className="shortcut-form" onSubmit={(event) => {
-          event.preventDefault();
-          onSubmit(draft);
-        }}>
+        <form
+          className="shortcut-form"
+          onSubmit={(event) => {
+            event.preventDefault();
+            onSubmit(draft);
+          }}
+        >
           <label className="shortcut-form-label">名称</label>
-          <input className="shortcut-form-input" value={draft.title} onChange={(event) => setDraft({ ...draft, title: event.target.value })} />
+          <input
+            className="shortcut-form-input"
+            value={draft.title}
+            onChange={(event) => setDraft({ ...draft, title: event.target.value })}
+          />
           <label className="shortcut-form-label">网址</label>
-          <input className="shortcut-form-input" value={draft.url} onChange={(event) => setDraft({ ...draft, url: event.target.value })} />
+          <input
+            className="shortcut-form-input"
+            value={draft.url}
+            onChange={(event) => setDraft({ ...draft, url: event.target.value })}
+          />
           <label className="shortcut-form-label">分类</label>
-          <select className="shortcut-form-input" value={draft.category} onChange={(event) => setDraft({ ...draft, category: event.target.value })}>
+          <select
+            className="shortcut-form-input"
+            value={draft.category}
+            onChange={(event) => setDraft({ ...draft, category: event.target.value })}
+          >
             {EDITABLE_CATEGORY_IDS.map((id) => (
-              <option key={id} value={id}>{CATEGORY_LABELS[id] || id}</option>
+              <option key={id} value={id}>
+                {CATEGORY_LABELS[id] || id}
+              </option>
             ))}
           </select>
           <label className="shortcut-form-label">Emoji 图标</label>
-          <input className="shortcut-form-input" value={draft.iconEmoji} onChange={(event) => setDraft({ ...draft, iconEmoji: event.target.value })} />
+          <input
+            className="shortcut-form-input"
+            value={draft.iconEmoji}
+            onChange={(event) => setDraft({ ...draft, iconEmoji: event.target.value })}
+          />
           <label className="shortcut-form-label">图片地址</label>
-          <input className="shortcut-form-input" value={draft.iconUrl} onChange={(event) => setDraft({ ...draft, iconUrl: event.target.value })} />
+          <input
+            className="shortcut-form-input"
+            value={draft.iconUrl}
+            onChange={(event) => setDraft({ ...draft, iconUrl: event.target.value })}
+          />
           <div className="shortcut-form-actions">
-            <button type="submit" className="ghost-btn">保存</button>
-            {onDelete && <button type="button" className="ghost-btn danger" onClick={() => onDelete(draft.id)}>删除此项</button>}
-            <button type="button" className="ghost-btn" onClick={onClose}>取消</button>
+            <button type="submit" className="ghost-btn">
+              保存
+            </button>
+            {onDelete && (
+              <button type="button" className="ghost-btn danger" onClick={() => onDelete(draft.id)}>
+                删除此项
+              </button>
+            )}
+            <button type="button" className="ghost-btn" onClick={onClose}>
+              取消
+            </button>
           </div>
         </form>
       </div>
@@ -312,9 +400,11 @@ function normalizeUrl(value = '') {
 }
 
 function shortcutCategory(shortcut) {
-  if (shortcut.category && EDITABLE_CATEGORY_IDS.includes(shortcut.category)) return shortcut.category;
+  if (shortcut.category && EDITABLE_CATEGORY_IDS.includes(shortcut.category))
+    return shortcut.category;
   const text = `${shortcut.title || ''} ${shortcut.url || ''}`.toLowerCase();
-  if (/figma|iconfont|pinterest|freepik|recraft|lovart|color|palette|设计|素材/.test(text)) return 'design';
+  if (/figma|iconfont|pinterest|freepik|recraft|lovart|color|palette|设计|素材/.test(text))
+    return 'design';
   if (/ai|chatgpt|gemini|grok|minimax|bot|agent|meshy|人工智能/.test(text)) return 'ai';
   if (/github|vercel|xda|cloud|server|host|vpn|api|dev|code/.test(text)) return 'dev';
   if (/gif|mp3|music|download|video|ncm|tts|语音|音乐|压缩/.test(text)) return 'media';
