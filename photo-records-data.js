@@ -993,6 +993,45 @@ export const PHOTO_RECORDS = [
         "longitude": "120,0,35.96° E"
       }
     }
+  },
+  {
+    "id": "photo-e696b0e5ae89e6b19fe5b1b1",
+    "type": "photo",
+    "title": "影像记录 · 新安江山水画廊",
+    "content": "一帧来自个人摄影归档的发布照片，更多说明可在本地编辑面板继续补充。",
+    "images": [
+      "assets/photos/新安江山水画廊.JPG"
+    ],
+    "thumbnails": [
+      "assets/photos/thumbs/新安江山水画廊.jpg"
+    ],
+    "tags": [
+      "摄影"
+    ],
+    "publishedAt": "2026-05-22T02:37:42.414Z",
+    "date": "2026-05-03",
+    "time": "15:24",
+    "location": "新安江山水画廊",
+    "camera": "NIKON CORPORATION NIKON Z fc",
+    "lens": "NIKKOR Z 24-120mm f/4 S",
+    "mood": "peaceful",
+    "exif": {
+      "aperture": "f/7.1",
+      "shutter": "1/400s",
+      "iso": 100,
+      "focal": "36mm",
+      "focalActual": "24mm",
+      "camera": "NIKON CORPORATION NIKON Z fc",
+      "lens": "NIKON NIKKOR Z 24-120mm f/4 S",
+      "dateTime": "2026年5月3日 15:24",
+      "exposureMode": "Auto",
+      "exposureProgram": "Not defined",
+      "meteringMode": "Pattern",
+      "whiteBalance": "Auto",
+      "flash": "Flash did not fire",
+      "colorSpace": "1",
+      "software": "Ver.01.60"
+    }
   }
 ];
 

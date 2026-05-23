@@ -120,7 +120,7 @@ src/
 ### 添加新照片
 
 1. **准备照片**：
-   - 将原图放入 `assets/photos/originals/`
+   - 将原图放入 `assets/photos/`
    - 建议使用有意义的文件名（如 `hangzhou-westlake-2025.jpg`）
 
 2. **生成资源**：
@@ -128,21 +128,22 @@ src/
    npm run photos:sync
    ```
    这会：
+   - 扫描 `assets/photos/` 根目录里的新增照片
    - 生成 720px 缩略图（72% 质量）
    - 提取 EXIF 信息
    - 更新 `photo-records-data.js`
+   - 在摄影页按发布时间展示新照片
 
 3. **添加元数据**（可选）：
    编辑 `photo-records-data.js`，添加标题、描述、地点等：
    ```javascript
    {
      id: 'photo-001',
-     filename: 'hangzhou-westlake-2025.jpg',
      title: '西湖日落',
-     description: '杭州西湖的美丽日落',
+     content: '杭州西湖的美丽日落',
      location: '杭州西湖',
      date: '2025-01-15',
-     images: ['assets/photos/originals/hangzhou-westlake-2025.jpg'],
+     images: ['assets/photos/hangzhou-westlake-2025.jpg'],
      thumbnails: ['assets/photos/thumbs/hangzhou-westlake-2025.jpg'],
      exif: { /* 自动生成 */ }
    }

@@ -109,10 +109,6 @@ function fileNameFor(record) {
   return imagePath ? path.basename(imagePath) : '';
 }
 
-function displayPathFor(fileName) {
-  return `assets/photos/display/${path.basename(fileName, path.extname(fileName))}.jpg`;
-}
-
 function thumbPathFor(fileName) {
   return `assets/photos/thumbs/${path.basename(fileName, path.extname(fileName))}.jpg`;
 }
@@ -304,9 +300,6 @@ async function main() {
         ? record.content
         : '一帧来自个人摄影归档的发布照片，记录当时的光线、空间和观看感受。'),
       thumbnails: [thumbPathFor(fileName)],
-      displayImages: Array.isArray(record.displayImages) && record.displayImages.length
-        ? record.displayImages
-        : [displayPathFor(fileName)],
       location: known?.location || record.location || formatGpsLocation(exif),
       camera: camera || record.camera || '',
       lens,

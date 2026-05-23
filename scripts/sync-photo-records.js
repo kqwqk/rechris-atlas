@@ -32,10 +32,6 @@ function thumbPathFor(fileName) {
   return `assets/photos/thumbs/${path.basename(fileName, path.extname(fileName))}.jpg`;
 }
 
-function displayPathFor(fileName) {
-  return `assets/photos/display/${path.basename(fileName, path.extname(fileName))}.jpg`;
-}
-
 function imagePathFor(fileName) {
   return `assets/photos/${fileName}`;
 }
@@ -147,7 +143,6 @@ async function main() {
       content: '一帧来自个人摄影归档的发布照片，更多说明可在本地编辑面板继续补充。',
       images: [imagePathFor(fileName)],
       thumbnails: [thumbPathFor(fileName)],
-      displayImages: [displayPathFor(fileName)],
       tags: ['摄影'],
       publishedAt,
       date: shotTime.date,
