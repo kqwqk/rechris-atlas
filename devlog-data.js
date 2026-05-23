@@ -1,5 +1,25 @@
 window.DEVLOG_ENTRIES = [
   {
+    "id": "devlog-1779507924135",
+    "date": "2026-05-23",
+    "title": "新增新安江山水画廊照片并清理摄影数据契约",
+    "category": "feature",
+    "description": "补充第 25 张摄影发布，移除历史 displayImages 字段，让数据与构建只依赖 thumbs 和原图。",
+    "tags": [
+      "摄影模块",
+      "数据契约",
+      "文档"
+    ],
+    "details": [
+      "新增 assets/photos/新安江山水画廊.JPG 及对应缩略图",
+      "photo-records-data.js 增至 25 条记录，补齐地点与 EXIF",
+      "从全部记录及 sync/enrich 脚本移除 displayImages",
+      "修正 DEVELOPMENT.md 与 HANDOFF 中的照片流程说明",
+      "本地 npm run build 与资源预算检查通过"
+    ],
+    "impact": "medium"
+  },
+  {
     "id": "devlog-1778759292492",
     "date": "2026-05-14",
     "title": "摄影详情页图片质量优化",
