@@ -22,6 +22,11 @@ const PAGE_META = {
     title: '开发日志 - RECHRIS ATLAS',
     description: '记录开发过程、技术思考和项目进展。',
     keywords: '开发日志,技术博客,前端开发,项目记录'
+  },
+  work: {
+    title: '工作记录 - RECHRIS ATLAS',
+    description: '按日期记录工作进度，快速查看月度任务状态。',
+    keywords: '工作记录,任务看板,日程管理,项目进度'
   }
 };
 

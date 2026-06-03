@@ -26,6 +26,16 @@ function loadDevLogDataModule() {
   return Array.isArray(sandbox.window.DEVLOG_ENTRIES) ? sandbox.window.DEVLOG_ENTRIES : [];
 }
 
+function validateWorklog(worklog) {
+  assert(worklog && typeof worklog === 'object', '默认工作看板数据格式错误');
+  assert(!Array.isArray(worklog.months), '工作看板 months 应为对象');
+  assert(worklog.records && typeof worklog.records === 'object', '工作看板 records 应为对象');
+  Object.entries(worklog.records).forEach(([dateKey, value]) => {
+    assert(/^\d{4}-\d{2}-\d{2}$/.test(dateKey), `工作看板日期键无效：${dateKey}`);
+    assert(value && typeof value.projects === 'object', `工作看板记录格式错误：${dateKey}`);
+  });
+}
+
 function validateShortcuts(shortcuts) {
   assert(Array.isArray(shortcuts) && shortcuts.length > 0, '默认收藏数据为空或格式错误');
   const ids = new Set();
@@ -70,6 +80,7 @@ function main() {
   const appEntry = read('src/main.jsx');
   const appConstants = read('src/app-constants.js');
   const shortcutsModule = read('src/features/shortcuts.jsx');
+  const worklogModule = read('src/features/worklog.jsx');
   const devlogModule = read('src/features/devlog.jsx');
   const layoutModule = read('src/layout.jsx');
   const generatedDisplayImages = [
@@ -98,12 +109,19 @@ function main() {
   assert(!appEntry.includes('SHORTCUTS_STORAGE_KEY'), '收藏页仍会优先读取浏览器旧缓存');
   assert(shortcutsModule.includes('defaultShortcuts'), '收藏模块未接管收藏数据');
   assert(shortcutsModule.includes('import.meta.env.DEV'), '收藏模块仍会在生产环境探测本地编辑 API');
+  assert(worklogModule.includes('readDefaultWorklog'), '工作看板未以项目默认数据作为入口数据源');
+  assert(worklogModule.includes('default-worklog.json'), '工作看板未绑定 default-worklog.json');
+  assert(worklogModule.includes('import.meta.env.DEV'), '工作看板仍会在生产环境探测本地编辑 API');
+  assert(worklogModule.includes('/__local-admin/worklog'), '工作看板缺少本地写回接口');
+  assert(!worklogModule.includes('localStorage.setItem'), '工作看板仍会写入浏览器缓存');
   assert(devlogModule.includes('siteContent'), '开发日志模块未接管开发日志数据');
   assert(layoutModule.includes('useWeather'), '天气卡片未拆分到布局/天气模块');
   assert(appConstants.includes('SITE_URL'), '缺少单一站点域名常量');
   assert(appConstants.includes('assets/generated/display/about-duck-day.jpg'), '首页主题图仍未使用轻量展示图');
 
   const viteConfig = read('vite.config.js');
+  assert(viteConfig.includes("'default-worklog.json'"), '工作看板默认数据未复制到构建产物');
+  assert(viteConfig.includes('/__local-admin/worklog'), 'Vite 未提供工作看板本地写回接口');
   assert(viteConfig.includes('siteMetadataPlugin'), 'Vite 未集中注入站点域名元信息');
   assert(viteConfig.includes("'assets/icons'"), '本地图标目录未复制到构建产物');
   assert(viteConfig.includes("'assets/generated/display'"), '轻量主题插画目录未复制到构建产物');
@@ -115,6 +133,7 @@ function main() {
   assert(viteConfig.includes("process.env.SOURCE_MAPS === 'true'"), '生产 sourcemap 未改为显式开启');
 
   validateShortcuts(JSON.parse(read('default-shortcuts.json')));
+  validateWorklog(JSON.parse(read('default-worklog.json')));
 
   const packageJson = JSON.parse(read('package.json'));
   assert(packageJson.scripts.build.includes('check-asset-budgets.js'), '构建流程缺少资源体积预算检查');

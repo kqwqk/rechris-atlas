@@ -9,6 +9,7 @@ const siteConfig = JSON.parse(readFileSync(resolve(__dirname, 'site-config.json'
 
 const runtimeFiles = [
   'default-shortcuts.json',
+  'default-worklog.json',
   'icon8-host-slugs.json',
   'site-content.json',
 ];
@@ -32,6 +33,32 @@ function sendJson(res, statusCode, data) {
   res.statusCode = statusCode;
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   res.end(JSON.stringify(data));
+}
+
+function normalizeWorklogPayload(input = {}) {
+  const months = {};
+  if (input.months && typeof input.months === 'object') {
+    Object.entries(input.months).forEach(([monthKey, value]) => {
+      const projects = Array.isArray(value?.projects)
+        ? value.projects.map((item) => String(item).trim()).filter(Boolean)
+        : Array.isArray(value)
+          ? value.map((item) => String(item).trim()).filter(Boolean)
+          : [];
+      if (projects.length) months[monthKey] = projects;
+    });
+  }
+  const records = {};
+  if (input.records && typeof input.records === 'object') {
+    Object.entries(input.records).forEach(([dateKey, value]) => {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(dateKey) || !value?.projects) return;
+      const projects = {};
+      Object.entries(value.projects).forEach(([name, mark]) => {
+        if (mark) projects[name] = true;
+      });
+      if (Object.keys(projects).length) records[dateKey] = { projects };
+    });
+  }
+  return { months, records };
 }
 
 function readJsonBody(req) {
@@ -99,6 +126,25 @@ function localAdminPlugin() {
             if (!Array.isArray(body.shortcuts)) return sendJson(res, 400, { error: 'Expected shortcuts array' });
             await writeFile(resolve(__dirname, 'default-shortcuts.json'), `${JSON.stringify(body.shortcuts, null, 2)}\n`, 'utf8');
             return sendJson(res, 200, { ok: true, count: body.shortcuts.length });
+          }
+          return sendJson(res, 405, { error: 'Method not allowed' });
+        } catch (error) {
+          return sendJson(res, 500, { error: error.message || 'Local admin write failed' });
+        }
+      });
+
+      server.middlewares.use('/__local-admin/worklog', async (req, res) => {
+        const worklogPath = resolve(__dirname, 'default-worklog.json');
+        try {
+          if (req.method === 'GET') {
+            const data = JSON.parse(await readFile(worklogPath, 'utf8'));
+            return sendJson(res, 200, normalizeWorklogPayload(data));
+          }
+          if (req.method === 'POST') {
+            const body = await readJsonBody(req);
+            const payload = normalizeWorklogPayload(body);
+            await writeFile(worklogPath, `${JSON.stringify(payload, null, 2)}\n`, 'utf8');
+            return sendJson(res, 200, { ok: true, ...payload });
           }
           return sendJson(res, 405, { error: 'Method not allowed' });
         } catch (error) {

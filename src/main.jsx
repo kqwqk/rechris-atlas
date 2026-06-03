@@ -15,8 +15,7 @@ import {
   Hero,
   Home,
   ModeIndicator,
-  SceneOverlays,
-  SectionHead
+  SceneOverlays
 } from './layout.jsx';
 
 const PhotoJournalApp = lazy(() => import('./photo-module/main.jsx'));
@@ -24,6 +23,7 @@ const Devlog = lazy(() => import('./features/devlog.jsx').then((m) => ({ default
 const Shortcuts = lazy(() =>
   import('./features/shortcuts.jsx').then((m) => ({ default: m.Shortcuts }))
 );
+const Worklog = lazy(() => import('./features/worklog.jsx').then((m) => ({ default: m.Worklog })));
 
 function App() {
   const [view, setView] = useState(() => viewFromHash());
@@ -182,7 +182,6 @@ function App() {
           >
             {view === 'life' && (
               <>
-                <SectionHead title="摄影发布" note="RECHRIS ATLAS / Published Frames" />
                 <Suspense
                   fallback={
                     <div className="panel-loading" role="status" aria-live="polite">
@@ -193,6 +192,23 @@ function App() {
                   <PhotoJournalApp />
                 </Suspense>
               </>
+            )}
+          </section>
+          <section
+            className={`section view-panel ${view === 'work' ? 'active' : ''}`}
+            data-view-panel="work"
+            aria-label="工作记录"
+          >
+            {view === 'work' && (
+              <Suspense
+                fallback={
+                  <div className="panel-loading" role="status" aria-live="polite">
+                    工作记录加载中
+                  </div>
+                }
+              >
+                <Worklog showToast={showToast} />
+              </Suspense>
             )}
           </section>
           <section

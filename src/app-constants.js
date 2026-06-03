@@ -14,6 +14,7 @@ export const MODES = [
 export const VIEWS = [
   { id: 'home', label: '首页' },
   { id: 'tools', label: '收藏' },
+  { id: 'work', label: '工作' },
   { id: 'life', label: '摄影' },
   { id: 'devlog', label: '开发日志' }
 ];
