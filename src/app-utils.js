@@ -9,7 +9,7 @@ import {
 
 export function viewFromHash() {
   const hash = window.location.hash.replace(/^#/, '');
-  return VIEWS.some((item) => item.id === hash) ? hash : 'home';
+  return VIEWS.some((item) => item.id === hash && !item.external) ? hash : 'home';
 }
 
 export function applyBodyTheme(mode) {

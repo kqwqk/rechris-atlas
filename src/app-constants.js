@@ -16,6 +16,12 @@ export const VIEWS = [
   { id: 'tools', label: '收藏' },
   { id: 'work', label: '工作' },
   { id: 'life', label: '摄影' },
+  {
+    id: 'tennis',
+    label: '网球',
+    href: 'https://tennis-app-six-omega.vercel.app/',
+    external: true
+  },
   { id: 'devlog', label: '开发日志' }
 ];
 

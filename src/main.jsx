@@ -49,7 +49,9 @@ function App() {
 
   useEffect(() => {
     document.body.classList.toggle('view-home', view === 'home');
-    VIEWS.forEach((item) => document.body.classList.toggle(`view-${item.id}`, view === item.id));
+    VIEWS.filter((item) => !item.external).forEach((item) =>
+      document.body.classList.toggle(`view-${item.id}`, view === item.id)
+    );
     if (window.location.hash.replace(/^#/, '') !== view) {
       window.history.replaceState(null, '', `#${view}`);
     }

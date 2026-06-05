@@ -55,16 +55,27 @@ export function Header({ view, onView }) {
     <header className="header">
       <div className="logo">RECHRIS ATLAS</div>
       <nav className="site-nav" aria-label="站点导航">
-        {VIEWS.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            className={`nav-item ${view === item.id ? 'active' : ''}`}
-            onClick={() => onView(item.id)}
-          >
-            {item.label}
-          </button>
-        ))}
+        {VIEWS.map((item) =>
+          item.external ? (
+            <a
+              key={item.id}
+              className="nav-item"
+              href={item.href}
+              rel="noopener noreferrer"
+            >
+              {item.label}
+            </a>
+          ) : (
+            <button
+              key={item.id}
+              type="button"
+              className={`nav-item ${view === item.id ? 'active' : ''}`}
+              onClick={() => onView(item.id)}
+            >
+              {item.label}
+            </button>
+          )
+        )}
       </nav>
     </header>
   );
