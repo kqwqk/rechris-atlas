@@ -34,6 +34,12 @@ function main() {
     ], { stdio: 'ignore' });
     console.log(`generated ${path.relative(ROOT, output)}`);
   });
+
+  const configPath = path.join(ROOT, 'site-config.json');
+  const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+  config.themeAssetsVersion = (config.themeAssetsVersion || 1) + 1;
+  fs.writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
+  console.log(`bumped themeAssetsVersion -> ${config.themeAssetsVersion}`);
 }
 
 try {

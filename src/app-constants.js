@@ -87,13 +87,16 @@ export const WMO_WEATHER_ZH = {
   99: '强雷暴冰雹'
 };
 
+const themeAssetsVersion = siteConfig.themeAssetsVersion || 1;
+const themeImage = (path) => `${path}?v=${themeAssetsVersion}`;
+
 export const THEME_IMAGE_FILES = {
-  day: 'assets/generated/display/about-duck-day.jpg',
-  sunny: 'assets/generated/display/about-duck-sunny.jpg',
-  night: 'assets/generated/display/about-duck-night.jpg',
-  midnight: 'assets/generated/display/about-duck-moonlight.jpg',
-  rain: 'assets/generated/display/about-duck-rainy.jpg',
-  snow: 'assets/generated/display/about-duck-snowy.jpg'
+  day: themeImage('assets/generated/display/about-duck-day.jpg'),
+  sunny: themeImage('assets/generated/display/about-duck-sunny.jpg'),
+  night: themeImage('assets/generated/display/about-duck-night.jpg'),
+  midnight: themeImage('assets/generated/display/about-duck-moonlight.jpg'),
+  rain: themeImage('assets/generated/display/about-duck-rainy.jpg'),
+  snow: themeImage('assets/generated/display/about-duck-snowy.jpg')
 };
 
 export const SITE_SHARE_IMAGE = `${SITE_URL}/${THEME_IMAGE_FILES.day}`;
