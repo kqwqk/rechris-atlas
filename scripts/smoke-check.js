@@ -67,7 +67,7 @@ function main() {
   assert(indexHtml.includes('property="og:title"'), 'Open Graph 标题缺失');
   assert(indexHtml.includes('name="twitter:card"'), 'Twitter card 缺失');
   assert(indexHtml.includes('application/ld+json'), '结构化数据缺失');
-  assert(indexHtml.includes('assets/icons/ui/sun.svg'), '本地图标未用于 favicon');
+  assert(indexHtml.includes('assets/icons/ui/psyduck-favicon.png'), '本地图标未用于 favicon');
   assert(!indexHtml.includes('https://img.icons8.com/ios/50/'), '关键 UI 图标仍依赖远程 Icons8');
   assert(!indexHtml.includes('src="app.js"'), '旧 app.js 仍在页面加载');
   assert(!indexHtml.includes('src="weather-module.js"'), '旧天气脚本仍在页面加载');
